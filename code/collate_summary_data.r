@@ -930,7 +930,7 @@ rrr8 <- rrr8 %>%
          B_or_W = "Between", 
          design = "control vs. treatment", 
          or_stat_test = "Confidence Interval", #No particular test, just looked at the effect and CI
-         effect_type = "Mean difference",
+         effect_type = "Raw mean difference",
          outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
          outcome_t2 = NA, #only have sE of the effect, so nothing for this variable
