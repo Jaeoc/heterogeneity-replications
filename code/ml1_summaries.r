@@ -12,14 +12,14 @@ library(dplyr)
 #set working directory
 
 #extract data on whether in-lab study or not
-lab <- read_excel("../../Table_S1_-_Detailed_Site_and_Sample_Characteristics.xlsx") %>% 
+lab <- read_excel("../data/Ml1/Table_S1_-_Detailed_Site_and_Sample_Characteristics.xlsx") %>% 
   select(`Site identifier`, `Online (O) or Lab (L)`) %>% 
   rename(Site = `Site identifier`, in_lab = `Online (O) or Lab (L)`) %>% 
   mutate(in_lab = ifelse(in_lab == "L", 1, 0), Site = tolower(Site))
 
 
 #*****************************************
-#T-test effects---
+#T-test effects----
 #*****************************************
 #Effects extracted in this section
 #[1] "Sunk Costs"           
@@ -35,9 +35,9 @@ lab <- read_excel("../../Table_S1_-_Detailed_Site_and_Sample_Characteristics.xls
 #**************
 
 #sheetnames of effects that use t-tests and have the same data format (Math_art gender does a t-test but has different data format)
-tsheets <- excel_sheets("../data/ML-_Summary_Statistics.xlsx")[-c(1:2, 13:18)] 
+tsheets <- excel_sheets("../data/Ml1/summary/ML-_Summary_Statistics.xlsx")[-c(1:2, 13:18)] 
 #extract data for these effects
-teffects <- lapply(tsheets, function (X) read_excel("../data/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
+teffects <- lapply(tsheets, function (X) read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
 
 tfilt <- c("Overall:", "Mean across samples:", "Overall (sum of samples)", "Overall for US participants:") #for removing summary rows
 
@@ -76,7 +76,7 @@ for(i in seq_along(tnames)){
            effect = tnames[i], 
            B_or_W = "Between", 
            design = "control vs. treatment", 
-           or_stat_test = "Equal var t-test", 
+           or_stat_test = "Independent samples t-test", #Equal var
            effect_type = "d",
            outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
            Ntotal = ntreatment + ncontrol,
@@ -90,19 +90,19 @@ for(i in seq_along(tnames)){
 teffects <- do.call("rbind", teffects) #bind into one dataframe
 
 #******************************************
-#Chi-square effects
+#Chi-square effects----
 #******************************************
 #Effects extracted in this section
 #[1] "Gain vs. loss framing"       
 #[2] "Allowed vs. forbidden"       
-#[3] "Norm of reciporcity"         
+#[3] "Norm of reciprocity"         
 #[4] "Low vs. high category scales"
 #*************************
 
 #sheetnames of effects that use chisquare-tests
-chisheets <- excel_sheets("../data/ML-_Summary_Statistics.xlsx")[c(15:18)] 
+chisheets <- excel_sheets("../data/Ml1/summary/ML-_Summary_Statistics.xlsx")[c(15:18)] 
 #extract data for these effects
-chieffects <- lapply(chisheets, function (X) read_excel("../data/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
+chieffects <- lapply(chisheets, function (X) read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
 
 chinames <-  c("Gain vs. loss framing", "Allowed vs. forbidden", #Clarify names
                  "Norm of reciprocity", "Low vs. high category scales")
@@ -119,7 +119,7 @@ for(i in seq_along(chinames)){
 }
 
 #Description of outcomes in the shape: "outcome 1 (t, c) _ outcome 2 (t, c)" where (t,c) are the between subjects groups
-chioutcomes <- c("count exact (gain, loss) _ count probability (gain, loss)", 
+chioutcomes <- c("count exact (gain, loss) _ count probability (gain, loss)", #I use the parentheses to clarify here because there is no clear treatment/control division
                  "count allow (yes, no) _ count forbid (yes, no)",
                  "count yes (asked first, second) _ count no (asked first, second)",
                  "count < 2.5 hrs (low, high category) _ count > 2.5 hrs (low, high category)")
@@ -160,7 +160,7 @@ chieffects <- do.call("rbind", chieffects) #combine into one dataframe
 #[1] "Gender math attitude"
 #*****************
 
-math_art <- read_excel("../data/ML-_Summary_Statistics.xlsx", sheet = "Math_Art Gender")
+math_art <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "Math_Art Gender")
 
 #Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection
 
@@ -178,7 +178,7 @@ math_art <- math_art %>%
          effect = "Gender math attitude", 
          B_or_W = "Between", 
          design = "control vs. treatment", 
-         or_stat_test = "Equal var t-test", 
+         or_stat_test = "Independent samples t-test", #Equal var
          effect_type = "d",
          outcomes1_2 = "mean _ SD",  #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
@@ -195,7 +195,7 @@ math_art <- math_art %>%
 #[1] "IAT correlation math"
 #*****************
 
-math_cor <- read_excel("../data/ML-_Summary_Statistics.xlsx", sheet = "IAT correlation")
+math_cor <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "IAT correlation")
 
 #Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection
 
@@ -227,7 +227,6 @@ math_cor <- math_cor %>%
 #******************************************
 #Combined dataframe----
 #******************************************
-
 
 ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 

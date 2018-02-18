@@ -69,7 +69,7 @@ rrr7 <- rrr7 %>%
            B_or_W = "Between", 
            design = "control vs. treatment", 
            or_stat_test = "Confidence Interval", #No particular test, just looked at the effect and CI
-           effect_type = "Mean difference",
+           effect_type = "Raw mean difference",
            outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
            Ntotal = ntreatment + ncontrol,
            effect_size = outcome_t1 - outcome_c1) %>% ##%Note that because Table 2 of the article contains rounded values these effect sizes are not exactly the same as those reported in Figure 1 in the paper

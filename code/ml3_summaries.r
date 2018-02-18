@@ -8,7 +8,7 @@ if(!require("dplyr")){install.packages("dplyr")}
 library(dplyr)
 
 #set working directory
-setwd("../data/ML3 Meta") #needs to be set to be able to load all files at once
+setwd("../data/Ml3/summary/ML3 Meta") #needs to be set to be able to load all files at once
 
 #All file names in path folder ending with .csv, excluding big five data
 files <- list.files(pattern = "*.csv")[-2] 
@@ -17,10 +17,6 @@ files <- list.files(pattern = "*.csv")[-2]
 ml3 <- lapply(files, read.csv) 
 names(ml3) <- gsub(".csv", "", files) #set names
 
-#mutate Site names to be consistent at the end instead with the full dataframe is more efficient, double check mturk name "mTurk"
-         #Site = recode(Site, IthacaCollege = "Ithaca", PennStateAbington = "abington",
-          #             SanDiegoStateUniversity = "SDSU", TexasAandM = "TAMU", UniversityOfFlorida = "UFL",
-           #            UniversityOfVirginia = "UVA", VirginiaCommonwealthUniversity = "VCU")) 
 
 #*****************************************
 #Ml3 Stroop effect---
@@ -131,7 +127,7 @@ for(i in seq_along(ml3t_names)){
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            B_or_W = "Between", 
            design = "control vs. treatment", 
-           or_stat_test = "Equal var t-test", 
+           or_stat_test = "Independent samples t-test", #equal var
            effect_type = "d",
            outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
            Ntotal = ntreatment + ncontrol,
