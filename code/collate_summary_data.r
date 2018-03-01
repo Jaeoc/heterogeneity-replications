@@ -8,14 +8,14 @@
 
 #[0] Packages
 #[1] Many labs 1
-#**[1.1] T-test effects
+#**[1.1] t-test effects
 #**[1.2] Chi-square effects
 #**[1.3] Math_Art Gender
 #**[1.4] Math explicit/implicit attitude correlation
 #**[1.5] ML1 combined
 #[2] Many Labs 3
 #**[2.1] Stroop effect
-#**[2.2] T-test effects
+#**[2.2] t-test effects
 #**[2.3] Non-parametric tests
 #**[2.4] Interaction effects
 #**[2.5] Correlation conscientiousness and persistance
@@ -37,8 +37,8 @@
 #*************************************************************************************************************************
 
 
-wd_path <- dirname(rstudioapi::getSourceEditorContext()$path) #used later for correcting working directory
-
+wd_path <- dirname(rstudioapi::getSourceEditorContext()$path) #used for correcting working directory
+setwd(wd_path)
 
 #******************************************
 #[0] Packages----
@@ -81,7 +81,7 @@ lab <- read_excel("../data/Ml1/Table_S1_-_Detailed_Site_and_Sample_Characteristi
 
 
 #*****************************************
-#**[1.1] T-test effects----
+#**[1.1] t-test effects----
 #*****************************************
 #Effects extracted in this section
 #[1] "Sunk Costs"           
@@ -189,8 +189,8 @@ chioutcomes <- c("count exact (gain, loss) _ count probability (gain, loss)", #I
 
 
 for(i in seq_along(chinames)){
-chieffects[[i]] <- chieffects[[i]] %>% #remove summary rows
-  filter(!(Site == "Overall:" | Site == "Sum across samples:")) %>% 
+chieffects[[i]] <- chieffects[[i]] %>% 
+  filter(!(Site == "Overall:" | Site == "Sum across samples:")) %>% #remove summary rows
     left_join(., lab, by = "Site") %>% #add online/in lab variable
     rename_at(vars(one_of(tot1)), funs(paste0("outcome_t1"))) %>% #'if column name is one of the names in tot1, rename as "outcome_t1"'
     rename_at(vars(one_of(toc1)), funs(paste0("outcome_c1"))) %>% #These lines will give some warnings, but they are ignorable
@@ -204,7 +204,7 @@ chieffects[[i]] <- chieffects[[i]] %>% #remove summary rows
          or_stat_test = "Chisquare", 
          effect_type = "d",
          outcomes1_2 = chioutcomes[i], #Describes the content of outcome1 and outcome2 variables
-         ntreatment = outcome_t1 + outcome_t2, #Assign more convenient names
+         ntreatment = outcome_t1 + outcome_t2,
          ncontrol = outcome_c1 + outcome_c2,
          Ntotal = ntreatment + ncontrol,
          country = c("USA", "BRA", "CZE", "USA", "USA", "MYS", "USA", "USA", "TUR", "CAN", "GBR",
@@ -224,7 +224,7 @@ chieffects <- do.call("rbind", chieffects) #combine into one dataframe
 
 math_art <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "Math_Art Gender")
 
-#Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection
+#Note that original authors remove the sample from the site "qccuny2" (USA) due to a systematic error in data collection (as do I)
 
 math_art <- math_art %>% 
   filter(!(Site %in% c("Overall:", "Mean across samples:", "qccuny2"))) %>%  #remove summary rows and qccuny2
@@ -259,7 +259,7 @@ math_art <- math_art %>%
 
 math_cor <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "IAT correlation")
 
-#Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection
+#Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection (as do I)
 
 math_cor <- math_cor %>% 
   filter(!(Site %in% c("Overall:", "Sum across samples:", "qccuny2"))) %>%  #remove summary rows and qccuny2
@@ -354,7 +354,7 @@ ml3_stroop <- ml3_stroop %>%
 
 
 #******************************************
-#**[2.2] T-test effects----
+#**[2.2] t-test effects----
 #******************************************
 #Effects extracted in this section
 #[1]"Power and Perspective"
@@ -442,7 +442,7 @@ ml3t <- do.call("rbind", ml3t) #bind into dataframe
 #[2] "Metaphor"
 #*********************
 
-##%% Not completely sure if B_or_W should be "Between" or "Within" (or NA?)
+##%% Not completely sure if B_or_W should be "Between" or "Within" (or NA?): one group, compares how many choose each option
 
 nonp_names <- c("Availability", "Metaphor")
 
@@ -460,14 +460,14 @@ for(i in seq_along(nonp_names)){
     rename_at(vars(one_of(nonp_c1)), funs(paste0("outcome_c1"))) %>% #"if variable name one_of... rename as paste0(..)"
     rename_at(vars(one_of(nonp_t1)), funs(paste0("outcome_t1"))) %>% #gives some warnings but they are ignorable
     rename(Ntotal = N, 
-           effect_size = d) %>% 
+           effect_size = r) %>% #ML3 uses r as input for meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R"), thus so do I
     mutate(rs = "ML3", #Add some descriptive information 
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            effect = nonp_names[i], 
            B_or_W = "Between", 
            design = "Choice of category 1 or 2", 
            or_stat_test = nonp_stat[i], 
-           effect_type = "d",
+           effect_type = "r",
            outcomes1_2 = nonp_outcomes[i],
            outcome_c2 = NA, 
            outcome_t2 = NA,
@@ -504,14 +504,14 @@ for(i in seq_along(internames)){
     rename(ntreatment = N2, #Assign names consistent with other datasets
            ncontrol = N1, 
            Ntotal = NT, 
-           effect_size = EtaInter) %>% 
+           effect_size = rInter) %>% #ML3 uses r as input for meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R"), thus so do I
     mutate(rs = "ML3", #Add some descriptive information 
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            effect = internames[i], 
            B_or_W = "Between", 
            design = interdesign[i], 
            or_stat_test = interstat[i], 
-           effect_type = "partial eta2",
+           effect_type = "r",
            outcomes1_2 = NA, 
            outcome_c1 = NA, 
            outcome_t1 = NA, 
@@ -642,15 +642,22 @@ rrr1_2 <- do.call("rbind", rrr1_2)
 #[4] RRR3 ----
 #******************************************
 ##summary data from Registered Replication Report 3 https://osf.io/d3mw4/
-##Data here: https://osf.io/fsmdk/
+##Imagery data https://osf.io/be6gd/, intention attribution https://osf.io/7d9yg/ and intentionality https://osf.io/fsmdk/, 
 
 #library(dplyr)
 
 setwd(wd_path) #reset working directory
-rrr3 <- read.csv("../data/RRR3/Intentionality.csv", stringsAsFactors = FALSE)
+setwd("../data/RRR3") #needs to be set to be able to load all files at once
 
+#Extract data
+files <- list.files(pattern = "*.csv") #list files
+rrr3 <- lapply(files, read.csv, stringsAsFactors = FALSE) #load files
 
-rrr3 <- rrr3 %>% 
+#Clean and format
+rrr3_names <- c("Grammar on detailed processing", "Grammar on intention attribution", "Grammar on intentionality")
+
+for(i in seq_along(files)){ #loop over the 3 files and for each file
+rrr3[[i]] <- rrr3[[i]] %>% 
   slice(-1) %>% #Remove first row which contains data from original experiment that was replicated
   rename(Site = Author, #rename to consistent names
          outcome_t1 = mimp,
@@ -660,12 +667,12 @@ rrr3 <- rrr3 %>%
          outcome_c2 = sdperf,
          ncontrol = nperf) %>% 
   mutate(rs = "RRR3", #Add some descriptive information
-         effect = "Grammar on intentionality", #Based on curatescience.org I only use one out of the 3 DVs  
+         effect = rrr3_names[i],   
          Site = recode(Site, 'ONLINE-Eerland, Sherrill, Magliano, Zwaan' = "mturk"),
          in_lab = ifelse(Site == "mturk", 0, 1), # Only mturk study was online
          B_or_W = "Between", 
          design = "control vs. treatment", 
-         or_stat_test = "Independent sample t-test", #No particular test, just looked at the effect and CI
+         or_stat_test = "Independent sample t-test",
          effect_type = "Raw mean difference",
          outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
@@ -673,7 +680,9 @@ rrr3 <- rrr3 %>%
          country = c(rep("USA", 3), "CAN", "USA", "CAN", rep("USA", 6))) %>% #Country information taken from Table 1 of paper http://journals.sagepub.com/doi/pdf/10.1177/1745691615605826
   select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+}
 
+rrr3 <- do.call("rbind", rrr3) #combine into one dataframe
 
 #******************************************
 #[5] RRR4 ----
@@ -682,6 +691,8 @@ rrr3 <- rrr3 %>%
 ##Data from file named RTV_incl.csv https://osf.io/54nza/
 
 #library(dplyr)
+
+setwd(wd_path) #Reset working directory
 
 #Extract data
 rrr4 <- read.csv("../data/RRR4/RTV_incl.csv", stringsAsFactors = FALSE)
@@ -713,17 +724,14 @@ rrr4 <- rrr4 %>%
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
-
-
-
 #******************************************
 #[6] RRR5 ----
 #******************************************
 ##summary data from Registered Replication Report 5 https://osf.io/s3hfr/
 ##Data extracted from directly from paper http://journals.sagepub.com/doi/pdf/10.1177/1745691616664694
 
-library(tabulizer)
-library(tidyr)
+#library(tabulizer)
+#library(tidyr)
 #library(dplyr)
 
 #Data extraction
@@ -968,13 +976,13 @@ effects <- rbind(ml1, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8)
 write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
 
 #temporary
-library(splitstackshape)
+# library(splitstackshape)
 
-set.seed(43)
-eff2 <- effects %>% #stratified sample, one for each effect
-  stratified(., "effect", 1) %>% 
-  arrange(rs) #Arrange in order by rs
+# set.seed(43)
+# eff2 <- effects %>% #stratified sample, one for each effect
+  # stratified(., "effect", 1) %>% 
+  # arrange(rs) #Arrange in order by rs
 
-library(xlsx)
+# library(xlsx)
 
-write.xlsx(eff2, "../data/overview_summary_data.xlsx", sheetName = "Quick overview", row.names = FALSE)
+# write.xlsx(eff2, "../data/overview_summary_data.xlsx", sheetName = "Quick overview", row.names = FALSE)
