@@ -538,62 +538,62 @@
 "ML1","Gender math attitude","wku","USA",1,"95","Between","control vs. treatment","Independent samples t-test","d","0.33",26,69,"mean _ SD",0.2286,0.4146,0.58358,0.53702
 "ML1","Gender math attitude","wl","USA",1,"90","Between","control vs. treatment","Independent samples t-test","d","0.09",14,76,"mean _ SD",0.5344,0.5777,0.49916,0.45305
 "ML1","Gender math attitude","wpi","USA",1,"84","Between","control vs. treatment","Independent samples t-test","d","0.53",42,42,"mean _ SD",0.1782,0.4346,0.43516,0.5335
-"ML1","IAT correlation math","abington","USA",1,"75","Within","Implicit with explicit attitude","Correlation","r","0.191",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","brasilia","BRA",1,"111","Within","Implicit with explicit attitude","Correlation","r","0.443",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","charles","CZE",1,"79","Within","Implicit with explicit attitude","Correlation","r","0.28199999999999997",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","conncoll","USA",1,"84","Within","Implicit with explicit attitude","Correlation","r","0.497",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","csun","USA",0,"85","Within","Implicit with explicit attitude","Correlation","r","0.185",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","help","MYS",1,"93","Within","Implicit with explicit attitude","Correlation","r","0.34100000000000003",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","ithaca","USA",1,"83","Within","Implicit with explicit attitude","Correlation","r","0.39",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","jmu","USA",0,"159","Within","Implicit with explicit attitude","Correlation","r","0.498",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","ku","TUR",0,"101","Within","Implicit with explicit attitude","Correlation","r","0.28899999999999998",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","laurier","CAN",1,"99","Within","Implicit with explicit attitude","Correlation","r","0.38800000000000001",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","lse","GBR",1,"259","Within","Implicit with explicit attitude","Correlation","r","0.36299999999999999",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","luc","USA",1,"131","Within","Implicit with explicit attitude","Correlation","r","0.44800000000000001",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","mcdaniel","USA",0,"87","Within","Implicit with explicit attitude","Correlation","r","0.41799999999999998",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","msvu","CAN",1,"58","Within","Implicit with explicit attitude","Correlation","r","0.46400000000000002",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","mturk","USA",0,"871","Within","Implicit with explicit attitude","Correlation","r","0.32500000000000001",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","osu","USA",1,"87","Within","Implicit with explicit attitude","Correlation","r","0.252",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","oxy","USA",1,"110","Within","Implicit with explicit attitude","Correlation","r","0.38500000000000001",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","pi","USA",0,"1179","Within","Implicit with explicit attitude","Correlation","r","0.35",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","psu","USA",1,"86","Within","Implicit with explicit attitude","Correlation","r","0.39500000000000002",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","qccuny","USA",1,"93","Within","Implicit with explicit attitude","Correlation","r","0.43",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","sdsu","USA",1,"149","Within","Implicit with explicit attitude","Correlation","r","0.34599999999999997",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","swps","POL",1,"73","Within","Implicit with explicit attitude","Correlation","r","0.3",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","swpson","POL",0,"162","Within","Implicit with explicit attitude","Correlation","r","0.41599999999999998",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","tamu","USA",1,"175","Within","Implicit with explicit attitude","Correlation","r","0.29299999999999998",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","tamuc","USA",1,"82","Within","Implicit with explicit attitude","Correlation","r","0.315",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","tamuon","USA",0,"197","Within","Implicit with explicit attitude","Correlation","r","0.45600000000000002",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","tilburg","NLD",1,"76","Within","Implicit with explicit attitude","Correlation","r","0.33600000000000002",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","ufl","USA",1,"123","Within","Implicit with explicit attitude","Correlation","r","0.59899999999999998",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","unipd","ITA",0,"129","Within","Implicit with explicit attitude","Correlation","r","0.48",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","uva","USA",1,"78","Within","Implicit with explicit attitude","Correlation","r","0.54200000000000004",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","vcu","USA",1,"96","Within","Implicit with explicit attitude","Correlation","r","0.42599999999999999",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","wisc","USA",1,"87","Within","Implicit with explicit attitude","Correlation","r","0.54700000000000004",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","wku","USA",1,"89","Within","Implicit with explicit attitude","Correlation","r","0.372",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","wl","USA",1,"89","Within","Implicit with explicit attitude","Correlation","r","0.30599999999999999",NA,NA,NA,NA,NA,NA,NA
-"ML1","IAT correlation math","wpi","USA",1,"80","Within","Implicit with explicit attitude","Correlation","r","0.32300000000000001",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","AshlandUniversity","USA",1,"84","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.023047702",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","BradleyUniversity","USA",1,"119","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.902931194",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","CarletonUniversity","USA",1,"44","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.109267841",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","Ithaca","USA",1,"91","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.218351759",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","MiamiUniversity","USA",1,"96","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.802060281",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","MichiganStateUniversity","USA",1,"318","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.704555318",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","MontanaStateUniversity","USA",1,"124","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.989044421",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","NovaSoutheasternUniversity","USA",1,"131","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.886983671",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","OSUNewark","USA",1,"158","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.075534108",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","PacificLutheranUniversity","USA",1,"101","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.00850005",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","abington","USA",1,"117","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.823143637",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","SDSU","USA",1,"142","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.870221617",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","TAMU","USA",1,"178","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.875440092",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UCDavis","USA",1,"119","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.834951623",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UCRiverside","USA",1,"242","Within","Repeated measurements","one sample t-test of std. mean diff","d","1.09064497",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UFL","USA",1,"137","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.753462547",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UniversityOfSouthernMississippi","USA",1,"89","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.89622981",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UniversityOfToronto","USA",1,"81","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.658427913",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","UVA","USA",1,"194","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.874012074",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","VCU","USA",1,"95","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.961185161",NA,NA,NA,NA,NA,NA,NA
-"ML3","Stroop effect","mturk","USA",0,"620","Within","Repeated measurements","one sample t-test of std. mean diff","d","0.813536031",NA,NA,NA,NA,NA,NA,NA
+"ML1","IAT correlation math","abington","USA",1,"75","Within","Implicit with explicit attitude","Correlation","r","0.191",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","brasilia","BRA",1,"111","Within","Implicit with explicit attitude","Correlation","r","0.443",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","charles","CZE",1,"79","Within","Implicit with explicit attitude","Correlation","r","0.28199999999999997",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","conncoll","USA",1,"84","Within","Implicit with explicit attitude","Correlation","r","0.497",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","csun","USA",0,"85","Within","Implicit with explicit attitude","Correlation","r","0.185",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","help","MYS",1,"93","Within","Implicit with explicit attitude","Correlation","r","0.34100000000000003",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","ithaca","USA",1,"83","Within","Implicit with explicit attitude","Correlation","r","0.39",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","jmu","USA",0,"159","Within","Implicit with explicit attitude","Correlation","r","0.498",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","ku","TUR",0,"101","Within","Implicit with explicit attitude","Correlation","r","0.28899999999999998",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","laurier","CAN",1,"99","Within","Implicit with explicit attitude","Correlation","r","0.38800000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","lse","GBR",1,"259","Within","Implicit with explicit attitude","Correlation","r","0.36299999999999999",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","luc","USA",1,"131","Within","Implicit with explicit attitude","Correlation","r","0.44800000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","mcdaniel","USA",0,"87","Within","Implicit with explicit attitude","Correlation","r","0.41799999999999998",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","msvu","CAN",1,"58","Within","Implicit with explicit attitude","Correlation","r","0.46400000000000002",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","mturk","USA",0,"871","Within","Implicit with explicit attitude","Correlation","r","0.32500000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","osu","USA",1,"87","Within","Implicit with explicit attitude","Correlation","r","0.252",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","oxy","USA",1,"110","Within","Implicit with explicit attitude","Correlation","r","0.38500000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","pi","USA",0,"1179","Within","Implicit with explicit attitude","Correlation","r","0.35",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","psu","USA",1,"86","Within","Implicit with explicit attitude","Correlation","r","0.39500000000000002",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","qccuny","USA",1,"93","Within","Implicit with explicit attitude","Correlation","r","0.43",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","sdsu","USA",1,"149","Within","Implicit with explicit attitude","Correlation","r","0.34599999999999997",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","swps","POL",1,"73","Within","Implicit with explicit attitude","Correlation","r","0.3",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","swpson","POL",0,"162","Within","Implicit with explicit attitude","Correlation","r","0.41599999999999998",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","tamu","USA",1,"175","Within","Implicit with explicit attitude","Correlation","r","0.29299999999999998",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","tamuc","USA",1,"82","Within","Implicit with explicit attitude","Correlation","r","0.315",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","tamuon","USA",0,"197","Within","Implicit with explicit attitude","Correlation","r","0.45600000000000002",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","tilburg","NLD",1,"76","Within","Implicit with explicit attitude","Correlation","r","0.33600000000000002",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","ufl","USA",1,"123","Within","Implicit with explicit attitude","Correlation","r","0.59899999999999998",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","unipd","ITA",0,"129","Within","Implicit with explicit attitude","Correlation","r","0.48",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","uva","USA",1,"78","Within","Implicit with explicit attitude","Correlation","r","0.54200000000000004",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","vcu","USA",1,"96","Within","Implicit with explicit attitude","Correlation","r","0.42599999999999999",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","wisc","USA",1,"87","Within","Implicit with explicit attitude","Correlation","r","0.54700000000000004",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","wku","USA",1,"89","Within","Implicit with explicit attitude","Correlation","r","0.372",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","wl","USA",1,"89","Within","Implicit with explicit attitude","Correlation","r","0.30599999999999999",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML1","IAT correlation math","wpi","USA",1,"80","Within","Implicit with explicit attitude","Correlation","r","0.32300000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","AshlandUniversity","USA",1,"84","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.455402382",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","BradleyUniversity","USA",1,"119","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.411475205",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","CarletonUniversity","USA",1,"44","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.485026929",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","Ithaca","USA",1,"91","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.520246163",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","MiamiUniversity","USA",1,"96","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.372214773",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","MichiganStateUniversity","USA",1,"318","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.332263561",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","MontanaStateUniversity","USA",1,"124","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.443281126",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","NovaSoutheasternUniversity","USA",1,"131","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.405411164",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","OSUNewark","USA",1,"158","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.473625585",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","PacificLutheranUniversity","USA",1,"101","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.450246911",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","abington","USA",1,"117","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.380597288",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","SDSU","USA",1,"142","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.398979197",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","TAMU","USA",1,"178","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.400988023",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UCDavis","USA",1,"119","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.385251525",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UCRiverside","USA",1,"242","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.478762772",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UFL","USA",1,"137","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.352543415",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UniversityOfSouthernMississippi","USA",1,"89","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.408933594",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UniversityOfToronto","USA",1,"81","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.312704074",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UVA","USA",1,"194","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.400438887",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","VCU","USA",1,"95","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.433165105",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","mturk","USA",0,"620","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.376788873",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Power and Perspective","AshlandUniversity","USA",1,"84","Between","control vs. treatment","Independent samples t-test","d","0.01",53,31,"mean _ SD",3.698,3.71,1.716,1.755
 "ML3","Power and Perspective","BradleyUniversity","USA",1,"112","Between","control vs. treatment","Independent samples t-test","d","0.41",63,49,"mean _ SD",3.857,4.469,1.625,1.26
 "ML3","Power and Perspective","CarletonUniversity","USA",1,"32","Between","control vs. treatment","Independent samples t-test","d","-0.27",17,15,"mean _ SD",4.059,3.643,1.56,1.447
@@ -697,144 +697,144 @@
 "ML3","Metaphor","UniversityOfToronto","USA",1,"37","Between","Choice of category 1 or 2","Chisquare","r","0.23796223",NA,NA,"count prime (consistent, inconsistent) _ NA",14,23,NA,NA
 "ML3","Metaphor","UVA","USA",1,"104","Between","Choice of category 1 or 2","Chisquare","r","0.019996001",NA,NA,"count prime (consistent, inconsistent) _ NA",51,53,NA,NA
 "ML3","Metaphor","VCU","USA",1,"51","Between","Choice of category 1 or 2","Chisquare","r","-0.059892291",NA,NA,"count prime (consistent, inconsistent) _ NA",27,24,NA,NA
-"ML3","Credentials interaction","AshlandUniversity","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","0.259848111",42,42,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.040245419",67,53,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","CarletonUniversity","USA",1,"44","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.071159694",22,22,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.182461713",46,46,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","MiamiUniversity","USA",1,"93","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.181650177",41,52,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","MichiganStateUniversity","USA",1,"316","Between","Group x continuous variable","Linear regression with ANOVA","r","0.071742506",161,155,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","MontanaStateUniversity","USA",1,"124","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.108938302",62,62,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","NovaSoutheasternUniversity","USA",1,"130","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.042816101",72,58,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","OSUNewark","USA",1,"155","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.032604569",69,86,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","PacificLutheranUniversity","USA",1,"103","Between","Group x continuous variable","Linear regression with ANOVA","r","0.217997074",54,49,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","abington","USA",1,"119","Between","Group x continuous variable","Linear regression with ANOVA","r","0.131966769",52,67,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","SDSU","USA",1,"138","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.07108533",72,66,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","TAMU","USA",1,"178","Between","Group x continuous variable","Linear regression with ANOVA","r","0.019923238",88,90,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UCDavis","USA",1,"117","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.091410904",52,65,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UCRiverside","USA",1,"243","Between","Group x continuous variable","Linear regression with ANOVA","r","0",123,120,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UFL","USA",1,"136","Between","Group x continuous variable","Linear regression with ANOVA","r","0.008560203",69,67,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.176343889",46,43,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UniversityOfToronto","USA",1,"80","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070023118",50,30,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","UVA","USA",1,"192","Between","Group x continuous variable","Linear regression with ANOVA","r","0.001581137",93,99,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","VCU","USA",1,"94","Between","Group x continuous variable","Linear regression with ANOVA","r","0.064149959",46,48,NA,NA,NA,NA,NA
-"ML3","Credentials interaction","mturk","USA",0,"639","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.028247684",293,346,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","AshlandUniversity","USA",1,"85","Between","Group x continuous variable","Linear regression with ANOVA","r","0.08467124",44,41,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.060594178",56,64,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","CarletonUniversity","USA",1,"45","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.031731371",21,24,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.025125854",45,47,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","MiamiUniversity","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.099823941",48,48,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","MichiganStateUniversity","USA",1,"318","Between","Group x continuous variable","Linear regression with ANOVA","r","0.079100139",155,163,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","MontanaStateUniversity","USA",1,"128","Between","Group x continuous variable","Linear regression with ANOVA","r","0.096462956",61,67,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","NovaSoutheasternUniversity","USA",1,"134","Between","Group x continuous variable","Linear regression with ANOVA","r","0.034182954",69,65,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","OSUNewark","USA",1,"158","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.002474351",77,81,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","PacificLutheranUniversity","USA",1,"103","Between","Group x continuous variable","Linear regression with ANOVA","r","0.044903612",62,41,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","abington","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.04990887",58,62,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","SDSU","USA",1,"143","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.009534193",76,67,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","TAMU","USA",1,"179","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.045291003",90,89,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UCDavis","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.032742384",57,63,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UCRiverside","USA",1,"245","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.073395474",121,124,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UFL","USA",1,"137","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.039266954",56,81,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.004200803",44,45,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UniversityOfToronto","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.03707856",48,36,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UVA","USA",1,"195","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070361965",98,97,NA,NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","VCU","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.155569945",52,44,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","AshlandUniversity","USA",1,"82","Between","Group x categorical variable","ANOVA","r","-0.008678652",46,36,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","BradleyUniversity","USA",1,"118","Between","Group x categorical variable","ANOVA","r","-0.069552472",61,57,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","CarletonUniversity","USA",1,"42","Between","Group x categorical variable","ANOVA","r","-0.353467441",24,18,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","Ithaca","USA",1,"90","Between","Group x categorical variable","ANOVA","r","0.103833135",36,54,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","MiamiUniversity","USA",1,"95","Between","Group x categorical variable","ANOVA","r","0.116155668",50,45,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","MichiganStateUniversity","USA",1,"307","Between","Group x categorical variable","ANOVA","r","0.063030904",155,152,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","MontanaStateUniversity","USA",1,"121","Between","Group x categorical variable","ANOVA","r","-0.06567505",55,66,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","NovaSoutheasternUniversity","USA",1,"130","Between","Group x categorical variable","ANOVA","r","-0.056464173",66,64,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","OSUNewark","USA",1,"149","Between","Group x categorical variable","ANOVA","r","-0.033728227",77,72,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","PacificLutheranUniversity","USA",1,"99","Between","Group x categorical variable","ANOVA","r","0.096803561",43,56,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","abington","USA",1,"112","Between","Group x categorical variable","ANOVA","r","0.152857125",56,56,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","SDSU","USA",1,"137","Between","Group x categorical variable","ANOVA","r","-0.05827524",61,76,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","TAMU","USA",1,"177","Between","Group x categorical variable","ANOVA","r","0.024475692",91,86,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UCDavis","USA",1,"110","Between","Group x categorical variable","ANOVA","r","-0.018018226",51,59,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UCRiverside","USA",1,"229","Between","Group x categorical variable","ANOVA","r","0.184826814",115,114,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UFL","USA",1,"134","Between","Group x categorical variable","ANOVA","r","-0.077722624",63,71,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UniversityOfSouthernMississippi","USA",1,"86","Between","Group x categorical variable","ANOVA","r","-0.080248006",47,39,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UniversityOfToronto","USA",1,"77","Between","Group x categorical variable","ANOVA","r","-0.049757408",36,41,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UVA","USA",1,"178","Between","Group x categorical variable","ANOVA","r","0.00215665",86,92,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","VCU","USA",1,"92","Between","Group x categorical variable","ANOVA","r","0.282120128",51,41,NA,NA,NA,NA,NA
-"ML3","Subjective Distance interaction","mturk","USA",0,"574","Between","Group x categorical variable","ANOVA","r","0.033607716",292,282,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","AshlandUniversity","USA",1,"84","Within","Conscientiousness with persistance","correlation","r","-0.2113888",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","BradleyUniversity","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.007624803",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","CarletonUniversity","USA",1,"42","Within","Conscientiousness with persistance","correlation","r","-0.06357754",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","Ithaca","USA",1,"90","Within","Conscientiousness with persistance","correlation","r","0.2007985",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MiamiUniversity","USA",1,"96","Within","Conscientiousness with persistance","correlation","r","-0.06392194",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MichiganStateUniversity","USA",1,"314","Within","Conscientiousness with persistance","correlation","r","0.02015154",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MontanaStateUniversity","USA",1,"126","Within","Conscientiousness with persistance","correlation","r","-0.04414049",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","NovaSoutheasternUniversity","USA",1,"131","Within","Conscientiousness with persistance","correlation","r","0.1034288",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","OSUNewark","USA",1,"156","Within","Conscientiousness with persistance","correlation","r","-0.0851966",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","PacificLutheranUniversity","USA",1,"101","Within","Conscientiousness with persistance","correlation","r","-0.1399075",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","abington","USA",1,"118","Within","Conscientiousness with persistance","correlation","r","0.02433485",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","SDSU","USA",1,"139","Within","Conscientiousness with persistance","correlation","r","0.004294308",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","TAMU","USA",1,"179","Within","Conscientiousness with persistance","correlation","r","0.1415478",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UCDavis","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.06029606",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UCRiverside","USA",1,"240","Within","Conscientiousness with persistance","correlation","r","-0.02011479",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UFL","USA",1,"137","Within","Conscientiousness with persistance","correlation","r","0.1644415",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfSouthernMississippi","USA",1,"89","Within","Conscientiousness with persistance","correlation","r","-0.05992367",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfToronto","USA",1,"80","Within","Conscientiousness with persistance","correlation","r","-0.01726644",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UVA","USA",1,"177","Within","Conscientiousness with persistance","correlation","r","-0.000519782",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","VCU","USA",1,"95","Within","Conscientiousness with persistance","correlation","r","0.000264722",NA,NA,NA,NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","mturk","USA",0,"580","Within","Conscientiousness with persistance","correlation","r","0.04721134",NA,NA,NA,NA,NA,NA,NA
-"RRR1","Verbal overshadowing","mturk","USA",0,"390","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0597722960151803",186,204,"count correct _ count incorrect",91,112,95,92
-"RRR1","Verbal overshadowing","Victoria K. Alogna, Jamin Halberstadt, Jonathan Jong, Joshua C. Jackson, Cathy Ng","NZL",1,"113","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.130325814536341",57,56,"count correct _ count incorrect",40,32,17,24
-"RRR1","Verbal overshadowing","Stacy Birch","USA",1,"106","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.000714285714285667",50,56,"count correct _ count incorrect",33,37,17,19
-"RRR1","Verbal overshadowing","Angela R. Birt, Philip Aucoin","CAN",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0266666666666667",50,51,"count correct _ count incorrect",18,17,32,34
-"RRR1","Verbal overshadowing","Maria A. Brandimonte","ITA",1,"140","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.1",70,70,"count correct _ count incorrect",27,34,43,36
-"RRR1","Verbal overshadowing","Curt Carlson, Dawn Weatherford, Maria Carlson","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.133333333333333",75,75,"count correct _ count incorrect",42,32,33,43
-"RRR1","Verbal overshadowing","Kimberly S. Dellapaolera, Brian H. Bornstein","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.147581792318634",76,74,"count correct _ count incorrect",41,29,35,45
-"RRR1","Verbal overshadowing","Jean-Francois Delvenne, Charity Brown, Emma Portch, Tara Zaksaite","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0222283967768825",61,59,"count correct _ count incorrect",40,40,21,19
-"RRR1","Verbal overshadowing","Gerald Echterhoff, René Kopietz","DEU",1,"87","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.155885471898197",46,41,"count correct _ count incorrect",24,15,22,26
-"RRR1","Verbal overshadowing","Casey M. Eggleston,  Calvin K. Lai, Elizabeth A. Gilbert,","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0713902308105206",69,81,"count correct _ count incorrect",39,40,30,41
-"RRR1","Verbal overshadowing","Daniel L. Greenberg, Marino Mugayar-Baldocchi","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0800000000000001",50,50,"count correct _ count incorrect",28,24,22,26
-"RRR1","Verbal overshadowing","Andre Kehn, Kimberly Schweitzer, Bradlee W. Gamblin, Kimberly Wiseman, Narina L. Nunez","USA",1,"131","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.049719887955182",68,63,"count correct _ count incorrect",39,33,29,30
-"RRR1","Verbal overshadowing","Christopher Koch, Remi Gentry, Jennifer Shaheed, Kelsi Buswell","USA",1,"96","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0833333333333333",48,48,"count correct _ count incorrect",22,26,28,22
-"RRR1","Verbal overshadowing","Nicola Mammarella, Beth Fairfield, Alberto Di Domenico","ITA",1,"220","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.118181818181818",110,110,"count correct _ count incorrect",58,45,52,65
-"RRR1","Verbal overshadowing","Shannon McCoy, Arielle Rancourt","USA",1,"123","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.154415653093601",61,62,"count correct _ count incorrect",35,26,26,36
-"RRR1","Verbal overshadowing","Abigail A. Mitchell, Marilyn S. Petro","USA",1,"113","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0385831752055661",51,62,"count correct _ count incorrect",26,34,25,28
-"RRR1","Verbal overshadowing","Robin Musselman, Michael Colarusso","USA",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.164705882352941",50,51,"count correct _ count incorrect",20,12,30,39
-"RRR1","Verbal overshadowing","Christopher R. Poirier, Matthew K. Attaya, Kathleen A. McConnaughy, Jessica E. Pappagianopoulos, Griffin A. Sullivan","USA",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.127272727272727",55,55,"count correct _ count incorrect",31,24,24,31
-"RRR1","Verbal overshadowing","Eva Rubínová, Marek Vranka, Štepán Bahník","CZE",1,"118","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0694117647058823",50,68,"count correct _ count incorrect",23,36,27,32
-"RRR1","Verbal overshadowing","Kyle J. Susa, Jessica K. Swanner, Christian A. Meissner","USA",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0",55,55,"count correct _ count incorrect",23,23,32,32
-"RRR1","Verbal overshadowing","W. Burt Thompson","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.14",50,50,"count correct _ count incorrect",21,28,29,22
-"RRR1","Verbal overshadowing","Joanna Ulatowska, Aleksandra Cislak","POL",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0363636363636364",55,55,"count correct _ count incorrect",38,40,17,15
-"RRR1","Verbal overshadowing","Kimberley A. Wade, Ulrike Körner, Melissa, F. Colloff,  Melina A. Kunar","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0833333333333334",60,60,"count correct _ count incorrect",39,34,21,26
-"RRR1","Verbal overshadowing","Simon Chu, John E. Marsh, Faye Skelton","GBR",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0874509803921568",51,50,"count correct _ count incorrect",32,27,19,23
-"RRR1","Verbal overshadowing","John E. Edlund, Austin Lee Nichols","USA",1,"112","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.122790099646416",61,51,"count correct _ count incorrect",26,28,35,23
-"RRR1","Verbal overshadowing","Fiona Gabbert, Tim Valentine","GBR",1,"108","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0332761578044597",53,55,"count correct _ count incorrect",31,34,22,21
-"RRR1","Verbal overshadowing","Fabio P. Leite","USA",1,"102","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.175384615384615",50,52,"count correct _ count incorrect",28,20,22,32
-"RRR1","Verbal overshadowing","Alex H. McIntyre, Stephen R. H. Langton, Peter J. B. Hancock","GBR",1,"103","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0139517345399698",51,52,"count correct _ count incorrect",37,37,14,15
-"RRR1","Verbal overshadowing","Robert B. Michael,  Gregory Franco, Mevagh Sanson, Maryanne Garry","NZL",1,"185","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.00199390100867936",98,87,"count correct _ count incorrect",55,49,43,38
-"RRR1","Verbal overshadowing","Matthew A. Palmer, Aaron Drummond, James D. Sauer, Daniel V. Zuj, Lauren Hall, Liam Satchell, Glenys Holt, Miriam Rainsford","AUS",1,"107","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0168067226890757",51,56,"count correct _ count incorrect",30,32,21,24
-"RRR1","Verbal overshadowing","Verkoeijen, P. P. J. L., Bouwmeester, S., Zwaan, R. A.","NLD",1,"105","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0457516339869282",54,51,"count correct _ count incorrect",30,26,24,25
-"RRR1","Verbal overshadowing","Christopher A. Was, Dale Hirsch. Rachel Todaro, Connie Romig","USA",1,"135","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0215100965759438",68,67,"count correct _ count incorrect",38,36,30,31
-"RRR2","Verbal overshadowing","mturk","USA",0,"387","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.107521697203472",183,204,"count correct _ count incorrect",104,94,79,110
-"RRR2","Verbal overshadowing","Victoria K. Alogna, Jamin Halberstadt, Jonathan Jong, Joshua C. Jackson, Cathy Ng","NZL",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.12",50,50,"count correct _ count incorrect",31,25,19,25
-"RRR2","Verbal overshadowing","Stacy Birch","USA",1,"107","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.157232704402516",54,53,"count correct _ count incorrect",36,27,18,26
-"RRR2","Verbal overshadowing","Angela R. Birt, Philip Aucoin","CAN",1,"61","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.249462365591398",31,30,"count correct _ count incorrect",16,8,15,22
-"RRR2","Verbal overshadowing","Maria A. Brandimonte","ITA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.02",50,50,"count correct _ count incorrect",24,23,26,27
-"RRR2","Verbal overshadowing","Curt Carlson, Dawn Weatherford, Maria Carlson","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.24",75,75,"count correct _ count incorrect",50,32,25,43
-"RRR2","Verbal overshadowing","Kimberly S. Dellapaolera, Brian H. Bornstein","USA",1,"139","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.206053067993366",67,72,"count correct _ count incorrect",38,26,29,46
-"RRR2","Verbal overshadowing","Jean-Francois Delvenne, Charity Brown, Emma Portch, Tara Zaksaite","GBR",1,"94","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.259057971014493",48,46,"count correct _ count incorrect",26,13,22,33
-"RRR2","Verbal overshadowing","Gerald Echterhoff, René Kopietz","DEU",1,"89","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.216380182002022",46,43,"count correct _ count incorrect",26,15,20,28
-"RRR2","Verbal overshadowing","Casey M. Eggleston,  Calvin K. Lai, Elizabeth A. Gilbert","USA",1,"84","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0170164492342598",41,43,"count correct _ count incorrect",15,15,26,28
-"RRR2","Verbal overshadowing","Daniel L. Greenberg, Marino Mugayar-Baldocchi","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.133333333333333",30,30,"count correct _ count incorrect",19,15,11,15
-"RRR2","Verbal overshadowing","Andre Kehn, Kimberly Schweitzer, Bradlee W. Gamblin, Kimberly Wiseman, Narina L. Nunez","USA",1,"99","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0106122448979591",50,49,"count correct _ count incorrect",24,23,26,26
-"RRR2","Verbal overshadowing","Christopher Koch, Remi Gentry, Jennifer Shaheed, Kelsi Buswell","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.1",30,30,"count correct _ count incorrect",14,11,16,19
-"RRR2","Verbal overshadowing","Nicola Mammarella, Beth Fairfield, Alberto Di Domenico","ITA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.22",50,50,"count correct _ count incorrect",26,15,24,35
-"RRR2","Verbal overshadowing","Shannon K. McCoy, Arielle Rancourt","USA",1,"82","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.146341463414634",41,41,"count correct _ count incorrect",19,13,22,28
-"RRR2","Verbal overshadowing","Abigail A. Mitchell, Marilyn S. Petro","USA",1,"92","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.195652173913044",46,46,"count correct _ count incorrect",22,13,24,33
-"RRR2","Verbal overshadowing","Robin Musselman, Michael Colarusso","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.233333333333333",30,30,"count correct _ count incorrect",14,7,16,23
-"RRR2","Verbal overshadowing","Christopher R. Poirier, Matthew K. Attaya, Griffin A. Sullivan, Kathleen A. McConnaughy, Jessica E. Pappagianopoulos","USA",1,"85","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.289911308203991",41,44,"count correct _ count incorrect",24,13,17,31
-"RRR2","Verbal overshadowing","Eva Rubínová, Marek Vranka, Štepán Bahník","CZE",1,"102","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0323076923076923",50,52,"count correct _ count incorrect",17,16,33,36
-"RRR2","Verbal overshadowing","Kyle J. Susa, Jessica K. Swanner, Christian A. Meissner","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.24",50,50,"count correct _ count incorrect",23,11,27,39
-"RRR2","Verbal overshadowing","W. Burt Thompson","USA",1,"77","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0890688259109312",39,38,"count correct _ count incorrect",24,20,15,18
-"RRR2","Verbal overshadowing","Joanna Ulatowska, Aleksandra Cislak","POL",1,"94","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.170212765957447",47,47,"count correct _ count incorrect",35,27,12,20
-"RRR2","Verbal overshadowing","Kimberley A. Wade, Ulrike Körner, Melissa, F. Colloff,  Melina A. Kunar","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.166666666666667",60,60,"count correct _ count incorrect",36,26,24,34
+"ML3","Credentials interaction","AshlandUniversity","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","0.259848111",42,42,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.040245419",67,53,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","CarletonUniversity","USA",1,"44","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.071159694",22,22,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.182461713",46,46,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","MiamiUniversity","USA",1,"93","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.181650177",41,52,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","MichiganStateUniversity","USA",1,"316","Between","Group x continuous variable","Linear regression with ANOVA","r","0.071742506",161,155,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","MontanaStateUniversity","USA",1,"124","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.108938302",62,62,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","NovaSoutheasternUniversity","USA",1,"130","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.042816101",72,58,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","OSUNewark","USA",1,"155","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.032604569",69,86,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","PacificLutheranUniversity","USA",1,"103","Between","Group x continuous variable","Linear regression with ANOVA","r","0.217997074",54,49,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","abington","USA",1,"119","Between","Group x continuous variable","Linear regression with ANOVA","r","0.131966769",52,67,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","SDSU","USA",1,"138","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.07108533",72,66,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","TAMU","USA",1,"178","Between","Group x continuous variable","Linear regression with ANOVA","r","0.019923238",88,90,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UCDavis","USA",1,"117","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.091410904",52,65,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UCRiverside","USA",1,"243","Between","Group x continuous variable","Linear regression with ANOVA","r","0",123,120,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UFL","USA",1,"136","Between","Group x continuous variable","Linear regression with ANOVA","r","0.008560203",69,67,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.176343889",46,43,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UniversityOfToronto","USA",1,"80","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070023118",50,30,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UVA","USA",1,"192","Between","Group x continuous variable","Linear regression with ANOVA","r","0.001581137",93,99,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","VCU","USA",1,"94","Between","Group x continuous variable","Linear regression with ANOVA","r","0.064149959",46,48,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","mturk","USA",0,"639","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.028247684",293,346,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","AshlandUniversity","USA",1,"85","Between","Group x continuous variable","Linear regression with ANOVA","r","0.08467124",44,41,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.060594178",56,64,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","CarletonUniversity","USA",1,"45","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.031731371",21,24,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.025125854",45,47,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","MiamiUniversity","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.099823941",48,48,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","MichiganStateUniversity","USA",1,"318","Between","Group x continuous variable","Linear regression with ANOVA","r","0.079100139",155,163,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","MontanaStateUniversity","USA",1,"128","Between","Group x continuous variable","Linear regression with ANOVA","r","0.096462956",61,67,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","NovaSoutheasternUniversity","USA",1,"134","Between","Group x continuous variable","Linear regression with ANOVA","r","0.034182954",69,65,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","OSUNewark","USA",1,"158","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.002474351",77,81,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","PacificLutheranUniversity","USA",1,"103","Between","Group x continuous variable","Linear regression with ANOVA","r","0.044903612",62,41,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","abington","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.04990887",58,62,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","SDSU","USA",1,"143","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.009534193",76,67,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","TAMU","USA",1,"179","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.045291003",90,89,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UCDavis","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.032742384",57,63,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UCRiverside","USA",1,"245","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.073395474",121,124,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UFL","USA",1,"137","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.039266954",56,81,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.004200803",44,45,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UniversityOfToronto","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.03707856",48,36,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UVA","USA",1,"195","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070361965",98,97,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","VCU","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.155569945",52,44,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","AshlandUniversity","USA",1,"82","Between","Group x categorical variable","ANOVA","r","-0.008678652",46,36,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","BradleyUniversity","USA",1,"118","Between","Group x categorical variable","ANOVA","r","-0.069552472",61,57,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","CarletonUniversity","USA",1,"42","Between","Group x categorical variable","ANOVA","r","-0.353467441",24,18,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","Ithaca","USA",1,"90","Between","Group x categorical variable","ANOVA","r","0.103833135",36,54,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","MiamiUniversity","USA",1,"95","Between","Group x categorical variable","ANOVA","r","0.116155668",50,45,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","MichiganStateUniversity","USA",1,"307","Between","Group x categorical variable","ANOVA","r","0.063030904",155,152,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","MontanaStateUniversity","USA",1,"121","Between","Group x categorical variable","ANOVA","r","-0.06567505",55,66,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","NovaSoutheasternUniversity","USA",1,"130","Between","Group x categorical variable","ANOVA","r","-0.056464173",66,64,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","OSUNewark","USA",1,"149","Between","Group x categorical variable","ANOVA","r","-0.033728227",77,72,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","PacificLutheranUniversity","USA",1,"99","Between","Group x categorical variable","ANOVA","r","0.096803561",43,56,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","abington","USA",1,"112","Between","Group x categorical variable","ANOVA","r","0.152857125",56,56,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","SDSU","USA",1,"137","Between","Group x categorical variable","ANOVA","r","-0.05827524",61,76,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","TAMU","USA",1,"177","Between","Group x categorical variable","ANOVA","r","0.024475692",91,86,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UCDavis","USA",1,"110","Between","Group x categorical variable","ANOVA","r","-0.018018226",51,59,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UCRiverside","USA",1,"229","Between","Group x categorical variable","ANOVA","r","0.184826814",115,114,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UFL","USA",1,"134","Between","Group x categorical variable","ANOVA","r","-0.077722624",63,71,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UniversityOfSouthernMississippi","USA",1,"86","Between","Group x categorical variable","ANOVA","r","-0.080248006",47,39,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UniversityOfToronto","USA",1,"77","Between","Group x categorical variable","ANOVA","r","-0.049757408",36,41,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UVA","USA",1,"178","Between","Group x categorical variable","ANOVA","r","0.00215665",86,92,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","VCU","USA",1,"92","Between","Group x categorical variable","ANOVA","r","0.282120128",51,41,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","mturk","USA",0,"574","Between","Group x categorical variable","ANOVA","r","0.033607716",292,282,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","AshlandUniversity","USA",1,"84","Within","Conscientiousness with persistance","correlation","r","-0.2113888",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","BradleyUniversity","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.007624803",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","CarletonUniversity","USA",1,"42","Within","Conscientiousness with persistance","correlation","r","-0.06357754",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","Ithaca","USA",1,"90","Within","Conscientiousness with persistance","correlation","r","0.2007985",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","MiamiUniversity","USA",1,"96","Within","Conscientiousness with persistance","correlation","r","-0.06392194",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","MichiganStateUniversity","USA",1,"314","Within","Conscientiousness with persistance","correlation","r","0.02015154",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","MontanaStateUniversity","USA",1,"126","Within","Conscientiousness with persistance","correlation","r","-0.04414049",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","NovaSoutheasternUniversity","USA",1,"131","Within","Conscientiousness with persistance","correlation","r","0.1034288",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","OSUNewark","USA",1,"156","Within","Conscientiousness with persistance","correlation","r","-0.0851966",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","PacificLutheranUniversity","USA",1,"101","Within","Conscientiousness with persistance","correlation","r","-0.1399075",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","abington","USA",1,"118","Within","Conscientiousness with persistance","correlation","r","0.02433485",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","SDSU","USA",1,"139","Within","Conscientiousness with persistance","correlation","r","0.004294308",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","TAMU","USA",1,"179","Within","Conscientiousness with persistance","correlation","r","0.1415478",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UCDavis","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.06029606",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UCRiverside","USA",1,"240","Within","Conscientiousness with persistance","correlation","r","-0.02011479",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UFL","USA",1,"137","Within","Conscientiousness with persistance","correlation","r","0.1644415",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UniversityOfSouthernMississippi","USA",1,"89","Within","Conscientiousness with persistance","correlation","r","-0.05992367",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UniversityOfToronto","USA",1,"80","Within","Conscientiousness with persistance","correlation","r","-0.01726644",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UVA","USA",1,"177","Within","Conscientiousness with persistance","correlation","r","-0.000519782",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","VCU","USA",1,"95","Within","Conscientiousness with persistance","correlation","r","0.000264722",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","mturk","USA",0,"580","Within","Conscientiousness with persistance","correlation","r","0.04721134",NA,NA,"NA _ NA",NA,NA,NA,NA
+"RRR1","Verbal overshadowing 1","mturk","USA",0,"390","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0597722960151803",186,204,"count correct _ count incorrect",91,112,95,92
+"RRR1","Verbal overshadowing 1","Victoria K. Alogna, Jamin Halberstadt, Jonathan Jong, Joshua C. Jackson, Cathy Ng","NZL",1,"113","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.130325814536341",57,56,"count correct _ count incorrect",40,32,17,24
+"RRR1","Verbal overshadowing 1","Stacy Birch","USA",1,"106","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.000714285714285667",50,56,"count correct _ count incorrect",33,37,17,19
+"RRR1","Verbal overshadowing 1","Angela R. Birt, Philip Aucoin","CAN",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0266666666666667",50,51,"count correct _ count incorrect",18,17,32,34
+"RRR1","Verbal overshadowing 1","Maria A. Brandimonte","ITA",1,"140","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.1",70,70,"count correct _ count incorrect",27,34,43,36
+"RRR1","Verbal overshadowing 1","Curt Carlson, Dawn Weatherford, Maria Carlson","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.133333333333333",75,75,"count correct _ count incorrect",42,32,33,43
+"RRR1","Verbal overshadowing 1","Kimberly S. Dellapaolera, Brian H. Bornstein","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.147581792318634",76,74,"count correct _ count incorrect",41,29,35,45
+"RRR1","Verbal overshadowing 1","Jean-Francois Delvenne, Charity Brown, Emma Portch, Tara Zaksaite","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0222283967768825",61,59,"count correct _ count incorrect",40,40,21,19
+"RRR1","Verbal overshadowing 1","Gerald Echterhoff, René Kopietz","DEU",1,"87","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.155885471898197",46,41,"count correct _ count incorrect",24,15,22,26
+"RRR1","Verbal overshadowing 1","Casey M. Eggleston,  Calvin K. Lai, Elizabeth A. Gilbert,","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0713902308105206",69,81,"count correct _ count incorrect",39,40,30,41
+"RRR1","Verbal overshadowing 1","Daniel L. Greenberg, Marino Mugayar-Baldocchi","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0800000000000001",50,50,"count correct _ count incorrect",28,24,22,26
+"RRR1","Verbal overshadowing 1","Andre Kehn, Kimberly Schweitzer, Bradlee W. Gamblin, Kimberly Wiseman, Narina L. Nunez","USA",1,"131","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.049719887955182",68,63,"count correct _ count incorrect",39,33,29,30
+"RRR1","Verbal overshadowing 1","Christopher Koch, Remi Gentry, Jennifer Shaheed, Kelsi Buswell","USA",1,"96","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0833333333333333",48,48,"count correct _ count incorrect",22,26,28,22
+"RRR1","Verbal overshadowing 1","Nicola Mammarella, Beth Fairfield, Alberto Di Domenico","ITA",1,"220","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.118181818181818",110,110,"count correct _ count incorrect",58,45,52,65
+"RRR1","Verbal overshadowing 1","Shannon McCoy, Arielle Rancourt","USA",1,"123","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.154415653093601",61,62,"count correct _ count incorrect",35,26,26,36
+"RRR1","Verbal overshadowing 1","Abigail A. Mitchell, Marilyn S. Petro","USA",1,"113","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0385831752055661",51,62,"count correct _ count incorrect",26,34,25,28
+"RRR1","Verbal overshadowing 1","Robin Musselman, Michael Colarusso","USA",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.164705882352941",50,51,"count correct _ count incorrect",20,12,30,39
+"RRR1","Verbal overshadowing 1","Christopher R. Poirier, Matthew K. Attaya, Kathleen A. McConnaughy, Jessica E. Pappagianopoulos, Griffin A. Sullivan","USA",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.127272727272727",55,55,"count correct _ count incorrect",31,24,24,31
+"RRR1","Verbal overshadowing 1","Eva Rubínová, Marek Vranka, Štepán Bahník","CZE",1,"118","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0694117647058823",50,68,"count correct _ count incorrect",23,36,27,32
+"RRR1","Verbal overshadowing 1","Kyle J. Susa, Jessica K. Swanner, Christian A. Meissner","USA",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0",55,55,"count correct _ count incorrect",23,23,32,32
+"RRR1","Verbal overshadowing 1","W. Burt Thompson","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.14",50,50,"count correct _ count incorrect",21,28,29,22
+"RRR1","Verbal overshadowing 1","Joanna Ulatowska, Aleksandra Cislak","POL",1,"110","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0363636363636364",55,55,"count correct _ count incorrect",38,40,17,15
+"RRR1","Verbal overshadowing 1","Kimberley A. Wade, Ulrike Körner, Melissa, F. Colloff,  Melina A. Kunar","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0833333333333334",60,60,"count correct _ count incorrect",39,34,21,26
+"RRR1","Verbal overshadowing 1","Simon Chu, John E. Marsh, Faye Skelton","GBR",1,"101","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0874509803921568",51,50,"count correct _ count incorrect",32,27,19,23
+"RRR1","Verbal overshadowing 1","John E. Edlund, Austin Lee Nichols","USA",1,"112","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.122790099646416",61,51,"count correct _ count incorrect",26,28,35,23
+"RRR1","Verbal overshadowing 1","Fiona Gabbert, Tim Valentine","GBR",1,"108","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0332761578044597",53,55,"count correct _ count incorrect",31,34,22,21
+"RRR1","Verbal overshadowing 1","Fabio P. Leite","USA",1,"102","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.175384615384615",50,52,"count correct _ count incorrect",28,20,22,32
+"RRR1","Verbal overshadowing 1","Alex H. McIntyre, Stephen R. H. Langton, Peter J. B. Hancock","GBR",1,"103","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0139517345399698",51,52,"count correct _ count incorrect",37,37,14,15
+"RRR1","Verbal overshadowing 1","Robert B. Michael,  Gregory Franco, Mevagh Sanson, Maryanne Garry","NZL",1,"185","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.00199390100867936",98,87,"count correct _ count incorrect",55,49,43,38
+"RRR1","Verbal overshadowing 1","Matthew A. Palmer, Aaron Drummond, James D. Sauer, Daniel V. Zuj, Lauren Hall, Liam Satchell, Glenys Holt, Miriam Rainsford","AUS",1,"107","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0168067226890757",51,56,"count correct _ count incorrect",30,32,21,24
+"RRR1","Verbal overshadowing 1","Verkoeijen, P. P. J. L., Bouwmeester, S., Zwaan, R. A.","NLD",1,"105","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0457516339869282",54,51,"count correct _ count incorrect",30,26,24,25
+"RRR1","Verbal overshadowing 1","Christopher A. Was, Dale Hirsch. Rachel Todaro, Connie Romig","USA",1,"135","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0215100965759438",68,67,"count correct _ count incorrect",38,36,30,31
+"RRR2","Verbal overshadowing 2","mturk","USA",0,"387","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.107521697203472",183,204,"count correct _ count incorrect",104,94,79,110
+"RRR2","Verbal overshadowing 2","Victoria K. Alogna, Jamin Halberstadt, Jonathan Jong, Joshua C. Jackson, Cathy Ng","NZL",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.12",50,50,"count correct _ count incorrect",31,25,19,25
+"RRR2","Verbal overshadowing 2","Stacy Birch","USA",1,"107","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.157232704402516",54,53,"count correct _ count incorrect",36,27,18,26
+"RRR2","Verbal overshadowing 2","Angela R. Birt, Philip Aucoin","CAN",1,"61","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.249462365591398",31,30,"count correct _ count incorrect",16,8,15,22
+"RRR2","Verbal overshadowing 2","Maria A. Brandimonte","ITA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.02",50,50,"count correct _ count incorrect",24,23,26,27
+"RRR2","Verbal overshadowing 2","Curt Carlson, Dawn Weatherford, Maria Carlson","USA",1,"150","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.24",75,75,"count correct _ count incorrect",50,32,25,43
+"RRR2","Verbal overshadowing 2","Kimberly S. Dellapaolera, Brian H. Bornstein","USA",1,"139","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.206053067993366",67,72,"count correct _ count incorrect",38,26,29,46
+"RRR2","Verbal overshadowing 2","Jean-Francois Delvenne, Charity Brown, Emma Portch, Tara Zaksaite","GBR",1,"94","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.259057971014493",48,46,"count correct _ count incorrect",26,13,22,33
+"RRR2","Verbal overshadowing 2","Gerald Echterhoff, René Kopietz","DEU",1,"89","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.216380182002022",46,43,"count correct _ count incorrect",26,15,20,28
+"RRR2","Verbal overshadowing 2","Casey M. Eggleston,  Calvin K. Lai, Elizabeth A. Gilbert","USA",1,"84","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0170164492342598",41,43,"count correct _ count incorrect",15,15,26,28
+"RRR2","Verbal overshadowing 2","Daniel L. Greenberg, Marino Mugayar-Baldocchi","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.133333333333333",30,30,"count correct _ count incorrect",19,15,11,15
+"RRR2","Verbal overshadowing 2","Andre Kehn, Kimberly Schweitzer, Bradlee W. Gamblin, Kimberly Wiseman, Narina L. Nunez","USA",1,"99","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0106122448979591",50,49,"count correct _ count incorrect",24,23,26,26
+"RRR2","Verbal overshadowing 2","Christopher Koch, Remi Gentry, Jennifer Shaheed, Kelsi Buswell","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.1",30,30,"count correct _ count incorrect",14,11,16,19
+"RRR2","Verbal overshadowing 2","Nicola Mammarella, Beth Fairfield, Alberto Di Domenico","ITA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.22",50,50,"count correct _ count incorrect",26,15,24,35
+"RRR2","Verbal overshadowing 2","Shannon K. McCoy, Arielle Rancourt","USA",1,"82","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.146341463414634",41,41,"count correct _ count incorrect",19,13,22,28
+"RRR2","Verbal overshadowing 2","Abigail A. Mitchell, Marilyn S. Petro","USA",1,"92","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.195652173913044",46,46,"count correct _ count incorrect",22,13,24,33
+"RRR2","Verbal overshadowing 2","Robin Musselman, Michael Colarusso","USA",1,"60","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.233333333333333",30,30,"count correct _ count incorrect",14,7,16,23
+"RRR2","Verbal overshadowing 2","Christopher R. Poirier, Matthew K. Attaya, Griffin A. Sullivan, Kathleen A. McConnaughy, Jessica E. Pappagianopoulos","USA",1,"85","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.289911308203991",41,44,"count correct _ count incorrect",24,13,17,31
+"RRR2","Verbal overshadowing 2","Eva Rubínová, Marek Vranka, Štepán Bahník","CZE",1,"102","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0323076923076923",50,52,"count correct _ count incorrect",17,16,33,36
+"RRR2","Verbal overshadowing 2","Kyle J. Susa, Jessica K. Swanner, Christian A. Meissner","USA",1,"100","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.24",50,50,"count correct _ count incorrect",23,11,27,39
+"RRR2","Verbal overshadowing 2","W. Burt Thompson","USA",1,"77","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.0890688259109312",39,38,"count correct _ count incorrect",24,20,15,18
+"RRR2","Verbal overshadowing 2","Joanna Ulatowska, Aleksandra Cislak","POL",1,"94","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.170212765957447",47,47,"count correct _ count incorrect",35,27,12,20
+"RRR2","Verbal overshadowing 2","Kimberley A. Wade, Ulrike Körner, Melissa, F. Colloff,  Melina A. Kunar","GBR",1,"120","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.166666666666667",60,60,"count correct _ count incorrect",36,26,24,34
 "RRR3","Grammar on detailed processing","mturk","USA",0,"260","Between","control vs. treatment","Independent sample t-test","Raw mean difference","-0.130000000000001",130,130,"mean _ SD",5.9,5.77,0.9,0.97
 "RRR3","Grammar on detailed processing","Arnal","USA",1,"67","Between","control vs. treatment","Independent sample t-test","Raw mean difference","-0.00999999999999979",35,32,"mean _ SD",4.88,4.87,1.13,1.12
 "RRR3","Grammar on detailed processing","Berger","USA",1,"75","Between","control vs. treatment","Independent sample t-test","Raw mean difference","-0.45",35,40,"mean _ SD",5.34,4.89,0.97,1.16

@@ -272,7 +272,7 @@ math_cor <- math_cor %>%
          design = "Implicit with explicit attitude", 
          or_stat_test = "Correlation", 
          effect_type = "r",
-         outcomes1_2 = NA,  #Describes the content of outcome1 and outcome2 variables
+         outcomes1_2 = "NA _ NA",  #Describes the content of outcome1 and outcome2 variables, as character instead of simply NA to facilitate working with data
          outcome_t1 = NA, 
          outcome_c1 = NA, 
          outcome_t2 = NA, 
@@ -330,15 +330,15 @@ ml3_stroop <- ml3[[7]]
 
 ml3_stroop <- ml3_stroop %>% 
   rename(Ntotal = N, #Assign names consistent with other datasets
-         effect_size = ES) %>% 
+         effect_size = r) %>% #The correlation used instead of cohen's d because that is what Ml3 use in their meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R")
   mutate(rs = "ML3", #Add some descriptive information 
          in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
          effect = "Stroop effect", 
          B_or_W = "Within", 
          design = "Repeated measurements", 
          or_stat_test = "one sample t-test of std. mean diff", 
-         effect_type = "d",
-         outcomes1_2 = NA, 
+         effect_type = "r",
+         outcomes1_2 = "NA _ NA", #as character instead of simply 'NA' to facilitate later analysis
          outcome_c1 = NA, 
          outcome_t1 = NA, 
          outcome_c2 = NA, 
@@ -512,7 +512,7 @@ for(i in seq_along(internames)){
            design = interdesign[i], 
            or_stat_test = interstat[i], 
            effect_type = "r",
-           outcomes1_2 = NA, 
+           outcomes1_2 = "NA _ NA", #as character instead of simply NA to facilitate working with data
            outcome_c1 = NA, 
            outcome_t1 = NA, 
            outcome_c2 = NA, 
@@ -546,7 +546,7 @@ cons_cor <- cons_cor %>%
          design = "Conscientiousness with persistance", 
          or_stat_test = "correlation", 
          effect_type = "r",
-         outcomes1_2 = NA, 
+         outcomes1_2 = "NA _ NA", #as character instead of simply NA to facilitate working with data
          outcome_c1 = NA, 
          outcome_t1 = NA, 
          outcome_c2 = NA, 
@@ -605,7 +605,7 @@ for(i in seq_along(files)){
            outcome_c1 = X__15) %>%  #n correct control group
     mutate(rs = names(rrr1_2)[i], #Add some descriptive information
            Site = ifelse(grepl("MTURK", Site), "mturk", Site), #if Site name contains MTURK recode to mturk
-           effect = "Verbal overshadowing", 
+           effect = paste("Verbal overshadowing", i), 
            in_lab = ifelse(Site == "mturk", 0, 1), #Only the mturk study was not in the lab
            B_or_W = "Between", 
            design = "Outcome 1 vs. 2 between groups", 

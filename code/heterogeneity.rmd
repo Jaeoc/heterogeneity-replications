@@ -1,0 +1,89 @@
+---
+title: "Heterogeneity in pregregistered multi-lab studies"
+author: "Anton Ohlsson Collentine"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+```
+
+```{r load data}
+library(readr)
+
+dat <- read_csv("../data/collated_summary_data.csv")
+```
+
+```{r metafor}
+library(metafor)
+library(dplyr)
+library(purrr)
+
+est_heterogen_smd_raw <- function(x){
+  if(any(x[, "outcomes1_2"] == "mean _ SD")){ #without the 'any' we will get warnings because we apply 'if' to a vector
+    
+    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives Hedge's g as outcome
+               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+    
+    fit2 <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives Hedge's g as outcome
+               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+    
+  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  #this currently gives us the estimate for the raw effect, but with SE should be possible to back-transform to smd
+    
+    fit <- fit2 <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x)
+    
+    I2_1 <- rep(NA, 3)
+    I2_2 <- confint(fit2)$random[3, ]
+    #In this case, stop function and return dataframe below
+    return(data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3])) #output is for smd, r, and 1 raw difference
+
+  } else if(any(x[, "effect_type"] == "r")){
+    
+    fit <- fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x)
+    
+    I2_1 <- confint(fit2)$random[3, ]
+    I2_2 <- rep(NA, 3)
+    #In this case, stop function and return dataframe below
+    return(data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3])) #output is for smd, r, and 1 raw difference
+    
+  } else{ #for all two-group count effects
+    
+    fit <- rma(measure = "OR2D", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #transformed to smd
+               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
+    
+    fit2 <- rma(measure = "OR", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #transformed to smd
+               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
+  }
+  
+  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
+  I2_2 <- confint(fit2)$random[3, ] #Gives us the I2 estimate and CI for raw values
+
+  data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3]) #output is for smd, r, and 1 raw difference
+}
+
+
+res <- dat %>% 
+  filter(!rs == "RRR5") %>% #Remove RRR5 for now because have not been able to extract sufficient data for it
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), 
+  mutate(dif = s_I2 - r_I2) #Gives us the difference between the two
+
+#Add rs to the data-frame
+het <- dat %>% 
+  select(rs, effect) %>% 
+  group_by(rs, effect) %>% 
+  summarize() %>% 
+  left_join(res) %>% 
+  arrange(rs, desc(s_I2)) #sort by rs and I2 for standardized effect
+
+
+```
+
+```{r table}
+library(kableExtra)
+het %>% knitr::kable("latex", booktabs = T, digits = 1, col.names = c("RS", "Effect", "I2(%)", "ci.lb", "ci.ub", "I2(%)", "ci.lb", "ci.ub", "Dif")) %>% 
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Standardized" = 3, "Unstandardized" = 3, " " = 1))
+  
+```
+**Note**: NA in unstandardized columns comes from correlations which I don't think is possible to calculate the unstandardized version for with the available information. RRR5 I have not yet been able to extract a measure of variance for, hence the NAs. RRR8 I only have the SE for the raw mean difference and have yet to figure out how use this to estimate a standardized effect.
