@@ -5,7 +5,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r load data}
@@ -47,16 +47,12 @@ est_heterogen_smd_raw <- function(x){
     
   } else if(any(x[, "effect_type"] == "r")){
     
-    fit <- fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x)
-    
-    I2_1 <- confint(fit2)$random[3, ]
-    I2_2 <- rep(NA, 3)
-    #In this case, stop function and return dataframe below
-    return(data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3])) #output is for smd, r, and 1 raw difference
-    
+    fit <-rma(measure = "ZCOR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #Fisher's r-to-z transformed correlation coefficient
+    fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #raw correlation
+
   } else{ #for all two-group count effects
     
-    fit <- rma(measure = "OR2D", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized
+    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but this = 'OR2DL'
                n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
     
     fit2 <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #unstandardized
@@ -69,30 +65,47 @@ est_heterogen_smd_raw <- function(x){
   data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3]) #output is for smd, r, and 1 raw difference
 }
 
-
-
+#--------------
 res <- dat %>% 
   filter(!rs == "RRR5") %>% #Remove RRR5 for now because have not been able to extract sufficient data for it
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), 
+  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
   mutate(dif = s_I2 - r_I2) #Gives us the difference between the two
 
+clarify <- c("Allowed vs. forbidden", "Gain vs. loss framing", "Norm of reciprocity", "Low vs. high category scales")
+
+#-----------TEST
+test <- dat %>% filter(effect == "IAT correlation math")
+fit <- rma(measure = "ZCOR", ri = effect_size, ni = Ntotal, test = "knha", data = test)
+fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = test)
+
+#---------
 #Add rs to the data-frame
 het <- dat %>% 
-  select(rs, effect) %>% 
+  select(rs, effect, effect_type) %>% 
   group_by(rs, effect) %>% 
-  summarize() %>% 
+  summarize(effect_type = unique(effect_type)) %>% 
   left_join(res) %>% 
-  arrange(rs, desc(s_I2)) #sort by rs and I2 for standardized effect
+  mutate(effect_type = recode(effect_type, 
+                              d = "Mean diff.",
+                              r = "Correlation",
+                              'Raw mean difference' = "Mean diff.",
+                              'Risk difference' = "OR / RD"),
+         effect_type = ifelse(effect %in% clarify, "OR / RD", effect_type)) %>% 
+  arrange(desc(s_I2)) #sort by rs and I2 for standardized effect
 
 
 ```
 
 ```{r table}
 library(kableExtra)
-het %>% knitr::kable("latex", booktabs = T, digits = 1, col.names = c("RS", "Effect", "I2(%)", "ci.lb", "ci.ub", "I2(%)", "ci.lb", "ci.ub", "Dif")) %>% 
+het %>% knitr::kable("latex", booktabs = T, digits = 1, col.names = c("RS", "Effect", "Effect type", "I2(%)", "ci.lb", "ci.ub", "I2(%)", "ci.lb", "ci.ub", "Dif")) %>% 
   kable_styling() %>% 
-  add_header_above(c(" " = 2, "Standardized" = 3, "Unstandardized" = 3, " " = 1))
+  add_header_above(c(" " = 3, "Standardized" = 3, "Unstandardized" = 3, " " = 1))
   
 ```
-**Note**: I am uncertain if we can speak of standardized/unstandardized in regards to 2x2 tables? For now these correspond to OR/Risk difference for the following five effects {Allowed vs forbidden, gain vs. loss framing, norm of reciprocity, low vs. high category scale, verbal overshadowing}. NA in unstandardized columns comes from correlations which don't seem possible to calculate the unstandardized version for with the available information. RRR5 I have not yet been able to extract a measure of variance for, hence the NAs.
+**Note**: "OR / RD" indicates that the effect was meta-analyzed as odds ratio in 'standardized' columns and risk difference in 'unstandardized' columns. Out of these effects 'Verbal overshadowing' was meta-analyzed by original authors as risk difference and the others as odds ratios. For correlations the standardized version correspond to Fisher's r-to-z transformed correlation and unstandardized to raw correlations. All original authors used raw correlations in their meta-analyzes. For 'Mean diff.' the standardized version corresponds to Hedge's g and unstandardized to raw mean differences. Original authors used different approaches for mean differences. RRR5 I have not yet been able to extract a measure of variance for, hence the NAs. Effects were estimated in metafor using REML with the "knha" correction.
+
+For RRR8 the analysis includes data from all 40 laboratories, the preregistered RRR8 analysis only included 23 laboratories (the rest didn't collect enough male participants) - needs fixing.
+
+

@@ -345,9 +345,7 @@ ml3_stroop <- ml3_stroop %>%
          outcome_t2 = NA,
          ntreatment = NA, 
          ncontrol = NA,
-         country = ifelse("mTurk" %in% Site, #if effect includes mturk sample add country label for that sample
-                          c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA"),
-                          c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA"))) %>%
+         country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
   select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
@@ -425,9 +423,8 @@ for(i in seq_along(ml3t_names)){
            effect_type = "d",
            outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
            Ntotal = ntreatment + ncontrol,
-           country = ifelse("mTurk" %in% Site, #if dataframe includes mturk sample add one country label for that sample
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA"),
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA"))) %>%
+           country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
+                     else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
@@ -473,9 +470,8 @@ for(i in seq_along(nonp_names)){
            outcome_t2 = NA,
            ntreatment = NA, #Assign names consistent with other datasets
            ncontrol = NA,
-           country = ifelse("mTurk" %in% Site, #if effect includes mturk sample add country label for that sample
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA"),
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA"))) %>%
+           country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
+                     else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
@@ -517,9 +513,8 @@ for(i in seq_along(internames)){
            outcome_t1 = NA, 
            outcome_c2 = NA, 
            outcome_t2 = NA,
-           country = ifelse("mTurk" %in% Site, #if effect includes mturk sample add country label for that sample
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA"),
-                            c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA"))) %>%
+           country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
+                     else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
@@ -553,9 +548,7 @@ cons_cor <- cons_cor %>%
          outcome_t2 = NA,
          ntreatment = NA, 
          ncontrol = NA,
-         country = ifelse("mTurk" %in% Site, #if effect includes mturk sample add country label for that sample
-                          c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA"),
-                          c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA"))) %>%
+         country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
   select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
@@ -753,7 +746,7 @@ rrr5 <- rrr5 %>%
   separate(V1, into = c("Site", "N", "Male", "Female", "unreported", "Mean"), sep = " ") %>% 
   mutate(Ntotal = as.numeric(N) - as.numeric(V5)) %>% #total minus excluded total gives us the used total
   select(Site, Ntotal) %>% 
-  mutate(rs = "RRR5", #Add some descriptive information, %%FIX EVERYTHING BELOW
+  mutate(rs = "RRR5", #Add some descriptive information
          effect = "Commitment on forgiveness", 
          in_lab = 1, # "Participants were tested in-person", p.752 of RRR5
          B_or_W = "Between", 
@@ -771,8 +764,6 @@ rrr5 <- rrr5 %>%
          effect_size = outcome_t1 - outcome_c1) %>% 
   select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
-
-
 
 
 #******************************************
