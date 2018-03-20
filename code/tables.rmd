@@ -72,8 +72,12 @@ est_heterogen_smd_raw <- function(x){
     
   } else if(any(x[, "effect_type"] == "r")){
     
-    fit <-rma(measure = "ZCOR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #Fisher's r-to-z transformed correlation coefficient
-    fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #raw correlation
+    fit <- fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #raw correlation
+    
+    I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
+    I2_2 <- rep(NA, 3) #No unstandardized version
+
+    return(data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2],      r_ci.ub = I2_2[3]))
 
   } else{ #for all two-group count effects
     
