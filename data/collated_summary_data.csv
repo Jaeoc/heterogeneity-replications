@@ -575,7 +575,7 @@
 "ML1","IAT correlation math","wpi","USA",1,"80","Within","Implicit with explicit attitude","Correlation","r","0.32300000000000001",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","AshlandUniversity","USA",1,"84","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.455402382",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","BradleyUniversity","USA",1,"119","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.411475205",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Stroop effect","CarletonUniversity","USA",1,"44","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.485026929",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","CarletonUniversity","CAN",1,"44","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.485026929",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","Ithaca","USA",1,"91","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.520246163",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","MiamiUniversity","USA",1,"96","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.372214773",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","MichiganStateUniversity","USA",1,"318","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.332263561",NA,NA,"NA _ NA",NA,NA,NA,NA
@@ -590,13 +590,13 @@
 "ML3","Stroop effect","UCRiverside","USA",1,"242","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.478762772",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","UFL","USA",1,"137","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.352543415",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","UniversityOfSouthernMississippi","USA",1,"89","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.408933594",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Stroop effect","UniversityOfToronto","USA",1,"81","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.312704074",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Stroop effect","UniversityOfToronto","CAN",1,"81","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.312704074",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","UVA","USA",1,"194","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.400438887",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","VCU","USA",1,"95","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.433165105",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Stroop effect","mturk","USA",0,"620","Within","Repeated measurements","one sample t-test of std. mean diff","r","0.376788873",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Power and Perspective","AshlandUniversity","USA",1,"84","Between","control vs. treatment","Independent samples t-test","d","0.01",53,31,"mean _ SD",3.698,3.71,1.716,1.755
 "ML3","Power and Perspective","BradleyUniversity","USA",1,"112","Between","control vs. treatment","Independent samples t-test","d","0.41",63,49,"mean _ SD",3.857,4.469,1.625,1.26
-"ML3","Power and Perspective","CarletonUniversity","USA",1,"32","Between","control vs. treatment","Independent samples t-test","d","-0.27",17,15,"mean _ SD",4.059,3.643,1.56,1.447
+"ML3","Power and Perspective","CarletonUniversity","CAN",1,"32","Between","control vs. treatment","Independent samples t-test","d","-0.27",17,15,"mean _ SD",4.059,3.643,1.56,1.447
 "ML3","Power and Perspective","Ithaca","USA",1,"88","Between","control vs. treatment","Independent samples t-test","d","-0.23",50,38,"mean _ SD",4.12,3.784,1.438,1.475
 "ML3","Power and Perspective","MiamiUniversity","USA",1,"89","Between","control vs. treatment","Independent samples t-test","d","-0.19",49,40,"mean _ SD",3.755,3.45,1.562,1.568
 "ML3","Power and Perspective","MichiganStateUniversity","USA",1,"240","Between","control vs. treatment","Independent samples t-test","d","0.12",121,119,"mean _ SD",3.876,4.059,1.509,1.603
@@ -611,13 +611,13 @@
 "ML3","Power and Perspective","UCRiverside","USA",1,"232","Between","control vs. treatment","Independent samples t-test","d","0.02",116,116,"mean _ SD",3.513,3.544,1.423,1.662
 "ML3","Power and Perspective","UFL","USA",1,"129","Between","control vs. treatment","Independent samples t-test","d","0.21",59,70,"mean _ SD",3.61,3.943,1.587,1.587
 "ML3","Power and Perspective","UniversityOfSouthernMississippi","USA",1,"82","Between","control vs. treatment","Independent samples t-test","d","-0.39",41,41,"mean _ SD",3.951,3.341,1.516,1.606
-"ML3","Power and Perspective","UniversityOfToronto","USA",1,"64","Between","control vs. treatment","Independent samples t-test","d","-0.11",27,37,"mean _ SD",3.852,3.676,1.486,1.668
+"ML3","Power and Perspective","UniversityOfToronto","CAN",1,"64","Between","control vs. treatment","Independent samples t-test","d","-0.11",27,37,"mean _ SD",3.852,3.676,1.486,1.668
 "ML3","Power and Perspective","UVA","USA",1,"177","Between","control vs. treatment","Independent samples t-test","d","0.03",91,86,"mean _ SD",3.867,3.906,1.486,1.419
 "ML3","Power and Perspective","VCU","USA",1,"91","Between","control vs. treatment","Independent samples t-test","d","0.2",40,51,"mean _ SD",3.75,4.059,1.581,1.489
 "ML3","Power and Perspective","mturk","USA",0,"591","Between","control vs. treatment","Independent samples t-test","d","-0.06",306,285,"mean _ SD",3.762,3.665,1.488,1.505
 "ML3","Warmth Perceptions","AshlandUniversity","USA",1,"79","Between","control vs. treatment","Independent samples t-test","d","-0.272482199243946",42,37,"mean _ SD",70.667,69.514,3.836,4.641
 "ML3","Warmth Perceptions","BradleyUniversity","USA",1,"116","Between","control vs. treatment","Independent samples t-test","d","-0.108958824028693",46,70,"mean _ SD",70.13,69.671,4.598,3.941
-"ML3","Warmth Perceptions","CarletonUniversity","USA",1,"37","Between","control vs. treatment","Independent samples t-test","d","-0.0583907410394358",16,21,"mean _ SD",67.375,67,5.277,7.162
+"ML3","Warmth Perceptions","CarletonUniversity","CAN",1,"37","Between","control vs. treatment","Independent samples t-test","d","-0.0583907410394358",16,21,"mean _ SD",67.375,67,5.277,7.162
 "ML3","Warmth Perceptions","Ithaca","USA",1,"83","Between","control vs. treatment","Independent samples t-test","d","0.262609301118695",45,38,"mean _ SD",66.2,67.447,4.934,4.518
 "ML3","Warmth Perceptions","MiamiUniversity","USA",1,"94","Between","control vs. treatment","Independent samples t-test","d","-0.0910878516504992",40,54,"mean _ SD",70.6,70.352,2.79,2.672
 "ML3","Warmth Perceptions","MichiganStateUniversity","USA",1,"298","Between","control vs. treatment","Independent samples t-test","d","0.0742083845002141",137,161,"mean _ SD",69.336,69.64,4.31,3.906
@@ -632,13 +632,13 @@
 "ML3","Warmth Perceptions","UCRiverside","USA",1,"237","Between","control vs. treatment","Independent samples t-test","d","-0.139368210330544",127,110,"mean _ SD",74.008,73.5,3.749,3.521
 "ML3","Warmth Perceptions","UFL","USA",1,"132","Between","control vs. treatment","Independent samples t-test","d","0.0135846082121632",77,55,"mean _ SD",73.61,73.655,3.277,3.362
 "ML3","Warmth Perceptions","UniversityOfSouthernMississippi","USA",1,"87","Between","control vs. treatment","Independent samples t-test","d","0.229457446892512",45,42,"mean _ SD",71.689,72.714,4.111,4.82
-"ML3","Warmth Perceptions","UniversityOfToronto","USA",1,"70","Between","control vs. treatment","Independent samples t-test","d","0.25490080320156",40,30,"mean _ SD",72.325,73.567,5.25,4.313
+"ML3","Warmth Perceptions","UniversityOfToronto","CAN",1,"70","Between","control vs. treatment","Independent samples t-test","d","0.25490080320156",40,30,"mean _ SD",72.325,73.567,5.25,4.313
 "ML3","Warmth Perceptions","UVA","USA",1,"189","Between","control vs. treatment","Independent samples t-test","d","0.0818094167843874",112,77,"mean _ SD",71.089,71.39,3.613,3.774
 "ML3","Warmth Perceptions","VCU","USA",1,"92","Between","control vs. treatment","Independent samples t-test","d","-0.295468694718555",40,52,"mean _ SD",73.725,72.231,5.593,4.604
 "ML3","Warmth Perceptions","mturk","USA",0,"575","Between","control vs. treatment","Independent samples t-test","d","0.10339801838783",293,282,"mean _ SD",71.055,71.596,5.09,5.376
 "ML3","Weight Embodiment","AshlandUniversity","USA",1,"72","Between","control vs. treatment","Independent samples t-test","d","0.117089047070034",38,34,"mean _ SD",6.342,6.471,1.097,1.107
 "ML3","Weight Embodiment","BradleyUniversity","USA",1,"109","Between","control vs. treatment","Independent samples t-test","d","0.197594651739795",56,53,"mean _ SD",6.13,6.346,1.26,0.883
-"ML3","Weight Embodiment","CarletonUniversity","USA",1,"39","Between","control vs. treatment","Independent samples t-test","d","-0.103012368148568",20,19,"mean _ SD",6.105,6,0.809,1.202
+"ML3","Weight Embodiment","CarletonUniversity","CAN",1,"39","Between","control vs. treatment","Independent samples t-test","d","-0.103012368148568",20,19,"mean _ SD",6.105,6,0.809,1.202
 "ML3","Weight Embodiment","Ithaca","USA",1,"64","Between","control vs. treatment","Independent samples t-test","d","0.0550507844007864",32,32,"mean _ SD",6.032,6.097,1.251,1.106
 "ML3","Weight Embodiment","MiamiUniversity","USA",1,"82","Between","control vs. treatment","Independent samples t-test","d","0.117187895861713",42,40,"mean _ SD",5.951,6.1,1.341,1.194
 "ML3","Weight Embodiment","MichiganStateUniversity","USA",1,"274","Between","control vs. treatment","Independent samples t-test","d","0.0165182408569228",142,132,"mean _ SD",6.029,6.046,1.096,0.952
@@ -653,12 +653,12 @@
 "ML3","Weight Embodiment","UCRiverside","USA",1,"212","Between","control vs. treatment","Independent samples t-test","d","-0.0316779984219989",107,105,"mean _ SD",6.178,6.144,1.008,1.136
 "ML3","Weight Embodiment","UFL","USA",1,"121","Between","control vs. treatment","Independent samples t-test","d","0.0951309843270357",61,60,"mean _ SD",6,6.083,1,0.72
 "ML3","Weight Embodiment","UniversityOfSouthernMississippi","USA",1,"79","Between","control vs. treatment","Independent samples t-test","d","0.0511228420699587",38,41,"mean _ SD",6.243,6.3,1.116,1.114
-"ML3","Weight Embodiment","UniversityOfToronto","USA",1,"73","Between","control vs. treatment","Independent samples t-test","d","-0.343581288726192",36,37,"mean _ SD",6.083,5.75,0.806,1.105
+"ML3","Weight Embodiment","UniversityOfToronto","CAN",1,"73","Between","control vs. treatment","Independent samples t-test","d","-0.343581288726192",36,37,"mean _ SD",6.083,5.75,0.806,1.105
 "ML3","Weight Embodiment","UVA","USA",1,"171","Between","control vs. treatment","Independent samples t-test","d","0.0909597229342456",86,85,"mean _ SD",6.083,6.163,0.881,0.878
 "ML3","Weight Embodiment","VCU","USA",1,"89","Between","control vs. treatment","Independent samples t-test","d","0.119373445731832",44,45,"mean _ SD",6.186,6.289,1.006,0.695
 "ML3","Availability","AshlandUniversity","USA",1,"77","Between","Choice of category 1 or 2","sign test","r","-0.14349931",NA,NA,"count letter position (first, third) _ NA",44,33,NA,NA
 "ML3","Availability","BradleyUniversity","USA",1,"112","Between","Choice of category 1 or 2","sign test","r","0",NA,NA,"count letter position (first, third) _ NA",56,56,NA,NA
-"ML3","Availability","CarletonUniversity","USA",1,"37","Between","Choice of category 1 or 2","sign test","r","0.133786376",NA,NA,"count letter position (first, third) _ NA",16,21,NA,NA
+"ML3","Availability","CarletonUniversity","CAN",1,"37","Between","Choice of category 1 or 2","sign test","r","0.133786376",NA,NA,"count letter position (first, third) _ NA",16,21,NA,NA
 "ML3","Availability","Ithaca","USA",1,"86","Between","Choice of category 1 or 2","sign test","r","-0.114247023",NA,NA,"count letter position (first, third) _ NA",48,38,NA,NA
 "ML3","Availability","MiamiUniversity","USA",1,"91","Between","Choice of category 1 or 2","sign test","r","0.205517234",NA,NA,"count letter position (first, third) _ NA",36,55,NA,NA
 "ML3","Availability","MichiganStateUniversity","USA",1,"303","Between","Choice of category 1 or 2","sign test","r","-0.004999938",NA,NA,"count letter position (first, third) _ NA",152,151,NA,NA
@@ -673,13 +673,13 @@
 "ML3","Availability","UCRiverside","USA",1,"217","Between","Choice of category 1 or 2","sign test","r","0.10442593",NA,NA,"count letter position (first, third) _ NA",97,120,NA,NA
 "ML3","Availability","UFL","USA",1,"129","Between","Choice of category 1 or 2","sign test","r","-0.039968038",NA,NA,"count letter position (first, third) _ NA",67,62,NA,NA
 "ML3","Availability","UniversityOfSouthernMississippi","USA",1,"80","Between","Choice of category 1 or 2","sign test","r","0.049937617",NA,NA,"count letter position (first, third) _ NA",38,42,NA,NA
-"ML3","Availability","UniversityOfToronto","USA",1,"78","Between","Choice of category 1 or 2","sign test","r","0.074789948",NA,NA,"count letter position (first, third) _ NA",36,42,NA,NA
+"ML3","Availability","UniversityOfToronto","CAN",1,"78","Between","Choice of category 1 or 2","sign test","r","0.074789948",NA,NA,"count letter position (first, third) _ NA",36,42,NA,NA
 "ML3","Availability","UVA","USA",1,"190","Between","Choice of category 1 or 2","sign test","r","0.074789948",NA,NA,"count letter position (first, third) _ NA",88,102,NA,NA
 "ML3","Availability","VCU","USA",1,"91","Between","Choice of category 1 or 2","sign test","r","0.119145221",NA,NA,"count letter position (first, third) _ NA",40,51,NA,NA
 "ML3","Availability","mturk","USA",0,"591","Between","Choice of category 1 or 2","sign test","r","0.089637699",NA,NA,"count letter position (first, third) _ NA",269,322,NA,NA
 "ML3","Metaphor","AshlandUniversity","USA",1,"44","Between","Choice of category 1 or 2","Chisquare","r","0.359291738",NA,NA,"count prime (consistent, inconsistent) _ NA",14,30,NA,NA
 "ML3","Metaphor","BradleyUniversity","USA",1,"58","Between","Choice of category 1 or 2","Chisquare","r","0.034978582",NA,NA,"count prime (consistent, inconsistent) _ NA",28,30,NA,NA
-"ML3","Metaphor","CarletonUniversity","USA",1,"23","Between","Choice of category 1 or 2","Chisquare","r","0.044954507",NA,NA,"count prime (consistent, inconsistent) _ NA",11,12,NA,NA
+"ML3","Metaphor","CarletonUniversity","CAN",1,"23","Between","Choice of category 1 or 2","Chisquare","r","0.044954507",NA,NA,"count prime (consistent, inconsistent) _ NA",11,12,NA,NA
 "ML3","Metaphor","Ithaca","USA",1,"39","Between","Choice of category 1 or 2","Chisquare","r","0.27852445",NA,NA,"count prime (consistent, inconsistent) _ NA",14,25,NA,NA
 "ML3","Metaphor","MiamiUniversity","USA",1,"52","Between","Choice of category 1 or 2","Chisquare","r","0.039968038",NA,NA,"count prime (consistent, inconsistent) _ NA",25,27,NA,NA
 "ML3","Metaphor","MichiganStateUniversity","USA",1,"159","Between","Choice of category 1 or 2","Chisquare","r","0.044954507",NA,NA,"count prime (consistent, inconsistent) _ NA",76,83,NA,NA
@@ -694,12 +694,12 @@
 "ML3","Metaphor","UCRiverside","USA",1,"110","Between","Choice of category 1 or 2","Chisquare","r","0.054917001",NA,NA,"count prime (consistent, inconsistent) _ NA",52,58,NA,NA
 "ML3","Metaphor","UFL","USA",1,"72","Between","Choice of category 1 or 2","Chisquare","r","0.109340479",NA,NA,"count prime (consistent, inconsistent) _ NA",32,40,NA,NA
 "ML3","Metaphor","UniversityOfSouthernMississippi","USA",1,"39","Between","Choice of category 1 or 2","Chisquare","r","0.024992191",NA,NA,"count prime (consistent, inconsistent) _ NA",19,20,NA,NA
-"ML3","Metaphor","UniversityOfToronto","USA",1,"37","Between","Choice of category 1 or 2","Chisquare","r","0.23796223",NA,NA,"count prime (consistent, inconsistent) _ NA",14,23,NA,NA
+"ML3","Metaphor","UniversityOfToronto","CAN",1,"37","Between","Choice of category 1 or 2","Chisquare","r","0.23796223",NA,NA,"count prime (consistent, inconsistent) _ NA",14,23,NA,NA
 "ML3","Metaphor","UVA","USA",1,"104","Between","Choice of category 1 or 2","Chisquare","r","0.019996001",NA,NA,"count prime (consistent, inconsistent) _ NA",51,53,NA,NA
 "ML3","Metaphor","VCU","USA",1,"51","Between","Choice of category 1 or 2","Chisquare","r","-0.059892291",NA,NA,"count prime (consistent, inconsistent) _ NA",27,24,NA,NA
 "ML3","Credentials interaction","AshlandUniversity","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","0.259848111",42,42,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.040245419",67,53,"NA _ NA",NA,NA,NA,NA
-"ML3","Credentials interaction","CarletonUniversity","USA",1,"44","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.071159694",22,22,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","CarletonUniversity","CAN",1,"44","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.071159694",22,22,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.182461713",46,46,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","MiamiUniversity","USA",1,"93","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.181650177",41,52,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","MichiganStateUniversity","USA",1,"316","Between","Group x continuous variable","Linear regression with ANOVA","r","0.071742506",161,155,"NA _ NA",NA,NA,NA,NA
@@ -714,13 +714,13 @@
 "ML3","Credentials interaction","UCRiverside","USA",1,"243","Between","Group x continuous variable","Linear regression with ANOVA","r","0",123,120,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","UFL","USA",1,"136","Between","Group x continuous variable","Linear regression with ANOVA","r","0.008560203",69,67,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.176343889",46,43,"NA _ NA",NA,NA,NA,NA
-"ML3","Credentials interaction","UniversityOfToronto","USA",1,"80","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070023118",50,30,"NA _ NA",NA,NA,NA,NA
+"ML3","Credentials interaction","UniversityOfToronto","CAN",1,"80","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070023118",50,30,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","UVA","USA",1,"192","Between","Group x continuous variable","Linear regression with ANOVA","r","0.001581137",93,99,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","VCU","USA",1,"94","Between","Group x continuous variable","Linear regression with ANOVA","r","0.064149959",46,48,"NA _ NA",NA,NA,NA,NA
 "ML3","Credentials interaction","mturk","USA",0,"639","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.028247684",293,346,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","AshlandUniversity","USA",1,"85","Between","Group x continuous variable","Linear regression with ANOVA","r","0.08467124",44,41,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","BradleyUniversity","USA",1,"120","Between","Group x continuous variable","Linear regression with ANOVA","r","0.060594178",56,64,"NA _ NA",NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","CarletonUniversity","USA",1,"45","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.031731371",21,24,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","CarletonUniversity","CAN",1,"45","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.031731371",21,24,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","Ithaca","USA",1,"92","Between","Group x continuous variable","Linear regression with ANOVA","r","0.025125854",45,47,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","MiamiUniversity","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.099823941",48,48,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","MichiganStateUniversity","USA",1,"318","Between","Group x continuous variable","Linear regression with ANOVA","r","0.079100139",155,163,"NA _ NA",NA,NA,NA,NA
@@ -735,12 +735,12 @@
 "ML3","Elaboration likelihood interaction","UCRiverside","USA",1,"245","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.073395474",121,124,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","UFL","USA",1,"137","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.039266954",56,81,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","UniversityOfSouthernMississippi","USA",1,"89","Between","Group x continuous variable","Linear regression with ANOVA","r","0.004200803",44,45,"NA _ NA",NA,NA,NA,NA
-"ML3","Elaboration likelihood interaction","UniversityOfToronto","USA",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.03707856",48,36,"NA _ NA",NA,NA,NA,NA
+"ML3","Elaboration likelihood interaction","UniversityOfToronto","CAN",1,"84","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.03707856",48,36,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","UVA","USA",1,"195","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.070361965",98,97,"NA _ NA",NA,NA,NA,NA
 "ML3","Elaboration likelihood interaction","VCU","USA",1,"96","Between","Group x continuous variable","Linear regression with ANOVA","r","-0.155569945",52,44,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","AshlandUniversity","USA",1,"82","Between","Group x categorical variable","ANOVA","r","-0.008678652",46,36,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","BradleyUniversity","USA",1,"118","Between","Group x categorical variable","ANOVA","r","-0.069552472",61,57,"NA _ NA",NA,NA,NA,NA
-"ML3","Subjective Distance interaction","CarletonUniversity","USA",1,"42","Between","Group x categorical variable","ANOVA","r","-0.353467441",24,18,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","CarletonUniversity","CAN",1,"42","Between","Group x categorical variable","ANOVA","r","-0.353467441",24,18,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","Ithaca","USA",1,"90","Between","Group x categorical variable","ANOVA","r","0.103833135",36,54,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","MiamiUniversity","USA",1,"95","Between","Group x categorical variable","ANOVA","r","0.116155668",50,45,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","MichiganStateUniversity","USA",1,"307","Between","Group x categorical variable","ANOVA","r","0.063030904",155,152,"NA _ NA",NA,NA,NA,NA
@@ -755,13 +755,13 @@
 "ML3","Subjective Distance interaction","UCRiverside","USA",1,"229","Between","Group x categorical variable","ANOVA","r","0.184826814",115,114,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","UFL","USA",1,"134","Between","Group x categorical variable","ANOVA","r","-0.077722624",63,71,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","UniversityOfSouthernMississippi","USA",1,"86","Between","Group x categorical variable","ANOVA","r","-0.080248006",47,39,"NA _ NA",NA,NA,NA,NA
-"ML3","Subjective Distance interaction","UniversityOfToronto","USA",1,"77","Between","Group x categorical variable","ANOVA","r","-0.049757408",36,41,"NA _ NA",NA,NA,NA,NA
+"ML3","Subjective Distance interaction","UniversityOfToronto","CAN",1,"77","Between","Group x categorical variable","ANOVA","r","-0.049757408",36,41,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","UVA","USA",1,"178","Between","Group x categorical variable","ANOVA","r","0.00215665",86,92,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","VCU","USA",1,"92","Between","Group x categorical variable","ANOVA","r","0.282120128",51,41,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","mturk","USA",0,"574","Between","Group x categorical variable","ANOVA","r","0.033607716",292,282,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","AshlandUniversity","USA",1,"84","Within","Conscientiousness with persistance","correlation","r","-0.2113888",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","BradleyUniversity","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.007624803",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","CarletonUniversity","USA",1,"42","Within","Conscientiousness with persistance","correlation","r","-0.06357754",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","CarletonUniversity","CAN",1,"42","Within","Conscientiousness with persistance","correlation","r","-0.06357754",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","Ithaca","USA",1,"90","Within","Conscientiousness with persistance","correlation","r","0.2007985",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","MiamiUniversity","USA",1,"96","Within","Conscientiousness with persistance","correlation","r","-0.06392194",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","MichiganStateUniversity","USA",1,"314","Within","Conscientiousness with persistance","correlation","r","0.02015154",NA,NA,"NA _ NA",NA,NA,NA,NA
@@ -776,7 +776,7 @@
 "ML3","Conscientiousness and persistance","UCRiverside","USA",1,"240","Within","Conscientiousness with persistance","correlation","r","-0.02011479",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","UFL","USA",1,"137","Within","Conscientiousness with persistance","correlation","r","0.1644415",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","UniversityOfSouthernMississippi","USA",1,"89","Within","Conscientiousness with persistance","correlation","r","-0.05992367",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfToronto","USA",1,"80","Within","Conscientiousness with persistance","correlation","r","-0.01726644",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistance","UniversityOfToronto","CAN",1,"80","Within","Conscientiousness with persistance","correlation","r","-0.01726644",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","UVA","USA",1,"177","Within","Conscientiousness with persistance","correlation","r","-0.000519782",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","VCU","USA",1,"95","Within","Conscientiousness with persistance","correlation","r","0.000264722",NA,NA,"NA _ NA",NA,NA,NA,NA
 "ML3","Conscientiousness and persistance","mturk","USA",0,"580","Within","Conscientiousness with persistance","correlation","r","0.04721134",NA,NA,"NA _ NA",NA,NA,NA,NA
@@ -952,30 +952,17 @@
 "RRR8","Professor priming","Aveyard","ARE",1,"205","Between","control vs. treatment","Confidence Interval","Raw mean difference","-3.99",93,112,"mean _ SE",45.81,41.82,1.75,NA
 "RRR8","Professor priming","Baskin","USA",1,"130","Between","control vs. treatment","Confidence Interval","Raw mean difference","4.08",64,66,"mean _ SE",45.52,49.6,2.19,NA
 "RRR8","Professor priming","Bialobrzeska","POL",1,"136","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.12",72,64,"mean _ SE",52.82,52.71,2.03,NA
-"RRR8","Professor priming","Birt","CAN",1,"108","Between","control vs. treatment","Confidence Interval","Raw mean difference","-4.97",59,49,"mean _ SE",45.31,40.34,2.71,NA
 "RRR8","Professor priming","Boot","USA",1,"150","Between","control vs. treatment","Confidence Interval","Raw mean difference","-4.99",86,64,"mean _ SE",52.91,47.92,2.39,NA
 "RRR8","Professor priming","Braithwaite","USA",1,"136","Between","control vs. treatment","Confidence Interval","Raw mean difference","4.01",70,66,"mean _ SE",57,61.01,2.19,NA
-"RRR8","Professor priming","Chartier","USA",1,"124","Between","control vs. treatment","Confidence Interval","Raw mean difference","3.23",62,62,"mean _ SE",47.96,51.18,2.34,NA
-"RRR8","Professor priming","Cramwinckel","NLD",1,"45","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.93",27,18,"mean _ SE",54.44,53.52,2.79,NA
-"RRR8","Professor priming","DiDonato","USA",1,"159","Between","control vs. treatment","Confidence Interval","Raw mean difference","3.14",72,87,"mean _ SE",50,53.14,2.14,NA
-"RRR8","Professor priming","Harreveld","NLD",1,"104","Between","control vs. treatment","Confidence Interval","Raw mean difference","2.67",59,45,"mean _ SE",54.07,56.74,2.08,NA
 "RRR8","Professor priming","Karpinski","USA",1,"157","Between","control vs. treatment","Confidence Interval","Raw mean difference","1.38",80,77,"mean _ SE",51,52.38,2.27,NA
 "RRR8","Professor priming","Keller","USA",1,"431","Between","control vs. treatment","Confidence Interval","Raw mean difference","0.17",201,230,"mean _ SE",51.03,51.2,1.33,NA
 "RRR8","Professor priming","Klein","BEL",1,"242","Between","control vs. treatment","Confidence Interval","Raw mean difference","0.88",116,126,"mean _ SE",51.61,52.49,1.49,NA
 "RRR8","Professor priming","Koppel","SWE",1,"139","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.2",76,63,"mean _ SE",58.25,58.04,2.08,NA
-"RRR8","Professor priming","Krahmer","NLD",1,"99","Between","control vs. treatment","Confidence Interval","Raw mean difference","0.78",49,50,"mean _ SE",51.02,51.8,2.64,NA
-"RRR8","Professor priming","Legal","FRA",1,"125","Between","control vs. treatment","Confidence Interval","Raw mean difference","-1.5",63,62,"mean _ SE",50.32,48.82,2.13,NA
-"RRR8","Professor priming","Massar","NLD",1,"95","Between","control vs. treatment","Confidence Interval","Raw mean difference","-4.64",43,52,"mean _ SE",58.68,54.04,2.23,NA
-"RRR8","Professor priming","McBee","USA",1,"65","Between","control vs. treatment","Confidence Interval","Raw mean difference","-8.38",32,33,"mean _ SE",56.46,48.08,3.36,NA
 "RRR8","Professor priming","McLatchie","GBR",1,"107","Between","control vs. treatment","Confidence Interval","Raw mean difference","-2.16",54,53,"mean _ SE",55.37,53.21,2.52,NA
 "RRR8","Professor priming","Newell","AUS",1,"122","Between","control vs. treatment","Confidence Interval","Raw mean difference","1.66",58,64,"mean _ SE",52.82,54.48,2.41,NA
-"RRR8","Professor priming","O’Donnell","USA",1,"200","Between","control vs. treatment","Confidence Interval","Raw mean difference","1.58",94,106,"mean _ SE",48.23,49.81,2.5,NA
-"RRR8","Professor priming","Ozdogru","TUR",1,"117","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.15",67,50,"mean _ SE",43.08,42.93,1.99,NA
+"RRR8","Professor priming","O'Donnell","USA",1,"200","Between","control vs. treatment","Confidence Interval","Raw mean difference","1.58",94,106,"mean _ SE",48.23,49.81,2.5,NA
 "RRR8","Professor priming","Philipp","NZL",1,"140","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.43",70,70,"mean _ SE",52.81,52.38,2.43,NA
-"RRR8","Professor priming","Rentzelas","GBR",1,"100","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.61",44,56,"mean _ SE",45.61,45,2.18,NA
-"RRR8","Professor priming","Roer","DEU",1,"191","Between","control vs. treatment","Confidence Interval","Raw mean difference","-2.05",98,93,"mean _ SE",54.59,52.54,1.79,NA
 "RRR8","Professor priming","Ropovik","SVK",1,"199","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.48",95,104,"mean _ SE",52.95,52.47,1.6,NA
-"RRR8","Professor priming","Sackett","USA",1,"97","Between","control vs. treatment","Confidence Interval","Raw mean difference","0.56",54,43,"mean _ SE",57.65,58.22,3.34,NA
 "RRR8","Professor priming","Saunders","CAN",1,"152","Between","control vs. treatment","Confidence Interval","Raw mean difference","-1.87",85,67,"mean _ SE",45.8,43.93,2.26,NA
 "RRR8","Professor priming","Schulte-Mecklenbeck","CHE",1,"110","Between","control vs. treatment","Confidence Interval","Raw mean difference","4.24",60,50,"mean _ SE",54.22,58.47,2.23,NA
 "RRR8","Professor priming","Shanks","GBR",1,"135","Between","control vs. treatment","Confidence Interval","Raw mean difference","0.11",63,72,"mean _ SE",53.17,53.29,2.56,NA
@@ -983,8 +970,4 @@
 "RRR8","Professor priming","Steffens","AUS",1,"144","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.84",76,68,"mean _ SE",48.68,47.84,2.44,NA
 "RRR8","Professor priming","Susa","USA",1,"169","Between","control vs. treatment","Confidence Interval","Raw mean difference","-0.63",76,93,"mean _ SE",42.68,42.04,2.06,NA
 "RRR8","Professor priming","Tamayo","COL",1,"208","Between","control vs. treatment","Confidence Interval","Raw mean difference","1.41",102,106,"mean _ SE",53.46,54.87,1.74,NA
-"RRR8","Professor priming","Tong","SGP",1,"124","Between","control vs. treatment","Confidence Interval","Raw mean difference","-1.02",62,62,"mean _ SE",45.81,44.78,2.33,NA
 "RRR8","Professor priming","Vazire","USA",1,"277","Between","control vs. treatment","Confidence Interval","Raw mean difference","2.89",140,137,"mean _ SE",49.79,52.68,1.67,NA
-"RRR8","Professor priming","Willis","ESP",1,"251","Between","control vs. treatment","Confidence Interval","Raw mean difference","2.78",123,128,"mean _ SE",48.05,50.83,1.57,NA
-"RRR8","Professor priming","Wood","USA",1,"60","Between","control vs. treatment","Confidence Interval","Raw mean difference","3.55",31,29,"mean _ SE",46.45,50,3.64,NA
-"RRR8","Professor priming","Zheng","USA",1,"97","Between","control vs. treatment","Confidence Interval","Raw mean difference","-3.01",47,50,"mean _ SE",51.28,48.27,2.66,NA

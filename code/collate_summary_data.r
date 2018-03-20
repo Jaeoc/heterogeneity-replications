@@ -1,8 +1,8 @@
 #*************************************************************************************************************************
 
 ##Project: MA heterogeneity project
-##Code: Anton Ohlsson Collentine
 ##Script purpose: This script extracts, cleans and formats summary data from Many labs 1 & 3 and Registered Replication Reports 1 - 8 
+##Code: Anton Ohlsson Collentine
 
 ##Script content:----
 
@@ -904,7 +904,12 @@ rrr7 <- rrr7 %>%
 
 #Extract data
 f <- "../data/RRR8/final_results/tables/all_raw_effects.pdf" #path to table (which includes country names)
-rrr8 <- extract_tables(f)
+rrr8 <- extract_tables(f) #note contains data from all labs, not only the 23 used in main analysis of paper
+
+authors_main23 <- c("Schulte-Mecklenbeck", "Baskin", "Braithwaite", "Vazire", "Newell", "O'Donnell", "Tamayo", #23 labs from main analysis in paper
+                    "Karpinski", "Klein", "Keller", "Shanks", "Bialobrzeska", "Koppel", "Philipp", "Ropovik", #manually coded from Figure 1 in paper https://www.psychologicalscience.org/publications/replication-dijksterhuis-van-knippenberg
+                    "Steele", "Susa", "Steffens", "Aczel", "Saunders", "McLatchie", "Aveyard", "Boot") #also found in final_results/prereg/main.png from OSF
+
 
 #Clean and format data
 rrr8 <- lapply(rrr8, function(x) x[x[,2] == "Main Effect",]) #remove effects that are not the primary effect, note that this drops the headers which are in row 1 of the first list
@@ -912,9 +917,12 @@ rrr8[[1]] <- rrr8[[1]][, -c(4, 6, 8, 10, 18)] #drop a few by extraction incorrec
 
 rrr8 <- as.data.frame(do.call("rbind", rrr8), stringsAsFactors = FALSE)#conmbine into one dataframe
 
+rrr8$V1[22] <- "O'Donnell" #Correct faulty extraction of O'Donnell's name
+
 rrr8[, 3:8] <- sapply(rrr8[,3:8], as.numeric) #change relevant columns to numeric
 
 rrr8 <- rrr8 %>% 
+  filter(V1 %in% authors_main23) %>% #limit to the 23 labs from main analysis in paper
   rename(Site = V1, #rename variables to consistent names
          outcome_t1 = V3, #mean treatment group
          ntreatment = V4,
@@ -966,14 +974,3 @@ effects <- rbind(ml1, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8)
 
 write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
 
-#temporary
-# library(splitstackshape)
-
-# set.seed(43)
-# eff2 <- effects %>% #stratified sample, one for each effect
-  # stratified(., "effect", 1) %>% 
-  # arrange(rs) #Arrange in order by rs
-
-# library(xlsx)
-
-# write.xlsx(eff2, "../data/overview_summary_data.xlsx", sheetName = "Quick overview", row.names = FALSE)
