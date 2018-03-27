@@ -635,9 +635,15 @@ rrr1_2 <- do.call("rbind", rrr1_2)
 #[4] RRR3 ----
 #******************************************
 ##summary data from Registered Replication Report 3 https://osf.io/d3mw4/
-##Imagery data https://osf.io/be6gd/, intention attribution https://osf.io/7d9yg/ and intentionality https://osf.io/fsmdk/, 
+##Imagery (detailed processing) data https://osf.io/be6gd/, intention attribution https://osf.io/7d9yg/ and intentionality https://osf.io/fsmdk/, 
 
+#Effects extracted in this section
+#[1] "Grammar on detailed processing"  
+#[2] "Grammar on intention attribution"
+#[3] "Grammar on intentionality" 
+#*********************
 #library(dplyr)
+
 
 setwd(wd_path) #reset working directory
 setwd("../data/RRR3") #needs to be set to be able to load all files at once
@@ -721,50 +727,117 @@ rrr4 <- rrr4 %>%
 #[6] RRR5 ----
 #******************************************
 ##summary data from Registered Replication Report 5 https://osf.io/s3hfr/
-##Data extracted from directly from paper http://journals.sagepub.com/doi/pdf/10.1177/1745691616664694
+##Data extracted from raw data files https://osf.io/dvaz7/
 
-#library(tabulizer)
-#library(tidyr)
+#Effects extracted in this section
+#[1] "Commitment on exit"   
+#[2] "Commitment on neglect"
+#*********************
+
+#Additional comment:
+#Note that reported participant numbers of Table 1 in source paper (https://osf.io/s3hfr/) are before listwise deletion due to missing values
+#In addition, source paper appears to do listwise deletion based on missing values in any of the DVs, not only the primary one (exit/neglect)
+#This will result in slight different sample sizes/effects since we only use the stated primary outcomes exit and neglect for listwise deletion
+
+#*********************
+
 #library(dplyr)
 
-#Data extraction
-f <- "http://journals.sagepub.com/doi/pdf/10.1177/1745691616664694"
-rrr5 <- extract_tables(f, pages = 3) #Total sample sizes and lab names
 
-#Had to manually extract the means from Figure 2 ("Exit"). Couldn't figure out how to get the values using the r-code on OSF
-high <- c(2.37, 1.4, 2.23, 1.52, 1.41, 1.87, 2.12, 1.83, 1.96, 1.87, 1.55, 1.81, 2, 1.59, 1.61, 2.07)
-low <- c(2.25, 1.82, 2, 1.49, 1.67, 2.08, 1.96, 1.93, 2, 2.08, 1.79, 1.65, 2.04, 1.3, 1.73, 2.32)
+#Functions (3)
+convert <- function(x){as.numeric(as.character(x))} # "function that converts a column of Qualtrix output to useable form in R", from Finkel_Analysis.R https://osf.io/mp3s7/
 
+extract_rrr5 <- function(loaded_csv){ #function for initial manipulation of raw data
+  loaded_csv %>% 
+    select(Q7.1, #condition item, {1 = high, 2 = low}
+           Exclude, #Exclusion item {0 = include, 1 = exclude, 2 = maybe include}. Only =1 excluded for main analysis.
+           !!! exit_items, #Exit items, unquoted by !!! (see item list below)
+           !!! neglect_items) %>% #neglect items, unquoted by !!! (see item list below)
+    slice(-1) %>% #Remove first row which are alternative column names
+    mutate_all(convert) %>%  #transform qualtrix data into usable format in R
+    filter(!Exclude == 1) %>% #remove participants that were excluded in main analysis of paper
+    rowwise() %>% #ensures we can take the mean across columns in mutate below
+    mutate(exit = mean(c(!!! exit_items)), #creation of exit score as the average across items as per MA (Finkel_Analysis.R)
+           neglect = mean(c(!!! neglect_items)), #creation of neglect score as the average across items as per MA (Finkel_Analysis.R)
+           Q7.1 = ifelse(Q7.1 == 1, "treatment", "control"), #clarification
+           group = Q7.1) %>%  #clarification
+    ungroup() %>% #remove rowwise grouping
+    select(group, exit, neglect) %>% #output is scores for exit and neglect with information on condition where each row represents one participant
+    filter(complete.cases(.)) #remove cases with missing scores on exit or neglect, source paper does "listwise deletion" for meta-analysis, see Finkel_Meta.R https://osf.io/2m756/
+}
+
+summarizer <- function(extracted){ #Function to transform individual level data to summary statistics
+  extracted %>% 
+    group_by(group) %>% 
+    summarize(n = n(),
+              avg = mean(DV),
+              SD = sd(DV)) %>% 
+    ungroup()
+}
+
+#Extract data
+f <- list.files("../data/RRR5/Data", pattern = "*.csv") #folder with all raw data files for rrr5
+setwd("../data/RRR5/Data")
+rrr5 <- lapply(f, read.csv, stringsAsFactors = FALSE) #read raw data
+
+rrr5_names <- c("Commitment on exit", "Commitment on neglect") #effect names
+rrr5_sites <- unlist(lapply(strsplit(f, split = "_"), function(x) x[[1]])) #extracts author names as a vector from listed files
 countries <-  c("TUR", "USA", "USA", "USA", "USA", "CAN", "CAN", "USA", "USA", "USA", "USA", 
-                "CAN", "CAN", "USA", "CZE", "SGP") #Lab countries from https://osf.io/5e7th/wiki/home/, note that the order on OSF is not the same as in the data and that "Lisa Reddoch" = Hoplock
+                "CAN", "CAN", "USA", "CZE", "SGP") #Lab countries from https://osf.io/5e7th/wiki/home/, note that the order on OSF is not the same as in the data (here) and that "Lisa Reddoch" = Hoplock
 
-#Clean and format
-rrr5 <- as.data.frame(rrr5[[1]]) #only first list is actually table, keep that
-rrr5 <- rrr5[-c(1:5, nrow(rrr5)),c(1, 5)] #keep only first column and exclusion 1 total (which was used in paper and is = Ntotal). Remove superflous rows.
 
-rrr5 <- rrr5 %>% 
-  separate(V1, into = c("Site", "N", "Male", "Female", "unreported", "Mean"), sep = " ") %>% 
-  mutate(Ntotal = as.numeric(N) - as.numeric(V5)) %>% #total minus excluded total gives us the used total
-  select(Site, Ntotal) %>% 
-  mutate(rs = "RRR5", #Add some descriptive information
-         effect = "Commitment on forgiveness", 
-         in_lab = 1, # "Participants were tested in-person", p.752 of RRR5
-         B_or_W = "Between", 
-         design = "control vs. treatment", 
-         or_stat_test = "NA", #"The analysis does not focus on null-hypothesis significance testing." p. 755 RRR5 
-         effect_type = "Raw mean difference",
-         outcome_t1 = high,
-         outcome_c1 = low,
-         outcome_t2 = NA, #could not find SD or SE
-         outcome_c2 = NA,
-         ntreatment = NA, #Unable to find treatment group or control group sizes
-         ncontrol = NA,
-         outcomes1_2 = "mean _ NA", #Describes the content of outcome1 and outcome2 variables
-         country = countries,
-         effect_size = outcome_t1 - outcome_c1) %>% 
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+exit_items <- quos(Q2.2_1,Q2.3_3,Q2.4_1,Q2.5_2,Q2.6_2,Q2.7_4,Q2.8_2,Q2.9_4,Q2.10_1,Q2.11_4,Q2.12_3,Q2.13_4) #quote items for later use in dplyr verbs, list from Finkel_Analysis.R https://osf.io/mp3s7/
+neglect_items <- quos(Q2.2_4,Q2.3_2,Q2.4_2,Q2.5_4,Q2.6_1,Q2.7_2,Q2.8_4,Q2.9_2,Q2.10_4,Q2.11_1,Q2.12_1,Q2.13_1) #quote items for later use dplyr verbs, list from Finkel_Analysis.R https://osf.io/mp3s7/
 
+rrr5 <- lapply(rrr5, extract_rrr5) #Extract dependent variables and groupings
+
+#Cleaning and initial formatting of data
+exit <- lapply(rrr5, function(x) x %>% select(-neglect, DV = exit)) #separate into exit DV
+neglect <- lapply(rrr5, function(x) x %>% select(-exit, DV = neglect)) #separate into neglect DV
+#A this point we have individual level data for each DV in separate lists
+
+rrr5 <- list(exit, neglect) #put both DVs into one list for below loop
+
+for(dv in seq_along(rrr5_names)){ #for each DV
+  summed <- lapply(rrr5[[dv]], summarizer) #Create summary statistics
+  
+  high <- lapply(summed, function(x) x[x$group == "treatment",] %>%  #separate by group (high/low)
+                   select(-group, #removing grouping variable and clean up the names
+                          ntreatment = n,
+                          outcome_t1 = avg,
+                          outcome_t2 = SD))
+  
+  low <- lapply(summed, function(x) x[x$group == "control",]%>%
+                  select(-group, 
+                         ncontrol = n,
+                         outcome_c1 = avg,
+                         outcome_c2 = SD))
+  
+  rrr5[[dv]] <- mapply(cbind, high, low, SIMPLIFY = FALSE) #combine high and low columns for each lab
+  rrr5[[dv]] <- do.call(rbind, rrr5[[dv]]) #for each DV convert from list into dataframe
+  rrr5[[dv]]$Site <- rrr5_sites #clarify origin of each row of summary statistics
+} #end loop
+
+
+#Final formatting of data
+for(dv in seq_along(rrr5_names)){ #for each DV
+  rrr5[[dv]] <- rrr5[[dv]] %>% 
+    mutate(rs = "RRR5", #Add some descriptive information
+           effect = rrr5_names[dv], 
+           in_lab = 1, # "Participants were tested in-person", p.752 of RRR5
+           B_or_W = "Between", 
+           design = "control vs. treatment", 
+           or_stat_test = "NA", #"The analysis does not focus on null-hypothesis significance testing." p. 755 RRR5 
+           effect_type = "Raw mean difference",
+           outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
+           country = countries,
+           Ntotal = ncontrol + ntreatment,
+           effect_size = outcome_t1 - outcome_c1) %>% 
+    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+           ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+}
+
+rrr5 <- do.call(rbind, rrr5) #combine into one dataframe
 
 #******************************************
 #[7] RRR6 ----
@@ -774,6 +847,8 @@ rrr5 <- rrr5 %>%
 
 #library(tabulizer)
 #library(dplyr)
+
+setwd(wd_path) #Reset working directory
 
 #Extract data
 rrr6 <- read.csv("../data/RRR6/resultsFacialFeedbackReplication.csv", stringsAsFactors = FALSE)
