@@ -74,7 +74,7 @@ library(tabulizer)
 
 
 #extract data on whether in-lab study or not
-lab <- read_excel("../data/Ml1/Table_S1_-_Detailed_Site_and_Sample_Characteristics.xlsx") %>% 
+lab <- read_excel("../data/source/Ml1/Table_S1_-_Detailed_Site_and_Sample_Characteristics.xlsx") %>% 
   select(`Site identifier`, `Online (O) or Lab (L)`) %>% 
   rename(Site = `Site identifier`, in_lab = `Online (O) or Lab (L)`) %>% 
   mutate(in_lab = ifelse(in_lab == "L", 1, 0), Site = tolower(Site))
@@ -97,9 +97,9 @@ lab <- read_excel("../data/Ml1/Table_S1_-_Detailed_Site_and_Sample_Characteristi
 #**************
 
 #sheetnames of effects that use t-tests and have the same data format (Math_art gender does a t-test but has different data format)
-tsheets <- excel_sheets("../data/Ml1/summary/ML-_Summary_Statistics.xlsx")[-c(1:2, 13:18)] 
+tsheets <- excel_sheets("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx")[-c(1:2, 13:18)] 
 #extract data for these effects
-teffects <- lapply(tsheets, function (X) read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
+teffects <- lapply(tsheets, function (X) read_excel("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
 
 tfilt <- c("Overall:", "Mean across samples:", "Overall (sum of samples)", "Overall for US participants:") #for removing summary rows
 
@@ -162,9 +162,9 @@ teffects <- do.call("rbind", teffects) #bind into one dataframe
 #*************************
 
 #sheetnames of effects that use chisquare-tests
-chisheets <- excel_sheets("../data/Ml1/summary/ML-_Summary_Statistics.xlsx")[c(15:18)] 
+chisheets <- excel_sheets("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx")[c(15:18)] 
 #extract data for these effects
-chieffects <- lapply(chisheets, function (X) read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
+chieffects <- lapply(chisheets, function (X) read_excel("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = X)) #read data
 
 chinames <-  c("Gain vs. loss framing", "Allowed vs. forbidden", #Clarify names
                  "Norm of reciprocity", "Low vs. high category scales")
@@ -222,7 +222,7 @@ chieffects <- do.call("rbind", chieffects) #combine into one dataframe
 #[1] "Gender math attitude"
 #*****************
 
-math_art <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "Math_Art Gender")
+math_art <- read_excel("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "Math_Art Gender")
 
 #Note that original authors remove the sample from the site "qccuny2" (USA) due to a systematic error in data collection (as do I)
 
@@ -257,7 +257,7 @@ math_art <- math_art %>%
 #[1] "IAT correlation math"
 #*****************
 
-math_cor <- read_excel("../data/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "IAT correlation")
+math_cor <- read_excel("../data/source/Ml1/summary/ML-_Summary_Statistics.xlsx", sheet = "IAT correlation")
 
 #Note that original authors remove the sample from the site "qccuny2"  (USA) due to a systematic error in data collection (as do I)
 
@@ -302,7 +302,7 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 #library(dplyr)
 
 #set working directory
-setwd("../data/Ml3/summary/ML3 Meta") #needs to be set to be able to load all files at once
+setwd("../data/source/Ml3/summary/ML3 Meta") #needs to be set to be able to load all files at once
 
 #All file names in path folder ending with .csv, excluding big five data
 files <- list.files(pattern = "*.csv")[-2] 
@@ -577,7 +577,7 @@ ml3 <- rbind(ml3_stroop, ml3t, nonp, inter, cons_cor) %>%
 
 #set working directory
 setwd(wd_path)
-setwd("../data/RRR1_2") #needs to be set to be able to load all files at once
+setwd("../data/source/RRR1_2") #needs to be set to be able to load all files at once
 
 #All file names in path folder ending with .xlsx
 files <- list.files(pattern = "*.xlsx")
@@ -646,7 +646,7 @@ rrr1_2 <- do.call("rbind", rrr1_2)
 
 
 setwd(wd_path) #reset working directory
-setwd("../data/RRR3") #needs to be set to be able to load all files at once
+setwd("../data/source/RRR3") #needs to be set to be able to load all files at once
 
 #Extract data
 files <- list.files(pattern = "*.csv") #list files
@@ -694,7 +694,7 @@ rrr3 <- do.call("rbind", rrr3) #combine into one dataframe
 setwd(wd_path) #Reset working directory
 
 #Extract data
-rrr4 <- read.csv("../data/RRR4/RTV_incl.csv", stringsAsFactors = FALSE)
+rrr4 <- read.csv("../data/source/RRR4/RTV_incl.csv", stringsAsFactors = FALSE)
 rrr4 <- rrr4[, -which(nchar(names(rrr4)) < 3)] #remove empty columns that were extracted, removes all columns with a name shorter than 3 characters
 
 
@@ -776,8 +776,8 @@ summarizer <- function(extracted){ #Function to transform individual level data 
 }
 
 #Extract data
-f <- list.files("../data/RRR5/Data", pattern = "*.csv") #folder with all raw data files for rrr5
-setwd("../data/RRR5/Data")
+f <- list.files("../data/source/RRR5/Data", pattern = "*.csv") #folder with all raw data files for rrr5
+setwd("../data/source/RRR5/Data")
 rrr5 <- lapply(f, read.csv, stringsAsFactors = FALSE) #read raw data
 
 rrr5_names <- c("Commitment on exit", "Commitment on neglect") #effect names
@@ -851,7 +851,7 @@ rrr5 <- do.call(rbind, rrr5) #combine into one dataframe
 setwd(wd_path) #Reset working directory
 
 #Extract data
-rrr6 <- read.csv("../data/RRR6/resultsFacialFeedbackReplication.csv", stringsAsFactors = FALSE)
+rrr6 <- read.csv("../data/source/RRR6/resultsFacialFeedbackReplication.csv", stringsAsFactors = FALSE)
 f <- "http://journals.sagepub.com/doi/pdf/10.1177/1745691616674458" #For extracting Table 1 from paper to get info on country for each lab
 country <- extract_tables(f, pages = 5, method = "data.frame") #Note that if we do not care about group sample sizes, this table contain all other information
 
@@ -978,7 +978,7 @@ rrr7 <- rrr7 %>%
 #library(dplyr)
 
 #Extract data
-f <- "../data/RRR8/final_results/tables/all_raw_effects.pdf" #path to table (which includes country names)
+f <- "../data/source/RRR8/final_results/tables/all_raw_effects.pdf" #path to table (which includes country names)
 rrr8 <- extract_tables(f) #note contains data from all labs, not only the 23 used in main analysis of paper
 
 authors_main23 <- c("Schulte-Mecklenbeck", "Baskin", "Braithwaite", "Vazire", "Newell", "O'Donnell", "Tamayo", #23 labs from main analysis in paper
