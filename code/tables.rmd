@@ -43,67 +43,46 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
 #library(dplyr)
 #library(purrr)
 
-#this function is for transforming RRR8 which only has raw mean difference and SE to a standardized version
-transform_SE <- function(ES, SE, n1, n2){ #Based on meta-analysis lecture 02
-  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2))
-  d <- ES / sdpooled
-  g <- (1 - 3 / (4*(n1 + n2) - 9))*d
-  v <- 1 / n1 + 1/ n2 + g^2 / (2*(n1 + n2))
-  data.frame(g = g, v = v)
-}
-
 est_heterogen_smd_raw <- function(x){
-  if(any(x[, "outcomes1_2"] == "mean _ SD")){ #without the 'any' we will get warnings because we apply 'if' to a vector
+  if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
     
-    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives Hedge's g as outcome
-               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
-    
-    fit2 <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives raw outcome
-               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+    fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
     
-    standardized <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
+    fit <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x) 
+  
+  } else if(any(x[, "effect_type"] == "Raw mean difference")){  
     
-    fit <- rma(yi = g, vi = v, test = "knha", data = standardized) #standardized effect estimate
+    fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+  
+  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
-    fit2 <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x) #raw effect estimate
-    
+    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+       
   } else if(any(x[, "effect_type"] == "r")){
     
-    fit <- fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #raw correlation
-    
-    I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
-    I2_2 <- rep(NA, 3) #No unstandardized version
-
-    return(data.frame(eff_size = fit$b[[1]],
-                      s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], 
-                      r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3]))
+    fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x)
 
   } else{ #for all two-group count effects
     
-    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but this = 'OR2DL'
+    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but that = 'OR2DL'
                n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
     
-    fit2 <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #unstandardized
-               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
   }
   
-  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
-  I2_2 <- confint(fit2)$random[3, ] #Gives us the I2 estimate and CI for raw values
-
-  data.frame(eff_size = fit$b[[1]], #standardized effect (point estimate)
-             s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], #standardized I2 + CI
-             r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3]) #unstandardized I2 + CI
+  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval
+  data.frame(eff_size = fit$b[[1]], #effect size (point estimate)
+             p = fit$pval,
+             s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3]) #I2 + CI
 }
 
 #Apply function to data
 res <- dat %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
-  mutate(dif = s_I2 - r_I2) #Gives us the difference between the two
+  map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
 
-clarify <- c("Allowed vs. forbidden", "Gain vs. loss framing", "Norm of reciprocity", "Low vs. high category scales") #Effects reported as d in many labs 1 but meta-analyzed as OR
+OR <- c("Allowed vs. forbidden", "Gain vs. loss framing", "Norm of reciprocity", "Low vs. high category scales") #Effects reported as d in many labs 1 but meta-analyzed as OR
 
 #Add rs to the data-frame
 het <- dat %>% 
@@ -112,22 +91,19 @@ het <- dat %>%
   summarize(effect_type = unique(effect_type)) %>% 
   left_join(res) %>% 
   mutate(effect_type = recode(effect_type, 
-                              d = "Mean diff.",
+                              d = "Std. mean diff.",
                               r = "Correlation",
-                              'Raw mean difference' = "Mean diff.",
-                              'Risk difference' = "OR / RD"),
-         effect_type = ifelse(effect %in% clarify, "OR / RD", effect_type)) %>% 
+                              'Raw mean difference' = "Raw mean diff.")) %>% 
   arrange(desc(s_I2)) #sort by I2 for standardized effect
 ```
 
 ##Heterogeneity in preregistered multi-lab psychology studies
 ```{r heterogeneity-table}
 library(kableExtra)
-het %>% knitr::kable("latex", booktabs = T, digits = 1, col.names = c("RS", "Effect", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "I2(%)", "ci.lb", "ci.ub", "Dif")) %>% 
-  kable_styling(latex_options = "scale_down") %>% 
-  add_header_above(c(" " = 4, "Standardized" = 3, "Unstandardized" = 3, " " = 1)) %>%
+het %>% knitr::kable("latex", booktabs = T, digits = 2, col.names = c("RS", "Effect", "Effect type", "Estimate", "p-value", "I2(%)", "ci.lb", "ci.ub")) %>% 
+  kable_styling() %>%
   footnote(threeparttable = TRUE,
-           general = "'OR / RD' indicates that the effect was meta-analyzed as odds ratio in 'standardized' columns and risk difference in 'unstandardized' columns. Out of these effects 'Verbal overshadowing' was meta-analyzed by original authors as risk difference and the others as odds ratios. For correlations the standardized version correspond to raw correlations.  For 'Mean diff.' the standardized version corresponds to Hedge's g and unstandardized to raw mean differences. Original authors used different approaches for mean differences. RRR5 I have not yet been able to extract a measure of variance for, hence the NAs. Effects were estimated in metafor using REML with the 'knha' correction. Estimate column are point estimates of standardized effect sizes.") 
+           general = "We meta-analyzed effects using the same outcome measures that were used by the original authors. Standardized mean difference is Hedge's g. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. Effects were estimated in metafor using REML with the 'knha' correction. Estimate column are point estimates of effect sizes. Final columns are the upper and lower boundaries of the 90% confidence interval for I2.") 
   
 ```
 
