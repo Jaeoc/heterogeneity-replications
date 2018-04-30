@@ -1,10 +1,8 @@
 ---
-title: "Heterogeneity and I2"
-author: "Anton Ohsson Collentine"
-date: "March 21, 2018"
+title: "Insufficient evidence for heterogeneity in psychology"
+author: "Anton Ohlsson Collentine"
 output: pdf_document
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
@@ -14,108 +12,25 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 library(readr)
 library(dplyr)
 library(kableExtra)
-library(purrr)
-library(metafor)
 
 dat <- read_csv("../data/collated_summary_data.csv")
 ```
 
-```{r prep-heterogeneity-table}
-#library(metafor)
-#library(dplyr)
-#library(purrr)
+In most research there is a natural pattern of studies. We first establish belief in the existence of an effect and then wish to know how well it generalizes by exploring its boundary conditions. The first we do by using inferential statistics to minimize the risk that a discovery is due to sampling error. In the second, we are asking to what extent the effect depends on a particular choice of contextual factors such as 1) sample population, 2) settings, 3) treatment variables and 4) measurement variables [ref: Campbell & Stanley]. This is often explored through replications of the original study with some slight variation, and once sufficient studies have accumulated through meta-analysis. In meta-analysis, the estimated heterogeneity of an effect size (henceforth heterogeneity) is a measure of an effect's susceptibility to changes in these four factors. An effect strongly dependent on one or more of the four factors should exhibit high heterogeneity unless controlled for. 
 
-#this function is for transforming RRR8 which only has raw mean difference and SE to a standardized version
-transform_SE <- function(ES, SE, n1, n2){ #Based on meta-analysis lecture 02
-  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2))
-  d <- ES / sdpooled
-  g <- (1 - 3 / (4*(n1 + n2) - 9))*d
-  v <- 1 / n1 + 1/ n2 + g^2 / (2*(n1 + n2))
-  data.frame(g = g, v = v)
-}
+Heterogeneity is of concern for several reasons. First, it affects the interpretation of the meta-analytic estimate as either _the_ true effect size (homogeneity) or the average of the true effect sizes (heterogeneity). Second, if boundary conditions are unknown, it makes it more difficult to 'successfully' replicate an effect. In the presence of heterogeneity even a well-powered single study may capture the average true effect in less than 50% of cases [ref: Voelkl]. Third, meta-analytic techniques that attempt to correct for publication bias in their estimate tend to fail in the presence of heterogeneity [refs: Inzlicht, McShane]. 
 
-est_heterogen_smd_raw <- function(x){
-  if(any(x[, "outcomes1_2"] == "mean _ SD")){ #without the 'any' we will get warnings because we apply 'if' to a vector
-    
-    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives Hedge's g as outcome
-               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
-    
-    fit2 <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, #gives raw outcome
-               n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-    standardized <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
-    
-    fit <- rma(yi = g, vi = v, test = "knha", data = standardized) #standardized effect estimate
-    
-    fit2 <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x) #raw effect estimate
-    
-  } else if(any(x[, "effect_type"] == "r")){
-    
-    fit <- fit2 <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x) #raw correlation
-    
-    I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
-    I2_2 <- rep(NA, 3) #No unstandardized version
+Several recent papers have argued that heterogeneity is the norm in psychology [ref: Tacket et al, McShane et al]. These authors argue that, if anywhere, heterogeneity should be minimal in pre-registered multi-lab studies with a common protocol, and the fact that heterogeneity has been found even under such circumstances [e.g., ref: Many Labs 1] is an indication that heterogeneity is widespread in psychology. In addition, recent large scale reviews of meta-analyses in psychology [ref: Stanley; van Erp et al] report that much variability in effect sizes can be attributed to heterogeneity, with median estimates of 74% and 70.62% respectively [ref: Stanley].
 
-    return(data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2],      r_ci.ub = I2_2[3]))
+We caution against broad claims of particular heterogeneity levels in psychology. We have multiple concerns. We think that the role of effect sizes is both underestimated (when large) and overestimated (when small) when considering heterogeneity. In addition, we think that too much attention is paid to point estimates in view of the uncertainty conferred by accompanying confidence intervals. We choose to dwell less on this latter point as it has already been well-made previously [ref: Ioannidis]. Generally, we argue that the current evidence is insufficient to make general claims about the prevalence of heterogeneity in psychology.
 
-  } else{ #for all two-group count effects
-    
-    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but this = 'OR2DL'
-               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
-    
-    fit2 <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #unstandardized
-               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
-  }
-  
-  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval for standardized values
-  I2_2 <- confint(fit2)$random[3, ] #Gives us the I2 estimate and CI for raw values
+Larger effect sizes lead to more heterogeneity. In classical test theory, an observed correlation $r_{xy}$ is equivalent to the true correlation $\rho_{xy}$ multiplied by the square root of the measurement reliabilities for X ($R_{xx'}$) and Y ($R_{yy'}$): $r_{xy} = \rho_{xy} \times \sqrt{R_{xx'}} \times \sqrt{R_{yy'}}$. Across different studies of the same effect the measurement reliabilities will differ due either to sampling variance (that the sample happens to be more or less homogenous) or to small (or large) differences in contextual factors (e.g., location). Given that the reliabilities will differ between studies, so will the observed effect sizes even when the underlying effect is the same. It follows from the above presented equation that the larger the underlying effect size, the larger the differences between observed effect sizes in studies with differing reliabilities. Hence the estimated heterogeneity will increase with effect size. 
 
-  data.frame(s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3], r_I2 = I2_2[1], r_ci.lb = I2_2[2], r_ci.ub = I2_2[3]) #output is for smd, r, and 1 raw difference
-}
+A null meta-analytic effect size does not imply absence of heterogeneity. Intuitively, it makes sense to think that if there is no effect there is nothing to moderate (i.e., no heterogeneity). However, while this might often be true it is by no means a truism. A null or near null effect size estimate may arise from failure to consider contextual factors ('hidden moderators', [ref: van Bavel]) and does not by itself imply the absence of heterogeneity. This is especially true when also taking into consideration heterogeneity confidence intervals.
 
-#Apply function to data
-res <- dat %>% 
-  filter(!rs == "RRR5") %>% #Remove RRR5 for now because have not been able to extract sufficient data for it
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
-  mutate(dif = s_I2 - r_I2) #Gives us the difference between the two
+In the following sections we clarify and illustrate our concerns using empirical data and the I2 index as a measure of heterogeneity [ref: Higgins & Higgins]. We make use of summary data from 10 pre-registered multi-lab replications that examined a total of 37 psychological effects (see Table 1). These data arguably represents the best, least biased, meta-analytic data available in psychology. The I2 index is an intuitive and much used measure of heterogeneity which ranges from 0% to 100%. It can be interpreted as the percentage of variability in effect sizes that is due to heterogeneity amongst the true effects rather than sampling variance and is a transformation of the Q-test [ref: Cochran] by taking $[Q - (k - 1)] / Q \times 100$%, where k is the number of studies included in the meta-analysis. I2 is a relative measure of heterogeneity that allows comparison of estimates across meta-analyses.
 
-clarify <- c("Allowed vs. forbidden", "Gain vs. loss framing", "Norm of reciprocity", "Low vs. high category scales") #Effects reported as d in many labs 1 but meta-analyzed as OR
-
-#Add rs to the data-frame
-het <- dat %>% 
-  select(rs, effect, effect_type) %>% 
-  group_by(rs, effect) %>% 
-  summarize(effect_type = unique(effect_type)) %>% 
-  left_join(res) %>% 
-  mutate(effect_type = recode(effect_type, 
-                              d = "Mean diff.",
-                              r = "Correlation",
-                              'Raw mean difference' = "Mean diff.",
-                              'Risk difference' = "OR / RD"),
-         effect_type = ifelse(effect %in% clarify, "OR / RD", effect_type)) %>% 
-  arrange(desc(s_I2)) #sort by rs and I2 for standardized effect
-```
-
-###Introduction
-Replication of research can be an important indicator of an effect's generalizability, ecological validity, or even its very existance [possible ref: make replication mainstream]. As such, replication is sometimes considered vital to scientific progress [e.g., refs: Many labs 1, make rep. mainstream] and meta-analysis is often used as a tool to estimate an underlying 'true', or average, effect size across several replications. Yet the presence of unknown moderators can complicate replication and result in heterogenous effect sizes (henceforth 'heterogeneity') in a meta-analysis. 
-
-Heterogeneity is of concern for several reasons. First, it affects the interpretation of the meta-analytic estimate as either _the_ true effect size (homogeneity) or the average of the true effect sizes (heterogeneity). Second, in the presence of heterogeneity, single-laboratory studies have an increased risk of false-positive findings [ref: Inhout]. Moreover, under such circumstances even a well-powered single study may capture the average true effect in less than 50% of cases [ref: Voelkl]. Third, meta-analytic techniques that attempt to correct for publication bias in their estimate tend to fail in the presence of heterogeneity [refs: Inzlicht, McShane]. 
-
-Heterogeniety is often estimated using I2 [e.g., refs]. The I2 index [refs: Higgins and Higgins] ranges from 0% to 100% and is a transformation of the Q-test [ref: Cohran] by taking $[Q - (k - 1)] / Q \times 100$%, where k is the number of studies included in the meta-analysis. It can be interpreted as the percentage of variability in effect sizes that is due to heterogeneity amongst the true effects rather than sampling variance. As opposed to tau2, I2 is a relative measure of heterogeneiety and allows comparison of estimates across meta-analyses. Recent large-scale reviews used I2 to argue that heterogeneity is rampant in psychology, reporting average estimates of around 70%. [refs: van Erp (citation), Stanley working paper]
-
-The behavior of I2 is not always well understood. Simulation indicates that I2 like Q has low power with less than 15 - 20 included studies [ref: Huedo-Medina] and confidence intervals often range from 0% to more than 50% [ref: Ioannidis], indicating heterogeneity anywhere between null and intermediate. In their simulations [Huedo-Medina] also demonstrated that for Hedge's g the I2 index maintains a nominal type 1 error rate for all combinations of (un)fulfilled normality and homoscedasticity assumptions. Yet recent simulations by [datacolada] based on real data suggest that this might not be true under all circumstances. In addition, [Huedo-Medina] showed that I2 estimates and type 1 error rates depend on the choice of effect type, by comparing Hedge's g with Glass' delta. It seems probable that other choices of effect type may also affect I2-estimates. For example, we consider standardized versus unstandardized mean differences a likely candidate.
-
-We explore the robustness of I2 as an indicator of heterogeneity using both an empirical and a simulation approach. As a basis for our empirical approach we used data from X pre-registered multi-lab psychology studies available on the Open Science Framework (OSF; osf.io). We perform simulations partly based on real data available from these studies on the OSF and partly with purely simulated data. 
-
-###Method
-All code and data for this project is available at osf.io/XXXX. We refer to relevant code files on OSF using brackets and links in the sections below, that is (osf.io/XXXX/). We ran all analyses using R version X [R citation].
-
-We downloaded and collated summary data from X pre-registered multi-lab psychology studies (Table 1). Altough some studies (e.g. RRR4) reported results from several outcome variables, we only included primary outcome variables, resulting in a total of Y effects. For each study we collated the data at the level of the lab (osf.io/XXXX/). We extracted information on the country of each lab, whether participants where physically in the lab for the study, total number of participants per lab, type of effect size and additional information related to each effect (see codebook; osf.io/XXXX/). Extracted data was in a variety of formats: Excel (Many labs 1, RRR1 & RRR2), CSV (Many labs 3, RRR3, RRR4, RRR6, RRR5) and as PDF tables (RRR7, RRR8). In two cases (RRR5 and RRR6) it was necessary to download the original studies' R-code and raw data to extract the summary data, and in the case of RRR5 we also had to adapt the study code to be able to extract the summary data (we are grateful to the corresponding author for her help in doing so) [Note: still working on the last bit]. 
-
-Table 1.
+##Table 1
 ```{r data-summary-table}
 #library(dplyr)
 #library(kableExtra)
@@ -132,25 +47,10 @@ summary.table <- dat %>%
 summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>% 
   kable_styling(position = "left") %>% 
   footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions).")
+           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). ML = Many Labs, RRR = Registered Replication Report.")
 ```
 
+<!-- General thought: Ml1 compares heterogeneity from the perspective of between lab vs. between effects and concludes that heterogeneity depends mostly on the effect. However, it seems unsurprising that a certain lab (when not perversely motivated) does not systematically bias effects, but rather that a location might have differential effects on different studied effects. -->
 
-For each effect in our empirical dataset we estimated heterogeneity using I-square and where applicable (for mean differences) compared I-square estimates for standardized versus unstandardized effect sizes. <!-- We further discuss reasons for heterogeneity in effect sizes -->
+<!-- This might mean that we have missed an important moderator, or that there is a lot of small moderators missed (thinking about it, this seems to differ from random fluctuations in that they are still systematic in some sense, on the other hand, whether they cancel out or not is in itself due to "chance". If an effect (but perhaps not others) is moderated by what time of the day the study is run this can lead to heterogeneity, but say there is also a time-independent moderator such as whether the room is warm -> then we get heterogeneity even if two labs measure at the same time, at what point do these things become "noise" rather than systematic bias? Because we have so few labs it is difficult to separate these?) -->
 
-To explore the expected distribution of I-square in the case of no heterogeneity we ran simulations both using permutations of empirical data and wholly simulated data. <!-- reasons and simulate data-->
-
-In order to run our permutation simulations we downloaded data at the individual level (rather than summary data) for [two] of the effects in Table 2 ([effect X and effect Y]).
-
-###Results
-Table 2.
-Heterogeneity in pre-registered multi-lab psychology studies.
-```{r heterogeneity-table}
-library(kableExtra)
-het %>% knitr::kable("latex", booktabs = T, digits = 1, col.names = c("RS", "Effect", "Effect type", "I2(%)", "ci.lb", "ci.ub", "I2(%)", "ci.lb", "ci.ub", "Dif")) %>% 
-  kable_styling() %>% 
-  add_header_above(c(" " = 3, "Standardized" = 3, "Unstandardized" = 3, " " = 1)) %>% 
-   footnote(threeparttable = TRUE,
-           general = "'OR / RD' indicates that the effect was meta-analyzed as odds ratio in 'standardized' columns and risk difference in 'unstandardized' columns. Out of these effects 'Verbal overshadowing' was meta-analyzed by original authors as risk difference and the others as odds ratios. For correlations the standardized version correspond to raw correlations. For 'Mean diff.' the standardized version corresponds to Hedge's g and unstandardized to raw mean differences. Original authors used different approaches for mean differences. RRR5 I have not yet been able to extract a measure of variance for, hence the NAs. Effects were estimated in metafor using REML with the 'knha' correction.")
-  
-```
