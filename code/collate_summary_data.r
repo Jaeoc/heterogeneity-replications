@@ -37,7 +37,7 @@
 #*************************************************************************************************************************
 
 
-wd_path <- dirname(rstudioapi::getSourceEditorContext()$path) #used for correcting working directory
+wd_path <- dirname(rstudioapi::getSourceEditorContext()$path) #used for correcting working directory, requires Rstudio
 setwd(wd_path)
 
 #******************************************
@@ -302,7 +302,7 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 #library(dplyr)
 
 #set working directory
-setwd("../data/source/Ml3/summary/ML3 Meta") #needs to be set to be able to load all files at once
+setwd("../data/source/Ml3/ML3 Meta") #needs to be set to be able to load all files at once
 
 #All file names in path folder ending with .csv, excluding big five data
 files <- list.files(pattern = "*.csv")[-2] 
@@ -439,8 +439,6 @@ ml3t <- do.call("rbind", ml3t) #bind into dataframe
 #[2] "Metaphor"
 #*********************
 
-##%% Not completely sure if B_or_W should be "Between" or "Within" (or NA?): one group, compares how many choose each option
-
 nonp_names <- c("Availability", "Metaphor")
 
 nonp <- ml3[names(ml3) %in% nonp_names] #limit data to only these effects
@@ -468,7 +466,7 @@ for(i in seq_along(nonp_names)){
            outcomes1_2 = nonp_outcomes[i],
            outcome_c2 = NA, 
            outcome_t2 = NA,
-           ntreatment = NA, #Assign names consistent with other datasets
+           ntreatment = NA, 
            ncontrol = NA,
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
@@ -558,9 +556,7 @@ cons_cor <- cons_cor %>%
 #******************************************
 
 ml3 <- rbind(ml3_stroop, ml3t, nonp, inter, cons_cor) %>% 
-  mutate(Site = recode(Site, IthacaCollege = "Ithaca", PennStateAbington = "abington", #recode Site names to be consistent with ml1
-                       SanDiegoStateUniversity = "SDSU", TexasAandM = "TAMU", UniversityOfFlorida = "UFL",
-                       UniversityOfVirginia = "UVA", VirginiaCommonwealthUniversity = "VCU", mTurk = "mturk")) 
+  mutate(Site = recode(Site, mTurk = "mturk")) 
 
 
 
