@@ -24,7 +24,7 @@ I have four different types of effects to transform to raw correlations:
 - RD
 - OR
 
-Should I first run MA and then transform effect sizes? ->Not sure how how to treat the raw mean differences, since I only get the MA-estimate estimate and the SE.  More straightforward to convert to common metric first. **Kolden + Ihle give formulas.**
+Should I first run MA and then transform effect sizes? ->Not sure how how to treat the raw mean differences, since I only get the MA-estimate estimate and the SE.  More straightforward to convert to common metric first. **Kolden + Ihle give formulas.** From book Cooper & Hedges, 1994.
 
 ```{r transformation_functions}
 #For raw mean difference + SE
@@ -38,10 +38,10 @@ transform_SE <- function(ES, SE, n1, n2){ #ES -> SDp based on meta-analysis lect
 
 #For mean differrence + SD
 transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
-  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #taken from Kolden from Esther
+  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #page 226. 
   d <- (m1 - m2) / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes
-  r <- d / sqrt(d^2 + corr)
+  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p.234
+  r <- d / sqrt(d^2 + corr) #p. 234
   data.frame(r = r, n = n1 + n2)
 }
 
@@ -51,12 +51,12 @@ transform_RD <- function(ai, bi, ci, di){
   bi <- ifelse(bi == 0, 0.5, bi)  #This affects 1 study for Allowed vs. forbidden
   ci <- ifelse(ci == 0, 0.5, ci)  #And several studies for Low vs. high category scales
   di <- ifelse(di == 0, 0.5, di)
-  logOR <- log((ai*di) / (bi*ci))
-  d = logOR * sqrt(3)/pi
+  logOR <- log((ai*di) / (bi*ci)) #p. 266
+  d = logOR * sqrt(3)/pi #p. 232
   n1 = ai + bi
   n2 = ci + di
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes
-  r <- d / sqrt(d^2 + corr)
+  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p. 234
+  r <- d / sqrt(d^2 + corr) #p. 234
   data.frame(r = r, n = ai + bi + ci +di)
 }
 
@@ -114,7 +114,7 @@ Seems okay. Metafor takes raw correlations as input for Fisher's z transformed r
 ```{r MA_df}
 summarizer <- function(x){
   fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, test = "knha", data = x) #takes raw correlation as input
-  data.frame(z = fit$b[[1]], I2 = fit$I2, H2 = fit$H2, H2alt = fit$QE / fit$k) #estimate out
+  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / fit$k) #estimate out
 }
 #Alternative version of calculating I2 does not make conceptual sense because gives negative values. Alternative method for calculating H2 provides information also on excessive homogeneity (i.e, less variability than expected by chance) for those interested. (that is, does not have a lower limit of 1)
   
@@ -130,23 +130,29 @@ Above seems to do what it should.
 library(ggplot2)
 
 
-ggplot(res2, aes(x = z, y = I2)) +
+I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
-  ggtitle("I2 increases with effect size in pre-registered multi-lab studies") +
   xlab("Fisher's z") +
   coord_cartesian(ylim = c(0, 100)) +
-  geom_text(x = 0.1, y = 75, label = "b = 69.40, R2 = 0.61", size = 3.5)
+  geom_text(x = 0.15, y = 80, label = "b = 69.40, R2 = 0.61", size = 3.5) +
+  theme_classic()
 
 # ggsave("I2_effect_size.png")
 
-ggplot(res2, aes(x = z, y = H2alt)) + 
+H2 <- ggplot(res2, aes(x = z, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
-  ggtitle("H2 increases with effect size in pre-registered multi-lab studies") +
   xlab("Fisher's z") +
-  geom_text(x = 0.1, y = 6, label = "b = 3.81, R2 = 0.53", size = 3.5)
+  geom_text(x = 0.14, y = 6, label = "b = 3.81, R2 = 0.53", size = 3.5) +
+  theme_classic()
 
+# ggsave("H2_effect_size.png")
+library(cowplot)
+
+effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v")
+# save_plot("effect_het.png", effect_het,
+          # nrow = 2, base_aspect_ratio = 1.3)
 
 # summary(lm(I2 ~ z, data = res2)) #b = 69.40, R2 = 0.61
 # summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
