@@ -94,28 +94,37 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
 est_heterogen_smd_raw <- function(x){
   if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
     
-    fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
+    fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol,  data = x)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
     
-    fit <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x) 
+    fit <-  rma(yi = effect_size, sei = outcome_c2,  data = x) 
   
-  } else if(any(x[, "effect_type"] == "Raw mean difference")){  
-    
-    fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+  } else if(any(x[, "effect_type"] == "Raw mean difference")){
+    if(any(x[, "rs"] %in% c("RRR5", "RRR7"))){ #For these us the Knapp and Hartung adjustment of standard errors
+      
+      fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, test ="knha", data = x)
+    } else{
+      fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x)
+    }
   
   } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
-    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
+    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x) 
        
   } else if(any(x[, "effect_type"] == "r")){
-    
-    fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x)
+    if(any(x[, "rs"] == "ML1")){
+      fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal,  data = x)
+    } else{ #for ML3
+      fit <- rma(measure = "UCOR", ri = effect_size, ni = Ntotal,  data = x, vtype = "UB")
+      #Note that ML3 specifies measure = "COR" with vtype = "UB", but that this is specified as above in the latest metafor 
+    }
 
   } else{ #for all two-group count effects
     
-    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but that = 'OR2DL'
-               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
+    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, 
+               n1i = ntreatment, n2i = ncontrol,  data = x)
+    #standardized, ML1 used 'OR2D' which = 'OR2DL' in latest version of metafor
     
   }
   

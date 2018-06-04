@@ -5,34 +5,30 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.asp = 1.3)
 ```
 
 ```{r load data and packages}
-library(readr)
-library(dplyr)
-library(kableExtra)
-library(purrr)
-library(metafor)
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(purrr) #For data transformation
+library(metafor) #To run meta-analyses
+library(ggplot2) #Plot data
+library(cowplot) #Combine several plots into one
 
 dat <- read_csv("../data/collated_summary_data.csv")
 ```
 
-I have four different types of effects to transform to raw correlations:
-- mean difference + SE
-- mean difference + SD
-- RD
-- OR
-
-Should I first run MA and then transform effect sizes? ->Not sure how how to treat the raw mean differences, since I only get the MA-estimate estimate and the SE.  More straightforward to convert to common metric first. **Kolden + Ihle give formulas.** From book Cooper & Hedges, 1994.
-
 ```{r transformation_functions}
+#Formulas found in: 
+#Borenstein, M. (2009). Effect sizes for continuous data. In H. Cooper, L. V. Hedges, & J. C. Valentine (Eds.), The handbook of research synthesis and meta-analysis (2nd ed., pp. 221-235). New York: Russell Sage Foundation.
+
 #For raw mean difference + SE
-transform_SE <- function(ES, SE, n1, n2){ #ES -> SDp based on meta-analysis lecture 02
-  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2))
+transform_SE <- function(ES, SE, n1, n2){ 
+  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
   d <- ES / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes
-  r <- d / sqrt(d^2 + corr)
+  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes. p.234
+  r <- d / sqrt(d^2 + corr) #p.234
   data.frame(r = r, n = n1 + n2)
 }
 
@@ -97,38 +93,34 @@ transform_MA <- function(x){
   # data.frame(b = fit$b[[1]], I2 = fit$I2) #estimate out
   transformed
 }
+
+
 ```
 
-Transform effect sizes to raw correlations
 ```{r transform_df}
+#Transform effect sizes to raw correlations
 res <- dat %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(transform_MA, .id = "effect") 
+  map_dfr(transform_MA, .id = "effect") #apply function and transform back from list to dataframe
 
-res %>% filter(!is.na(r) & r > 1) #checks
-res %>% filter(is.na(r)) #Checks
 ```
-
-Seems okay. Metafor takes raw correlations as input for Fisher's z transformed rma.
 
 ```{r MA_df}
 summarizer <- function(x){
-  fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, test = "knha", data = x) #takes raw correlation as input
-  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / fit$k) #estimate out
+  fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, data = x) #takes raw correlation as input
+  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1)) #estimates out
 }
-#Alternative version of calculating I2 does not make conceptual sense because gives negative values. Alternative method for calculating H2 provides information also on excessive homogeneity (i.e, less variability than expected by chance) for those interested. (that is, does not have a lower limit of 1)
+#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method computes H2 as originally specified by Higgins & Thompson instead of using the more general method of metafor (see ?print.rma.uni).
+
+#Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
   
 res2 <- res %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(summarizer, .id = "effect") %>% 
-  mutate(z = abs(z)) #We are interested in effect size rather than direction
+  mutate(z = abs(z)) #Absolute values since we are interested in effect size rather than direction
 ```
 
-Above seems to do what it should. 
-
 ```{r plot_res}
-library(ggplot2)
-
 
 I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_point(alpha = 0.5) +
@@ -148,9 +140,10 @@ H2 <- ggplot(res2, aes(x = z, y = H2)) +
   theme_classic()
 
 # ggsave("H2_effect_size.png")
-library(cowplot)
 
-effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v")
+
+effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v") #combine plots
+effect_het
 # save_plot("effect_het.png", effect_het,
           # nrow = 2, base_aspect_ratio = 1.3)
 
@@ -158,70 +151,14 @@ effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v")
 # summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
 ```
 
-Note that Fisher's z are the absolute z-scores, because we are interested in effect size rather than direction.
-
-```{r labelled_plot}
-library(ggplot2)
-
-
+```{r labelled_plot, fig.asp= 0.618}
 ggplot(res2, aes(x = z, y = I2, label = effect)) +
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE) +
-  geom_text(alpha = 0.3)
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  xlab("Fisher's z") +
+  coord_cartesian(ylim = c(0, 100)) +
+  theme_classic() +
+  geom_text(alpha = 0.5)
 ```
 
-Qs: Should I keep the I2 based on the original scales, but transform the effect sizes and plot that instead (seems not unreasonable since I2 depends on effect type). -> This seems to make little difference, see below.
-
-```{r}
-est_heterogen_smd_raw <- function(x){
-  if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
-    
-    fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-    fit <-  rma(yi = effect_size, sei = outcome_c2, test = "knha",  data = x) 
-  
-  } else if(any(x[, "effect_type"] == "Raw mean difference")){  
-    
-    fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
-  
-  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
-    
-    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol,test = "knha", data = x) 
-       
-  } else if(any(x[, "effect_type"] == "r")){
-    
-    fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal, test = "knha", data = x)
-
-  } else{ #for all two-group count effects
-    
-    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, #standardized, ML1 used 'OR2D' but that = 'OR2DL'
-               n1i = ntreatment, n2i = ncontrol, test = "knha", data = x)
-    
-  }
-  
-  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate)
-             p = fit$pval,
-             s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3]) #I2 + CI
-}
-
-#Apply function to data
-res3 <- dat %>% 
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% 
-  select(effect, s_I2) %>% 
-  left_join(res2, .)
-
-```
-
-
-```{r}
-ggplot(res3, aes(x = z, y = s_I2)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
-
-summary(lm(s_I2 ~ z, data = res3)) #b = 68.23, R2 = 0.67
-```
 
