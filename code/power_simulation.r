@@ -1,14 +1,14 @@
 #******************************************
 
 #Project: Heterogeneity in direct replications
-#Purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
+#Script purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
 #Code: Anton Ohlsson Collentine
 
 #******************************************
 
 
 #******************************************
-#Packages and data
+#Packages and data----
 #******************************************
 library(readr)
 library(metafor)
@@ -53,21 +53,52 @@ rma_simulate <- possibly(function(k, tau2, N){ #to use this across all effects I
   project <- cbind(treatment, control) #Dataframe with means and SDs for each k
   
   rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = SD_t, sd2i = SD_c, n1i = n_t, n2i = n_c, 
-      data = project, method = "REML")$I2
+      data = project, method = "REML")
   
 }, otherwise = NA) #If function fails return NA
 
-I2_replicate <- function(reps, tau2, k, N){ 
-  out_I2 <- vector("list", length(tau2))
-  for(t in seq_along(tau2)){
-    I2 <- replicate(reps, rma_simulate(k, tau2[t], N)) #I2 point estimate
-    out_I2[[t]] <- data.frame(I2 = mean(I2, na.rm = TRUE), #removs runs where rma did not converge
+#Function to extract average point estimates of I2 for a given tau2 
+I2_replicate_point <- function(reps, tau2, k, N){ #where reps = no. replications at a given tau2-value
+  out_I2 <- vector("list", length(tau2)) #tau2 is a vector of tau2-values to loop over
+  for(t in seq_along(tau2)){ #k is the number of studies in a project and N is a vector of participants in each k
+    I2 <- rep(NA, reps)
+    
+    for(rep in 1:reps){
+    fit <- rma_simulate(k, tau2[t], N) 
+    I2[rep] <- suppressWarnings(if(is.na(fit)) NA else fit$I2) #I2 point estimate. Suppressing warnings because rma is either NA or a list
+    } 
+    
+    out_I2[[t]] <- data.frame(I2 = mean(I2, na.rm = TRUE), #removes runs where rma did not converge
                               tau2 = tau2[t])
   }
   do.call(rbind, out_I2) #output dataframe
 }
 
+#Function to output point estimate of I2 and proportion significant results based on 95% confidence interval
+I2_replicate_ci <- function(reps, tau2, k, N){ 
+  I2_dist <- vector("list", length(tau2))
+  I2_ci <- vector("list", length(tau2))
+  for(t in seq_along(tau2)){
+    I2 <- rep(NA, reps)
+    ci.lb <- rep(NA, reps)
+    
+    for(rep in 1:reps){
+      fit <- rma_simulate(k, tau2[t], N) 
+      I2[rep] <- suppressWarnings(if(is.na(fit)) NA else fit$I2) #I2 point estimate
+      ci.lb[rep] <- suppressWarnings(if(is.na(fit)) NA else confint(fit)$random[3, 2]) #lower bound I2 CI
+    }
+    
+    I2_dist[[t]] <- data.frame(I2 = I2, tau2 = t)
+    I2_ci[[t]] <- data.frame(not_zero = mean(ci.lb > 0, na.rm = TRUE), #removs runs where rma did not converge
+                                   tau2 = t) #each input tau2 is output as its index in the tau2 vector
+  }
+  I2_dist <- do.call(rbind, I2_dist)
+  I2_ci <- do.call(rbind, I2_ci)
+  list(I2_dist = I2_dist, I2_ci_lb = I2_ci) #outputs two dataframes in a list
+}
+
 #**************************TEST----
+
 datx <- dat %>% 
   filter(effect == "Sunk Costs")
 
@@ -75,8 +106,18 @@ fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t
            sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = datx)
 confint(fit)$random[3, 2] #gives us lower bound of I2
 
+taus <- list(c(0, 0.01), c(0, 0.02))
+
+for(e in seq_along(dat2)){
+  res[[e]] <- I2_replicate_ci(5, c(0, 0.01), dat2[[e]]$k, dat2[[e]]$Ntotal)
+  cat("...RS",e, "/37") #see progress
+  # if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
+}
+
+
+
 #******************************************
-#Run simulations
+#Run simulations to estimate tau2 values that correspond to small/medium/large I2----
 #******************************************
 
 dat2 <- dat %>% #Extract k for each project and N of sub-studies
@@ -89,22 +130,31 @@ set.seed(112)
 res <- vector("list", length(dat2)) 
 
 for(e in seq_along(dat2)){
- res[[e]] <- I2_replicate(1, tau2_values, dat2[[e]]$k, dat2[[e]]$Ntotal)
+ res[[e]] <- I2_replicate_point(50, tau2_values, dat2[[e]]$k, dat2[[e]]$Ntotal)
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
 }
 
-
-
-#******************************************
-#Plot results
-#******************************************
-# dat3 <- readRDS("temp_sim_results.RDS")
-dat3 <- res
+dat3 <- readRDS("temp_sim_results.RDS")
 names(dat3) <- names(dat2)
-  
-dat3 <- dat3 %>% 
+
+dat3 <- dat3 %>% #create dataframe with identifier
   bind_rows(.id = "effect")
+
+
+#Extract values that correspond best to I2 = small (25%), medium (50%) and large (75%)
+dat4 <- dat3 %>% 
+  mutate(s = I2 - 25,
+         m = I2 - 50,
+         l = I2 - 75) %>% 
+  group_by(effect) %>% 
+  summarize(small = tau2[which.min(abs(s))], #tau2 value for I2 closest to 25
+            medium = tau2[which.min(abs(m))], #tau2 value for I2 closest to 50
+            large = tau2[which.min(abs(l))]) %>% #tau2 value for I2 closest to 75
+  ungroup()
+#******************************************
+#Plot tau2 against I2----
+#******************************************
 
 #Point-plot shows clearly that the initial increase is fastest 
 #Facet wrap makes it informative but lacks succinctness
@@ -120,25 +170,64 @@ ggplot(dat3, aes(x = tau2, y = I2, group = effect)) +
   scale_y_continuous(minor_breaks = NULL) +
   coord_cartesian(ylim = c(0, 100))
 
+
 #******************************************
-#Extract tau2 values
+#Simulation no. 2----
 #******************************************
-#Extract values that correspond best to I2 = zero, small (25%), medium (50%) and large (75%)
+dat5 <- dat4 %>%
+  split(.$effect) %>% 
+  map(., function(x) x %>% select(-effect) %>% as.numeric(t(.))) %>% 
+  map2(dat2, ., list) #add the extracted tau2-values as a vector to each list-element in dat2
 
-dat4 <- dat3 %>% 
-  mutate(s = I2 - 25,
-         m = I2 - 50,
-         l = I2 - 75) %>% 
-  group_by(effect) %>% 
-  summarize(small = tau2[which.min(abs(s))], #tau2 value for I2 closest to 25
-            medium = tau2[which.min(abs(m))], #tau2 value for I2 closest to 50
-            large = tau2[which.min(abs(l))]) %>% #tau2 value for I2 closest to 75
-  ungroup()
+set.seed(56)
+res2 <- vector("list", length(dat5)) 
 
-##At this point I have all the tau2-values that I need and can move on
-#to the next phase. In th next phase I will simulate power + type I error
-#based on the tau2-values that I input
+system.time(for(e in seq_along(dat5)){
+  res2[[e]] <- I2_replicate_ci(1e3, c(0, dat5[[e]][[2]]), dat5[[e]][[1]]$k, dat5[[e]][[1]]$Ntotal)
+  cat("...RS",e, "/37") #see progress
+  if (e%%5 == 0 | e == 37) saveRDS(res2, "temp_sim_results_2.RDS") #save ocassionally and at finish
+})
 
+
+
+res2 <- readRDS("temp_sim_results_2.RDS")
+
+I2_dist <- lapply(res2, function(x) x$I2_dist)
+I2_ci_lb <- lapply(res2, function(x) x$I2_ci_lb)
+
+names(I2_dist) <- names(I2_ci_lb) <- names(dat2)
+
+library(tidyr) #Used for spread
+I2_ci_lb <- I2_ci_lb %>% #power and type 1 error for each effect, ready for tabling
+  bind_rows(.id = "effect") %>% 
+  tidyr::spread(., key = tau2, value = not_zero) %>% 
+  rename(zero = '1', small = '2', medium = '3', large = '4')
+
+#******************************************
+#Plot distributions no. 2----
+#******************************************
+#Prep distribution for plotting
+I2_dist <- I2_dist %>% 
+  bind_rows(.id = "effect") %>% 
+  mutate(tau2 = recode(tau2, '1' = "Zero",
+                       '2' = "Small",
+                       '3' = "Medium",
+                       '4' = "Large"),
+         tau2 = as.factor(tau2))
+
+#load function and process from tables.rmd, needs to be fixed
+observed <- het %>%
+  ungroup() %>% 
+  select(effect, I2 = s_I2) %>%
+  mutate(tau2 = "Observed")
+
+ggplot(I2_dist, aes(x = I2, group = tau2, fill = tau2, linetype = tau2)) +
+  geom_density(alpha = 0.3) +
+  theme_classic() +
+  coord_cartesian(xlim = c(0, 100)) +
+  guides(fill = guide_legend(reverse = TRUE), color = guide_legend(reverse = TRUE), 
+         linetype = guide_legend(reverse = TRUE)) +
+  scale_fill_grey()
 
 
 
