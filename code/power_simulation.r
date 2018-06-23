@@ -15,132 +15,90 @@ library(metafor)
 library(dplyr)
 library(purrr) #for 'possibly'
 library(ggplot2)
+library(tidyr) #for 'spread'
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
 
 #******************************************
-#Functions
+#Simulation function----
 #******************************************
-#Because we are only interested in heterogeneity, average effect size doesn't matter
-#Huedo-Medina I set it to 0.5 (using hedge's g), however, we would then be double-standardizing
-#later when running the meta-analysis since each individual's value would be measured already
-#in standard deviation units. Simpler to set it to zero.
-
-rma_simulate <- possibly(function(k, tau2, N){ #to use this across all effects I just need to add N_half as an argument
-  #I use possibly because REML does not always converge. Non-conversions then -> NA
-  N_half <- N%/%2
-  #Step 1: draw k mean effect sizes, here homogeneity
-  averages <- rnorm(n = k, mean = 0, sd = sqrt(tau2)) #we wish to loop sd = tau over a number of values
+simulate_I2 <- function(effect, reps, tau){ #this function applies to a single list object (effect)
   
-  #Step 2: draw individual results for each study, control group and treatment group
-  #I draw N/2 rounded to the closest integer for each study with equality of variances
-  #Following Huedo-Medina I use no effect in control and the full effect in treatment group
+  K <- effect$K #Number of studies
+  N <- effect$Ntotal #Sample sizes for all K studies
+  output <- vector("list", length(tau)) #empty list for output
   
-  #loop because rnorm is not vectorized for n
-  treatment <- vector("list", length(N)) #length = k
-  control <- vector("list", length(N)) #length = k
-  for(Nk in seq_along(N_half)){ 
-    treatment_i <- rnorm(n = N_half[Nk], mean = averages[Nk], sd = 1)
-    control_i <- rnorm(n = N_half[Nk], mean = 0, sd = 1)
+  if(effect$type == "r"){ #If correlation
     
-    treatment[[Nk]] <- data.frame(avg_t = mean(treatment_i), SD_t = sd(treatment_i), n_t = N_half[Nk])
-    control[[Nk]] <- data.frame(avg_c = mean(control_i), SD_c = sd(control_i), n_c = N_half[Nk])
-  }
-  
-  treatment <- do.call(rbind, treatment) 
-  control <- do.call(rbind, control) 
-  project <- cbind(treatment, control) #Dataframe with means and SDs for each k
-  
-  rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = SD_t, sd2i = SD_c, n1i = n_t, n2i = n_c, 
-      data = project, method = "REML")
-  
-}, otherwise = NA) #If function fails return NA
-
-#Function to extract average point estimates of I2 for a given tau2 
-I2_replicate_point <- function(reps, tau2, k, N){ #where reps = no. replications at a given tau2-value
-  out_I2 <- vector("list", length(tau2)) #tau2 is a vector of tau2-values to loop over
-  for(t in seq_along(tau2)){ #k is the number of studies in a project and N is a vector of participants in each k
-    I2 <- rep(NA, reps)
-    
-    for(rep in 1:reps){
-    fit <- rma_simulate(k, tau2[t], N) 
-    I2[rep] <- suppressWarnings(if(is.na(fit)) NA else fit$I2) #I2 point estimate. Suppressing warnings because rma is either NA or a list
-    } 
-    
-    out_I2[[t]] <- data.frame(I2 = mean(I2, na.rm = TRUE), #removes runs where rma did not converge
-                              tau2 = tau2[t])
-  }
-  do.call(rbind, out_I2) #output dataframe
-}
-
-#Function to output point estimate of I2 and proportion significant results based on 95% confidence interval
-I2_replicate_ci <- function(reps, tau2, k, N){ 
-  I2_dist <- vector("list", length(tau2))
-  I2_ci <- vector("list", length(tau2))
-  for(t in seq_along(tau2)){
-    I2 <- rep(NA, reps)
-    ci.lb <- rep(NA, reps)
-    
-    for(rep in 1:reps){
-      fit <- rma_simulate(k, tau2[t], N) 
-      I2[rep] <- suppressWarnings(if(is.na(fit)) NA else fit$I2) #I2 point estimate
-      ci.lb[rep] <- suppressWarnings(if(is.na(fit)) NA else confint(fit)$random[3, 2]) #lower bound I2 CI
+    for(t in seq_along(tau)){ #loop over each tau-value
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){ #For each tau-value repeat below "reps" times and bind into dataframe
+        
+        rho <- rnorm(n = K, mean = 0, sd = tau[t]) #Draw true correlation rho for each k at the given value of tau
+        fr <- rnorm(n = K, mean = rho, sd = sqrt(1 / (N - 3))) #draw observed correlations (fisher's z) for each k
+        
+        fit <- rma(yi = fr, vi = 1 / (N - 3), method = "REML") #meta-analysis of fisher's z, each study weighted by its N
+        
+        data.frame(I2 = fit$I2, ci.lb = confint(fit)$random[3, 2], tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
     }
     
-    I2_dist[[t]] <- data.frame(I2 = I2, tau2 = t)
-    I2_ci[[t]] <- data.frame(not_zero = mean(ci.lb > 0, na.rm = TRUE), #removs runs where rma did not converge
-                                   tau2 = t) #each input tau2 is output as its index in the tau2 vector
+  }else{ #if not correlation, treat as t-test
+    
+    N_half <- N%/%2 #divide Ntotal in two equal halves (integer rounded) for treatment and control group
+    
+    for(t in seq_along(tau)){
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){
+        
+        theta <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each study
+        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(N_half)) #Draw means from sampling distribution control group
+        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(N_half)) #Draw means from sampling distribution treatment group
+        var_c <- rchisq(n = K, df = N_half - 1) / (N_half - 1) #draw variances from sampling distribution control group
+        var_t <- rchisq(n = K, df = N_half - 1) / (N_half - 1) #draw variances from sampling distribution treatment group
+        
+        fit <- rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t), sd2i = sqrt(var_c), n1i = N_half,
+                   n2i = N_half, method = "REML") #fit meta-analysis transforming into standardized mean difference (Hedge's g)
+        
+        data.frame(I2 = fit$I2, ci.lb = confint(fit)$random[3, 2], tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL))
+    }
   }
-  I2_dist <- do.call(rbind, I2_dist)
-  I2_ci <- do.call(rbind, I2_ci)
-  list(I2_dist = I2_dist, I2_ci_lb = I2_ci) #outputs two dataframes in a list
+  
+  bind_rows(output) #Combine output across tau-values into one dataframe
 }
 
-#**************************TEST----
-
-datx <- dat %>% 
-  filter(effect == "Sunk Costs")
-
-fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, 
-           sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = datx)
-confint(fit)$random[3, 2] #gives us lower bound of I2
-
-taus <- list(c(0, 0.01), c(0, 0.02))
-
-for(e in seq_along(dat2)){
-  res[[e]] <- I2_replicate_ci(5, c(0, 0.01), dat2[[e]]$k, dat2[[e]]$Ntotal)
-  cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
-}
-
-
-
 #******************************************
-#Run simulations to estimate tau2 values that correspond to small/medium/large I2----
+#Run simulations to estimate tau values that correspond to small/medium/large I2----
 #******************************************
 
-dat2 <- dat %>% #Extract k for each project and N of sub-studies
-  split(., .$effect) %>% 
-  map(~ list(k = nrow(.), Ntotal = .$Ntotal)) #~ is shorthand for an anonymous function
+dat2 <- dat %>% #Extract k and effect type for each effect and N of each included study
+  split(.$effect) %>% 
+  map(~ list(K = nrow(.), Ntotal = .$Ntotal, type = unique(.$effect_type))) #~ is shorthand for an anonymous function
 
-tau2_values <- seq(0, 0.25, by = 0.005) #tau2 values to loop over
+tau_values <- seq(0, 0.5, by = 0.005) #tau values to loop over
 
 set.seed(112)
-res <- vector("list", length(dat2)) 
+res <- vector("list", length(dat2)) #output of below loop
 
-for(e in seq_along(dat2)){
- res[[e]] <- I2_replicate_point(50, tau2_values, dat2[[e]]$k, dat2[[e]]$Ntotal)
+system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values)
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
-}
+})
 
 dat3 <- readRDS("temp_sim_results.RDS")
-names(dat3) <- names(dat2)
+names(dat3) <- names(dat2) #names are lost when looping instead of using lapply
 
-dat3 <- dat3 %>% #create dataframe with identifier
-  bind_rows(.id = "effect")
-
+dat3 <- dat3 %>% 
+  bind_rows(.id = "effect") %>% #create dataframe with identifier
+  select(I2, tau, effect) %>% 
+  group_by(tau, effect) %>% 
+  summarize(I2 = mean(I2)) %>% #Take mean of I2 at each tau-level and for each effect
+  ungroup()
 
 #Extract values that correspond best to I2 = small (25%), medium (50%) and large (75%)
 dat4 <- dat3 %>% 
@@ -148,22 +106,22 @@ dat4 <- dat3 %>%
          m = I2 - 50,
          l = I2 - 75) %>% 
   group_by(effect) %>% 
-  summarize(small = tau2[which.min(abs(s))], #tau2 value for I2 closest to 25
-            medium = tau2[which.min(abs(m))], #tau2 value for I2 closest to 50
-            large = tau2[which.min(abs(l))]) %>% #tau2 value for I2 closest to 75
+  summarize(small = tau[which.min(abs(s))], #tau value for I2 closest to 25
+            medium = tau[which.min(abs(m))], #tau value for I2 closest to 50
+            large = tau[which.min(abs(l))]) %>% #tau value for I2 closest to 75
   ungroup()
 #******************************************
-#Plot tau2 against I2----
+#Plot tau against I2----
 #******************************************
 
 #Point-plot shows clearly that the initial increase is fastest 
-#Facet wrap makes it informative but lacks succinctness
-ggplot(dat3, aes(x = tau2, y = I2)) + 
+#Facet wrap is informative but lacks succinctness
+ggplot(dat3, aes(x = tau, y = I2)) + 
   geom_point(alpha = 0.2) +
   facet_wrap(~effect)
 
 #combined line plot gives good overview. Point version of the same is also interesting.
-ggplot(dat3, aes(x = tau2, y = I2, group = effect)) +
+ggplot(dat3, aes(x = tau, y = I2, group = effect)) +
   geom_line(alpha = 0.2) +
   theme_bw() +
   scale_x_continuous(minor_breaks = NULL) +
@@ -172,48 +130,47 @@ ggplot(dat3, aes(x = tau2, y = I2, group = effect)) +
 
 
 #******************************************
-#Simulation no. 2----
+#Simulation 2 - estimate power/type 1 error at zero/small/medium/large heterogeneity----
 #******************************************
-dat5 <- dat4 %>%
+dat5 <- dat4 %>% #add the extracted tau2-values as a vector to each list-element in dat2
   split(.$effect) %>% 
   map(., function(x) x %>% select(-effect) %>% as.numeric(t(.))) %>% 
-  map2(dat2, ., list) #add the extracted tau2-values as a vector to each list-element in dat2
+  map2(dat2, ., list) 
 
 set.seed(56)
 res2 <- vector("list", length(dat5)) 
 
-system.time(for(e in seq_along(dat5)){
-  res2[[e]] <- I2_replicate_ci(1e3, c(0, dat5[[e]][[2]]), dat5[[e]][[1]]$k, dat5[[e]][[1]]$Ntotal)
+system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
+  res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1, tau = c(0, dat5[[e]][[2]]))
   cat("...RS",e, "/37") #see progress
-  if (e%%5 == 0 | e == 37) saveRDS(res2, "temp_sim_results_2.RDS") #save ocassionally and at finish
+  if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results_2.RDS") #save ocassionally and at finish
 })
 
 
-
 res2 <- readRDS("temp_sim_results_2.RDS")
+names(res2) <-  names(dat2)
 
-I2_dist <- lapply(res2, function(x) x$I2_dist)
-I2_ci_lb <- lapply(res2, function(x) x$I2_ci_lb)
-
-names(I2_dist) <- names(I2_ci_lb) <- names(dat2)
-
-library(tidyr) #Used for spread
-I2_ci_lb <- I2_ci_lb %>% #power and type 1 error for each effect, ready for tabling
+I2_ci_lb <- res2 %>% 
   bind_rows(.id = "effect") %>% 
-  tidyr::spread(., key = tau2, value = not_zero) %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')
 
 #******************************************
 #Plot distributions no. 2----
 #******************************************
 #Prep distribution for plotting
-I2_dist <- I2_dist %>% 
+I2_dist <- res2 %>% 
   bind_rows(.id = "effect") %>% 
-  mutate(tau2 = recode(tau2, '1' = "Zero",
-                       '2' = "Small",
-                       '3' = "Medium",
-                       '4' = "Large"),
-         tau2 = as.factor(tau2))
+  rename(heterogeneity = tau_index) %>% 
+  mutate(heterogeneity = recode(heterogeneity,
+                            '1' = "Zero",
+                            '2' = "Small",
+                            '3' = "Medium",
+                            '4' = "Large"),
+         heterogeneity = as.factor(heterogeneity))
 
 #load function and process from tables.rmd, needs to be fixed
 observed <- het %>%
@@ -222,12 +179,12 @@ observed <- het %>%
   mutate(tau2 = "Observed")
 
 ggplot(I2_dist, aes(x = I2, group = tau2, fill = tau2, linetype = tau2)) +
+  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 50, alpha = 0.5) +
   geom_density(alpha = 0.3) +
   theme_classic() +
-  coord_cartesian(xlim = c(0, 100)) +
-  guides(fill = guide_legend(reverse = TRUE), color = guide_legend(reverse = TRUE), 
-         linetype = guide_legend(reverse = TRUE)) +
-  scale_fill_grey()
-
+  coord_cartesian(xlim = c(0, 100))  +
+  scale_fill_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
+  scale_linetype(breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
+  scale_color_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed"))
 
 
