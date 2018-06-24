@@ -8,97 +8,29 @@ output: pdf_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.asp = 1.3)
 ```
 
-```{r load data and packages}
+```{r load packages, data and source helper functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(metafor)){install.packages("metafor")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(cowplot)){install.packages("cowplot")}
+
 library(readr) #To load data
 library(dplyr) #For data transformation
-library(purrr) #For data transformation
+library(purrr) #For data iteration
 library(metafor) #To run meta-analyses
 library(ggplot2) #Plot data
 library(cowplot) #Combine several plots into one
 
 dat <- read_csv("../data/collated_summary_data.csv")
-```
 
-```{r transformation_functions}
-#Formulas found in: 
-#Borenstein, M. (2009). Effect sizes for continuous data. In H. Cooper, L. V. Hedges, & J. C. Valentine (Eds.), The handbook of research synthesis and meta-analysis (2nd ed., pp. 221-235). New York: Russell Sage Foundation.
-
-#For raw mean difference + SE
-transform_SE <- function(ES, SE, n1, n2){ 
-  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
-  d <- ES / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes. p.234
-  r <- d / sqrt(d^2 + corr) #p.234
-  data.frame(r = r, n = n1 + n2)
-}
-
-#For mean differrence + SD
-transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
-  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #page 226. 
-  d <- (m1 - m2) / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p.234
-  r <- d / sqrt(d^2 + corr) #p. 234
-  data.frame(r = r, n = n1 + n2)
-}
-
-#For Risk difference/OR
-transform_RD <- function(ai, bi, ci, di){
-  ai <- ifelse(ai == 0, 0.5, ai)  #If value is equal to zero add one half so as to not divide by zero
-  bi <- ifelse(bi == 0, 0.5, bi)  #This affects 1 study for Allowed vs. forbidden
-  ci <- ifelse(ci == 0, 0.5, ci)  #And several studies for Low vs. high category scales
-  di <- ifelse(di == 0, 0.5, di)
-  logOR <- log((ai*di) / (bi*ci)) #p. 266
-  d = logOR * sqrt(3)/pi #p. 232
-  n1 = ai + bi
-  n2 = ci + di
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p. 234
-  r <- d / sqrt(d^2 + corr) #p. 234
-  data.frame(r = r, n = ai + bi + ci +di)
-}
-
-#No transformatin needed for correlation
-
-
-transform_MA <- function(x){
-  if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
-    
-    transformed <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
-    
-    #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-     transformed <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
-    
-    #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
-  
-  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
-    
-     transformed <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
-    
-    # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
- 
-  } else if(any(x[, "effect_type"] == "r")){
-    
-     transformed <- data.frame(r = x$effect_size, n = x$Ntotal)
-    
-    # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
- 
-   } else{ #For the many labs OR that were transformed to d [double check]
-    
-     transformed <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
-     
-}
-  
-  # data.frame(b = fit$b[[1]], I2 = fit$I2) #estimate out
-  transformed
-}
-
-
+source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
 ```{r transform_df}
 #Transform effect sizes to raw correlations
+#'transform_MA' is a sourced function
 res <- dat %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(transform_MA, .id = "effect") #apply function and transform back from list to dataframe
@@ -122,6 +54,8 @@ res2 <- res %>%
 
 ```{r plot_res}
 
+# summary(lm(I2 ~ z, data = res2)) #b = 69.40, R2 = 0.61
+
 I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
@@ -132,11 +66,13 @@ I2 <- ggplot(res2, aes(x = z, y = I2)) +
 
 # ggsave("I2_effect_size.png")
 
+# summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
+
 H2 <- ggplot(res2, aes(x = z, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   xlab("Fisher's z") +
-  geom_text(x = 0.14, y = 6, label = "b = 3.81, R2 = 0.53", size = 3.5) +
+  geom_text(x = 0.14, y = 5.9, label = "b = 3.81, R2 = 0.53", size = 3.5) +
   theme_classic()
 
 # ggsave("H2_effect_size.png")
@@ -147,18 +83,73 @@ effect_het
 # save_plot("effect_het.png", effect_het,
           # nrow = 2, base_aspect_ratio = 1.3)
 
-# summary(lm(I2 ~ z, data = res2)) #b = 69.40, R2 = 0.61
-# summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
 ```
 
-```{r labelled_plot, fig.asp= 0.618}
-ggplot(res2, aes(x = z, y = I2, label = effect)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  xlab("Fisher's z") +
-  coord_cartesian(ylim = c(0, 100)) +
+```{r robustness, results="hide"}
+##Excluding anchoring effects
+dropped_anchoring <- res2 %>%
+  filter(!grepl("Anchoring", effect))
+
+summary(lm(I2 ~ z, data = dropped_anchoring))
+#b = 87.87, R2 = .51
+
+```
+
+```{r Plot_tau_against_I2, fig.asp = 0.618}
+dat3 <- readRDS("temp_sim_results.RDS")
+names(dat3) <- sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
+
+dat3 <- dat3 %>% 
+  bind_rows(.id = "effect") %>% #create dataframe with identifier
+  select(I2, tau, effect) %>% 
+  group_by(tau, effect) %>% 
+  summarize(I2 = mean(I2)) %>% #Take mean of I2 at each tau-level and for each effect
+  ungroup()
+
+#combined line plot gives good overview. Point version of the same is also interesting.
+ggplot(dat3, aes(x = tau, y = I2, group = effect)) +
+  geom_line(alpha = 0.4) +
+  theme_bw() +
+  scale_x_continuous(minor_breaks = NULL) +
+  scale_y_continuous(minor_breaks = NULL) +
+  coord_cartesian(ylim = c(0, 100))
+
+```
+
+
+```{r Density_plot, fig.asp= 0.618}
+dens <- readRDS("temp_sim_results_2.RDS")
+names(dens) <-  sort(unique(dat$effect))
+
+
+#Simulated data at various heterogeneity levels, prep for plotting
+I2_dist <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  rename(heterogeneity = tau_index) %>% 
+  mutate(heterogeneity = recode(heterogeneity,
+                            '1' = "Zero",
+                            '2' = "Small",
+                            '3' = "Medium",
+                            '4' = "Large"),
+         heterogeneity = as.factor(heterogeneity))
+
+#Observed I2 estimates, i.e, results from main table, see table.rmd
+#Effects estimated with sourced function 'est_heterogeen_smd_raw'
+observed <- dat %>% 
+  split(.$effect) %>%  
+  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% 
+  select(effect, I2 = s_I2) %>%
+  mutate(heterogeneity = "Observed")
+
+ggplot(I2_dist, aes(x = I2, group = heterogeneity, fill = heterogeneity, linetype = heterogeneity)) +
+  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 50, alpha = 1) +
+  geom_density(alpha = 0.3) +
   theme_classic() +
-  geom_text(alpha = 0.5)
-```
+  coord_cartesian(xlim = c(0, 100))  +
+  scale_fill_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
+  scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"), breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
+  scale_color_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed"))
 
+
+```
 

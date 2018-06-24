@@ -8,14 +8,23 @@ output: pdf_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-```{r load data and packages}
-library(readr)
-library(dplyr)
-library(kableExtra)
-library(purrr)
-library(metafor)
+```{r load packages, data and source functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(metafor)){install.packages("metafor")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(kableExtra)){install.packages("kableExtra")}
+
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(purrr) #For data iteration
+library(metafor) #To run meta-analyses
+library(kableExtra) #For creating good-looking pdf tables
+
 
 dat <- read_csv("../data/collated_summary_data.csv")
+
+source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
 ##Heterogeneity increases with effect size
@@ -83,7 +92,7 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
   kable_styling() %>% 
   column_spec(2, width = "25em") %>% #specify width of paper column
   footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RS = Replication Study, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report.")
+           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RS = Replication Study, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (OSF.io/XXXX)")
 ```
 
 ```{r prep-heterogeneity-table}
@@ -91,56 +100,15 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
 #library(dplyr)
 #library(purrr)
 
-est_heterogen_smd_raw <- function(x){
-  if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
-    
-    fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol,  data = x)
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-    fit <-  rma(yi = effect_size, sei = outcome_c2,  data = x) 
-  
-  } else if(any(x[, "effect_type"] == "Raw mean difference")){
-    if(any(x[, "rs"] %in% c("RRR5", "RRR7"))){ #For these us the Knapp and Hartung adjustment of standard errors
-      
-      fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, test ="knha", data = x)
-    } else{
-      fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x)
-    }
-  
-  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
-    
-    fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x) 
-       
-  } else if(any(x[, "effect_type"] == "r")){
-    if(any(x[, "rs"] == "ML1")){
-      fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal,  data = x)
-    } else{ #for ML3
-      fit <- rma(measure = "UCOR", ri = effect_size, ni = Ntotal,  data = x, vtype = "UB")
-      #Note that ML3 specifies measure = "COR" with vtype = "UB", but that this is specified as above in the latest metafor 
-    }
-
-  } else{ #for all two-group count effects
-    
-    fit <- rma(measure = "OR2DL", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, 
-               n1i = ntreatment, n2i = ncontrol,  data = x)
-    #standardized, ML1 used 'OR2D' which = 'OR2DL' in latest version of metafor
-    
-  }
-  
-  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate)
-             s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3]) #I2 + CI
-}
-
-#Apply function to data
+#fit a random effects model to all empirical data
+#Each set of input datapoints is meta-analyzed as per the original replication project
+#Function 'est_heterogen_smd_raw' is sourced
 res <- dat %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
 
-OR <- c("Allowed vs. forbidden", "Gain vs. loss framing", "Norm of reciprocity", "Low vs. high category scales") #Effects reported as d in many labs 1 but meta-analyzed as OR
 
-#Add rs to the data-frame
+#Add rs and k to the data-frame and prep for table
 het <- dat %>% 
   select(rs, Site, effect, effect_type) %>% 
   group_by(rs, effect) %>% 
@@ -150,19 +118,37 @@ het <- dat %>%
   mutate(effect_type = recode(effect_type, 
                               d = "SMD.",
                               'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>% 
+                              'Risk difference' = "RD")) 
+
+#Load simulation results (power/type 1 error for all effects)
+dens <- readRDS("temp_sim_results_2.RDS")
+names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
+
+#Summary of simulation results, needs to be combined with main part of table
+I2_ci_lb <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(zero = '1', small = '2', medium = '3', large = '4')
+
+#Combine dataframes to create full table
+het <-  het %>% 
+  left_join(I2_ci_lb) %>% 
   select(rs, effect,k , everything()) %>% 
   arrange(desc(s_I2),  desc(s_ci.ub)) #sort by I2 and upper CI bound
 ```
 
 ##Heterogeneity in preregistered multi-lab psychology studies
 ```{r heterogeneity-table}
-library(kableExtra)
+#library(kableExtra)
 
-het %>% knitr::kable("latex", align = "c", booktabs = TRUE,digits = 2, col.names = c("RS", "Effect", "k", "Effect type", "Size", "I2(%)", "ci.lb", "ci.ub")) %>% 
-  kable_styling("scale_down") %>%
+het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.names = c("RS", "Effect", "k", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "Zero", "Small", "Medium", "Large")) %>% 
+  add_header_above(c(" " = 8, "Heterogeneity & power/type 1" = 4)) %>% 
+  kable_styling("scale_down", font_size = 8) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "We meta-analyzed effects using the same outcome measures that were used by the original authors. Standardized mean difference is Hedge's g. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. Effects were estimated in metafor using REML with the 'knha' correction. RS = Replication Study, k = no. primary studies, Size = Point estimates of effect sizes, ci.lb = lower bound of I2 95\\\\% confidence interval, ci.ub = upper bound of I2 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation.")
+           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RS = Replication Study, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of I2 95\\\\% confidence interval, ci.ub = upper bound of I2 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (OSF.io/XXXX)")
 
 
 ```

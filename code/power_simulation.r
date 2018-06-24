@@ -4,17 +4,28 @@
 #Script purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
 #Code: Anton Ohlsson Collentine
 
+##TO DO----
+#Should save results as .csv maybe
+
 #******************************************
 
 
 #******************************************
 #Packages and data----
 #******************************************
-library(readr)
-library(metafor)
-library(dplyr)
-library(purrr) #for 'possibly'
-library(ggplot2)
+if(!require(readr)){install.packages("readr")}
+if(!require(metafor)){install.packages("metafor")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(tidyr)){install.packages("tidyr")}
+
+
+library(readr) #load data
+library(metafor) #run meta-analyses
+library(dplyr) #general data wrangling
+library(purrr) #for 'possibly' and iteration with 'map'
+library(ggplot2) #plot results from first simulation
 library(tidyr) #for 'spread'
 
 dat <- read_csv("../data/collated_summary_data.csv")
@@ -72,7 +83,7 @@ simulate_I2 <- function(effect, reps, tau){ #this function applies to a single l
 }
 
 #******************************************
-#Run simulations to estimate tau values that correspond to small/medium/large I2----
+#Simulation 1 -  estimate tau values that correspond to small/medium/large I2----
 #******************************************
 
 dat2 <- dat %>% #Extract k and effect type for each effect and N of each included study
@@ -85,7 +96,7 @@ set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values)
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 100, tau = tau_values) #100 reps is about 3.5 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
 })
@@ -110,24 +121,13 @@ dat4 <- dat3 %>%
             medium = tau[which.min(abs(m))], #tau value for I2 closest to 50
             large = tau[which.min(abs(l))]) %>% #tau value for I2 closest to 75
   ungroup()
-#******************************************
-#Plot tau against I2----
-#******************************************
 
 #Point-plot shows clearly that the initial increase is fastest 
-#Facet wrap is informative but lacks succinctness
+#This plot provides good overview of results but is only an explorative plot
+#see figures.rmd for the plots in the paper
 ggplot(dat3, aes(x = tau, y = I2)) + 
   geom_point(alpha = 0.2) +
   facet_wrap(~effect)
-
-#combined line plot gives good overview. Point version of the same is also interesting.
-ggplot(dat3, aes(x = tau, y = I2, group = effect)) +
-  geom_line(alpha = 0.2) +
-  theme_bw() +
-  scale_x_continuous(minor_breaks = NULL) +
-  scale_y_continuous(minor_breaks = NULL) +
-  coord_cartesian(ylim = c(0, 100))
-
 
 #******************************************
 #Simulation 2 - estimate power/type 1 error at zero/small/medium/large heterogeneity----
@@ -141,50 +141,21 @@ set.seed(56)
 res2 <- vector("list", length(dat5)) 
 
 system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
-  res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1, tau = c(0, dat5[[e]][[2]]))
+  res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4, tau = c(0, dat5[[e]][[2]]))
   cat("...RS",e, "/37") #see progress
-  if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results_2.RDS") #save ocassionally and at finish
+  if (e%%5 == 0 | e == 37) saveRDS(res2, "temp_sim_results_2.RDS") #save ocassionally and at finish
 })
 
 
-res2 <- readRDS("temp_sim_results_2.RDS")
-names(res2) <-  names(dat2)
+dens <- readRDS("temp_sim_results_2.RDS")
+names(dens) <-  names(dat2)
 
-I2_ci_lb <- res2 %>% 
+#Summary of results. These are incorporated into the main table in the paper, see tables.rmd
+I2_ci_lb <- dens %>% 
   bind_rows(.id = "effect") %>% 
   group_by(effect, tau_index) %>% 
   summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
   ungroup() %>% 
   tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')
-
-#******************************************
-#Plot distributions no. 2----
-#******************************************
-#Prep distribution for plotting
-I2_dist <- res2 %>% 
-  bind_rows(.id = "effect") %>% 
-  rename(heterogeneity = tau_index) %>% 
-  mutate(heterogeneity = recode(heterogeneity,
-                            '1' = "Zero",
-                            '2' = "Small",
-                            '3' = "Medium",
-                            '4' = "Large"),
-         heterogeneity = as.factor(heterogeneity))
-
-#load function and process from tables.rmd, needs to be fixed
-observed <- het %>%
-  ungroup() %>% 
-  select(effect, I2 = s_I2) %>%
-  mutate(tau2 = "Observed")
-
-ggplot(I2_dist, aes(x = I2, group = tau2, fill = tau2, linetype = tau2)) +
-  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 50, alpha = 0.5) +
-  geom_density(alpha = 0.3) +
-  theme_classic() +
-  coord_cartesian(xlim = c(0, 100))  +
-  scale_fill_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
-  scale_linetype(breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
-  scale_color_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed"))
-
 
