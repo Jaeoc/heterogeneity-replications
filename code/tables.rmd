@@ -145,8 +145,8 @@ het <-  het %>%
 #library(kableExtra)
 
 het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.names = c("RS", "Effect", "k", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "Zero", "Small", "Medium", "Large")) %>% 
-  add_header_above(c(" " = 8, "Heterogeneity & power/type 1" = 4)) %>% 
-  kable_styling("scale_down", font_size = 8) %>%
+  add_header_above(c(" " = 8, "Heterogeneity & error/power" = 4)) %>% 
+  kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
            general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RS = Replication Study, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of I2 95\\\\% confidence interval, ci.ub = upper bound of I2 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (OSF.io/XXXX)")
 
