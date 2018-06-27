@@ -1,3 +1,3 @@
-This project collates the summary data from Many labs 1, 3 and Registered reports 1:8 using a common structure.
+This project examines heterogeneity across ten pre-registered multi-lab replication projects in psychology. We examine what degree of heterogeneity can be expected in replication studies in psychology and explore a proposed relationship with effect size. We focus on direct replications.
 
-It is supervised by Professor Jelte Wicherts and Professor Marcel van Assen.
+The repository on the Open Science Framework is considered the main repository: https://osf.io/f3mga/
