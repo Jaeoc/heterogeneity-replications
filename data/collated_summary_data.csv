@@ -1,4 +1,4 @@
-"rs","effect","Site","country","in_lab","Ntotal","B_or_W","design","or_stat_test","effect_type","effect_size","ncontrol","ntreatment","outcomes1_2","outcome_c1","outcome_t1","outcome_c2","outcome_t2"
+"rp","effect","Site","country","in_lab","Ntotal","B_or_W","design","or_stat_test","effect_type","effect_size","ncontrol","ntreatment","outcomes1_2","outcome_c1","outcome_t1","outcome_c2","outcome_t2"
 "ML1","Sunk Costs","abington","USA",1,"84","Between","control vs. treatment","Independent samples t-test","d","0.572529229442946",48,36,"mean _ SD",7,8.27777777777778,2.86579237863576,1.3225756497102
 "ML1","Sunk Costs","brasilia","BRA",1,"120","Between","control vs. treatment","Independent samples t-test","d","0.235853371616288",55,65,"mean _ SD",7.25454545454545,7.83076923076923,2.65426408729762,2.2119648418405
 "ML1","Sunk Costs","charles","CZE",1,"84","Between","control vs. treatment","Independent samples t-test","d","0.480861601163547",49,35,"mean _ SD",6.79591836734694,7.8,2.406411503989,1.71155244287339
@@ -759,27 +759,27 @@
 "ML3","Subjective Distance interaction","UniversityOfVirginia","USA",1,"178","Between","Group x categorical variable","ANOVA","r","0.00215665",86,92,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","VirginiaCommonwealthUniversity","USA",1,"92","Between","Group x categorical variable","ANOVA","r","0.282120128",51,41,"NA _ NA",NA,NA,NA,NA
 "ML3","Subjective Distance interaction","mturk","USA",0,"574","Between","Group x categorical variable","ANOVA","r","0.033607716",292,282,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","AshlandUniversity","USA",1,"84","Within","Conscientiousness with persistance","correlation","r","-0.2113888",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","BradleyUniversity","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.007624803",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","CarletonUniversity","CAN",1,"42","Within","Conscientiousness with persistance","correlation","r","-0.06357754",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","IthacaCollege","USA",1,"90","Within","Conscientiousness with persistance","correlation","r","0.2007985",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MiamiUniversity","USA",1,"96","Within","Conscientiousness with persistance","correlation","r","-0.06392194",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MichiganStateUniversity","USA",1,"314","Within","Conscientiousness with persistance","correlation","r","0.02015154",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","MontanaStateUniversity","USA",1,"126","Within","Conscientiousness with persistance","correlation","r","-0.04414049",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","NovaSoutheasternUniversity","USA",1,"131","Within","Conscientiousness with persistance","correlation","r","0.1034288",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","OSUNewark","USA",1,"156","Within","Conscientiousness with persistance","correlation","r","-0.0851966",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","PacificLutheranUniversity","USA",1,"101","Within","Conscientiousness with persistance","correlation","r","-0.1399075",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","PennStateAbington","USA",1,"118","Within","Conscientiousness with persistance","correlation","r","0.02433485",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","SanDiegoStateUniversity","USA",1,"139","Within","Conscientiousness with persistance","correlation","r","0.004294308",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","TexasAandM","USA",1,"179","Within","Conscientiousness with persistance","correlation","r","0.1415478",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UCDavis","USA",1,"117","Within","Conscientiousness with persistance","correlation","r","0.06029606",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UCRiverside","USA",1,"240","Within","Conscientiousness with persistance","correlation","r","-0.02011479",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfFlorida","USA",1,"137","Within","Conscientiousness with persistance","correlation","r","0.1644415",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfSouthernMississippi","USA",1,"89","Within","Conscientiousness with persistance","correlation","r","-0.05992367",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfToronto","CAN",1,"80","Within","Conscientiousness with persistance","correlation","r","-0.01726644",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","UniversityOfVirginia","USA",1,"177","Within","Conscientiousness with persistance","correlation","r","-0.000519782",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","VirginiaCommonwealthUniversity","USA",1,"95","Within","Conscientiousness with persistance","correlation","r","0.000264722",NA,NA,"NA _ NA",NA,NA,NA,NA
-"ML3","Conscientiousness and persistance","mturk","USA",0,"580","Within","Conscientiousness with persistance","correlation","r","0.04721134",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","AshlandUniversity","USA",1,"84","Within","Conscientiousness with persistence","correlation","r","-0.2113888",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","BradleyUniversity","USA",1,"117","Within","Conscientiousness with persistence","correlation","r","0.007624803",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","CarletonUniversity","CAN",1,"42","Within","Conscientiousness with persistence","correlation","r","-0.06357754",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","IthacaCollege","USA",1,"90","Within","Conscientiousness with persistence","correlation","r","0.2007985",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","MiamiUniversity","USA",1,"96","Within","Conscientiousness with persistence","correlation","r","-0.06392194",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","MichiganStateUniversity","USA",1,"314","Within","Conscientiousness with persistence","correlation","r","0.02015154",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","MontanaStateUniversity","USA",1,"126","Within","Conscientiousness with persistence","correlation","r","-0.04414049",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","NovaSoutheasternUniversity","USA",1,"131","Within","Conscientiousness with persistence","correlation","r","0.1034288",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","OSUNewark","USA",1,"156","Within","Conscientiousness with persistence","correlation","r","-0.0851966",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","PacificLutheranUniversity","USA",1,"101","Within","Conscientiousness with persistence","correlation","r","-0.1399075",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","PennStateAbington","USA",1,"118","Within","Conscientiousness with persistence","correlation","r","0.02433485",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","SanDiegoStateUniversity","USA",1,"139","Within","Conscientiousness with persistence","correlation","r","0.004294308",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","TexasAandM","USA",1,"179","Within","Conscientiousness with persistence","correlation","r","0.1415478",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UCDavis","USA",1,"117","Within","Conscientiousness with persistence","correlation","r","0.06029606",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UCRiverside","USA",1,"240","Within","Conscientiousness with persistence","correlation","r","-0.02011479",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UniversityOfFlorida","USA",1,"137","Within","Conscientiousness with persistence","correlation","r","0.1644415",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UniversityOfSouthernMississippi","USA",1,"89","Within","Conscientiousness with persistence","correlation","r","-0.05992367",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UniversityOfToronto","CAN",1,"80","Within","Conscientiousness with persistence","correlation","r","-0.01726644",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","UniversityOfVirginia","USA",1,"177","Within","Conscientiousness with persistence","correlation","r","-0.000519782",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","VirginiaCommonwealthUniversity","USA",1,"95","Within","Conscientiousness with persistence","correlation","r","0.000264722",NA,NA,"NA _ NA",NA,NA,NA,NA
+"ML3","Conscientiousness and persistence","mturk","USA",0,"580","Within","Conscientiousness with persistence","correlation","r","0.04721134",NA,NA,"NA _ NA",NA,NA,NA,NA
 "RRR1","Verbal overshadowing 1","mturk","USA",0,"390","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.0597722960151803",186,204,"count correct _ count incorrect",91,112,95,92
 "RRR1","Verbal overshadowing 1","Victoria K. Alogna, Jamin Halberstadt, Jonathan Jong, Joshua C. Jackson, Cathy Ng","NZL",1,"113","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","-0.130325814536341",57,56,"count correct _ count incorrect",40,32,17,24
 "RRR1","Verbal overshadowing 1","Stacy Birch","USA",1,"106","Between","Outcome 1 vs. 2 between groups","Chisquare","Risk difference","0.000714285714285667",50,56,"count correct _ count incorrect",33,37,17,19

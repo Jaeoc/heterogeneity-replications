@@ -18,7 +18,7 @@
 #**[2.2] t-test effects
 #**[2.3] Non-parametric tests
 #**[2.4] Interaction effects
-#**[2.5] Correlation conscientiousness and persistance
+#**[2.5] Correlation conscientiousness and persistence
 #**[2.6] Ml3 combined
 #[3] RRR1 & 2
 #[4] RRR3 
@@ -134,7 +134,7 @@ for(i in seq_along(tnames)){
     rename_at(vars(one_of(tot2)), funs(paste0("outcome_t2"))) %>%
     rename_at(vars(one_of(toc2)), funs(paste0("outcome_c2"))) %>%
     rename(effect_size = "ES (from means)")  %>%
-    mutate(rs = "ML1", #Add some descriptive information
+    mutate(rp = "ML1", #Add some descriptive information
            effect = tnames[i], 
            B_or_W = "Between", 
            design = "control vs. treatment", 
@@ -145,7 +145,7 @@ for(i in seq_along(tnames)){
            country = c("USA", "BRA", "CZE", "USA", "USA", "MYS", "USA", "USA", "TUR", "CAN", "GBR", #Country of each study site
                        "USA", "USA", "CAN", rep("USA", 8), "POL", "POL", rep("USA", 3), "NLD", "USA",
                        "ITA", rep("USA", 6))) %>% 
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -197,7 +197,7 @@ chieffects[[i]] <- chieffects[[i]] %>%
     rename_at(vars(one_of(tot2)), funs(paste0("outcome_t2"))) %>%
     rename_at(vars(one_of(toc2)), funs(paste0("outcome_c2"))) %>%
     rename(effect_size = "ES (from means)")  %>%
-  mutate(rs = "ML1", #Add some descriptive information
+  mutate(rp = "ML1", #Add some descriptive information
          effect = chinames[i], 
          B_or_W = "Between", 
          design = "Choice of outcome 1 vs. 2 between groups", 
@@ -210,7 +210,7 @@ chieffects[[i]] <- chieffects[[i]] %>%
          country = c("USA", "BRA", "CZE", "USA", "USA", "MYS", "USA", "USA", "TUR", "CAN", "GBR",
                      "USA", "USA", "CAN", rep("USA", 8), "POL", "POL", rep("USA", 3), "NLD", "USA",
                      "ITA", rep("USA", 6))) %>% 
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -236,7 +236,7 @@ math_art <- math_art %>%
          effect_size = "ES (from means)",
          ntreatment = "N (Female)",
          ncontrol = "N (Male)") %>% 
-  mutate(rs = "ML1", #Add some descriptive information
+  mutate(rp = "ML1", #Add some descriptive information
          effect = "Gender math attitude", 
          B_or_W = "Between", 
          design = "control vs. treatment", 
@@ -247,7 +247,7 @@ math_art <- math_art %>%
          country = c("USA", "BRA", "CZE", "USA", "USA", "MYS", "USA", "USA", "TUR", "CAN", "GBR", 
                      "USA", "USA", "CAN", rep("USA", 7), "POL", "POL", rep("USA", 3), "NLD", "USA", #rep USA 7 instead of 8 because of exclusion of qccuny2
                      "ITA", rep("USA", 6))) %>%
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 #******************************************
@@ -266,7 +266,7 @@ math_cor <- math_cor %>%
   left_join(., lab, by = "Site") %>% #add online/in lab variable
   rename(Ntotal = "N",
          effect_size = "Correlation (r)") %>% 
-  mutate(rs = "ML1", #Add some descriptive information
+  mutate(rp = "ML1", #Add some descriptive information
          effect = "IAT correlation math", 
          B_or_W = "Within", 
          design = "Implicit with explicit attitude", 
@@ -282,7 +282,7 @@ math_cor <- math_cor %>%
          country = c("USA", "BRA", "CZE", "USA", "USA", "MYS", "USA", "USA", "TUR", "CAN", "GBR", 
                      "USA", "USA", "CAN", rep("USA", 7), "POL", "POL", rep("USA", 3), "NLD", "USA", #rep USA 7 instead of 8 because of exclusion of qccuny2
                      "ITA", rep("USA", 6))) %>%
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
@@ -331,7 +331,7 @@ ml3_stroop <- ml3[[7]]
 ml3_stroop <- ml3_stroop %>% 
   rename(Ntotal = N, #Assign names consistent with other datasets
          effect_size = r) %>% #The correlation used instead of cohen's d because that is what Ml3 use in their meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R")
-  mutate(rs = "ML3", #Add some descriptive information 
+  mutate(rp = "ML3", #Add some descriptive information 
          in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
          effect = "Stroop effect", 
          B_or_W = "Within", 
@@ -346,7 +346,7 @@ ml3_stroop <- ml3_stroop %>%
          ntreatment = NA, 
          ncontrol = NA,
          country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
@@ -414,7 +414,7 @@ for(i in seq_along(ml3t_names)){
     mutate(ES..equal.var. = if(!"ES..equal.var." %in% names(.)) {calc_d(outcome_t1, outcome_c1, ntreatment, ncontrol, outcome_t2, outcome_c2)} 
            else {ES..equal.var.}) %>% #if dataframe does not contain cohen's d (ES..equal.var.), then calculate it for each row using calc_d function
     rename(effect_size = "ES..equal.var.")  %>%
-    mutate(rs = "ML3", #Add some descriptive information
+    mutate(rp = "ML3", #Add some descriptive information
            effect = ml3t_names[i], 
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            B_or_W = "Between", 
@@ -425,7 +425,7 @@ for(i in seq_along(ml3t_names)){
            Ntotal = ntreatment + ncontrol,
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -456,7 +456,7 @@ for(i in seq_along(nonp_names)){
     rename_at(vars(one_of(nonp_t1)), funs(paste0("outcome_t1"))) %>% #gives some warnings but they are ignorable
     rename(Ntotal = N, 
            effect_size = r) %>% #ML3 uses r as input for meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R"), thus so do I
-    mutate(rs = "ML3", #Add some descriptive information 
+    mutate(rp = "ML3", #Add some descriptive information 
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            effect = nonp_names[i], 
            B_or_W = "Between", 
@@ -470,7 +470,7 @@ for(i in seq_along(nonp_names)){
            ncontrol = NA,
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -499,7 +499,7 @@ for(i in seq_along(internames)){
            ncontrol = N1, 
            Ntotal = NT, 
            effect_size = rInter) %>% #ML3 uses r as input for meta-analysis (https://osf.io/yhdau/ -> "ML3 Meta Script.R"), thus so do I
-    mutate(rs = "ML3", #Add some descriptive information 
+    mutate(rp = "ML3", #Add some descriptive information 
            in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
            effect = internames[i], 
            B_or_W = "Between", 
@@ -513,7 +513,7 @@ for(i in seq_along(internames)){
            outcome_t2 = NA,
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -521,10 +521,10 @@ inter <- do.call("rbind", inter) #bind together in one dataframe
 
 
 #******************************************
-#**[2.5] Correlation conscientiousness and persistance----
+#**[2.5] Correlation conscientiousness and persistence----
 #******************************************
 #Effects extracted in this section
-#[1] "Conscientiousness and persistance"
+#[1] "Conscientiousness and persistence"
 #*************************
 
 cons_cor <- ml3$ConscientiousnessPersistence #limit data to only correlation
@@ -532,11 +532,11 @@ cons_cor <- ml3$ConscientiousnessPersistence #limit data to only correlation
 cons_cor <- cons_cor %>% 
   rename(Ntotal = N, #Assign names consistent with other datasets
          effect_size = r) %>% 
-  mutate(rs = "ML3", #Add some descriptive information 
+  mutate(rp = "ML3", #Add some descriptive information 
          in_lab = ifelse(Site == "mTurk", 0, 1), #mturk sample is only non-lab sample in this study
-         effect = "Conscientiousness and persistance", 
+         effect = "Conscientiousness and persistence", 
          B_or_W = "Within", 
-         design = "Conscientiousness with persistance", 
+         design = "Conscientiousness with persistence", 
          or_stat_test = "correlation", 
          effect_type = "r",
          outcomes1_2 = "NA _ NA", #as character instead of simply NA to facilitate working with data
@@ -547,7 +547,7 @@ cons_cor <- cons_cor %>%
          ntreatment = NA, 
          ncontrol = NA,
          country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
@@ -592,7 +592,7 @@ for(i in seq_along(files)){
            outcome_t1 = X__8, #n correcttreatment group
            ncontrol = X__14, #Total n control group after exclusions
            outcome_c1 = X__15) %>%  #n correct control group
-    mutate(rs = names(rrr1_2)[i], #Add some descriptive information
+    mutate(rp = names(rrr1_2)[i], #Add some descriptive information
            Site = ifelse(grepl("MTURK", Site), "mturk", Site), #if Site name contains MTURK recode to mturk
            effect = paste("Verbal overshadowing", i), 
            in_lab = ifelse(Site == "mturk", 0, 1), #Only the mturk study was not in the lab
@@ -619,7 +619,7 @@ for(i in seq_along(files)){
                             Poland = "POL",
                             Australia = "AUS",
                             Netherlands = "NLD")) %>% 
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -661,7 +661,7 @@ rrr3[[i]] <- rrr3[[i]] %>%
          outcome_c1 = mperf,
          outcome_c2 = sdperf,
          ncontrol = nperf) %>% 
-  mutate(rs = "RRR3", #Add some descriptive information
+  mutate(rp = "RRR3", #Add some descriptive information
          effect = rrr3_names[i],   
          Site = recode(Site, 'ONLINE-Eerland, Sherrill, Magliano, Zwaan' = "mturk"),
          in_lab = ifelse(Site == "mturk", 0, 1), # Only mturk study was online
@@ -673,7 +673,7 @@ rrr3[[i]] <- rrr3[[i]] %>%
          Ntotal = ntreatment + ncontrol,
          effect_size = outcome_t1 - outcome_c1,
          country = c(rep("USA", 3), "CAN", "USA", "CAN", rep("USA", 6))) %>% #Country information taken from Table 1 of paper http://journals.sagepub.com/doi/pdf/10.1177/1745691615605826
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -704,7 +704,7 @@ rrr4 <- rrr4 %>%
          outcome_c2 = Control.Std.Dev, #SD control group
          ncontrol = Control.Sample.size,
          effect_size = Std.diff.in.means) %>%  #Cohen's d
-  mutate(rs = "RRR4", #Add some descriptive information
+  mutate(rp = "RRR4", #Add some descriptive information
          effect = "Ego depletion", 
          in_lab = 1, #Studies were in-lab
          B_or_W = "Between", 
@@ -715,7 +715,7 @@ rrr4 <- rrr4 %>%
          Ntotal = ntreatment + ncontrol,
          country = c("CAN", rep("USA", 4), "CAN", "AUS", "USA", "USA", "NZL", "USA","NLD", #Add country indicators, country info taken from Table 1 in paper
                      "NLD", "DEU", "DEU", "FRA", "NLD", "DEU", "NLD", "BEL", "CHE", "DEU", "IDN")) %>% 
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
@@ -733,7 +733,7 @@ rrr4 <- rrr4 %>%
 #Additional comment:
 #Note that reported participant numbers of Table 1 in source paper (https://osf.io/s3hfr/) are before listwise deletion due to missing values
 #In addition, source paper appears to do listwise deletion based on missing values in any of the DVs, not only the primary one (exit/neglect)
-#This will result in slight different sample sizes/effects since we only use the stated primary outcomes exit and neglect for listwise deletion
+#This will result in slight different sample sizes/effects since we only extract and use the stated primary outcomes exit and neglect for listwise deletion
 
 #*********************
 
@@ -818,7 +818,7 @@ for(dv in seq_along(rrr5_names)){ #for each DV
 #Final formatting of data
 for(dv in seq_along(rrr5_names)){ #for each DV
   rrr5[[dv]] <- rrr5[[dv]] %>% 
-    mutate(rs = "RRR5", #Add some descriptive information
+    mutate(rp = "RRR5", #Add some descriptive information
            effect = rrr5_names[dv], 
            in_lab = 1, # "Participants were tested in-person", p.752 of RRR5
            B_or_W = "Between", 
@@ -829,7 +829,7 @@ for(dv in seq_along(rrr5_names)){ #for each DV
            country = countries,
            Ntotal = ncontrol + ntreatment,
            effect_size = outcome_t1 - outcome_c1) %>% 
-    select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+    select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
            ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 }
 
@@ -839,7 +839,7 @@ rrr5 <- do.call(rbind, rrr5) #combine into one dataframe
 #[7] RRR6 ----
 #******************************************
 ##summary data from Registered Replication Report 6 https://osf.io/hgi2y/
-##Download RRR6 data https://osf.io/9j72u/ and run their code https://osf.io/9j72u/ to get a summary data file 
+##Download RRR6 data https://osf.io/9j72u/ and run their code https://osf.io/9j72u/ to get a summary data file from which data can be extracted
 
 #library(tabulizer)
 #library(dplyr)
@@ -878,7 +878,7 @@ rrr6 <- rrr6 %>%
          ncontrol = nPoutEx,
          effect_size = rawMeanDiffEx) %>% 
   left_join(., country) %>% 
-  mutate(rs = "RRR6", #Add some descriptive information
+  mutate(rp = "RRR6", #Add some descriptive information
          effect = "Facial Feedback hypothesis", 
          in_lab = 1, #In-lab study
          B_or_W = "Between", 
@@ -886,7 +886,7 @@ rrr6 <- rrr6 %>%
          or_stat_test = "NA", #No statistical test performed as part of main analysis, only looked at mean difference. Secondary used BF
          effect_type = "Raw mean difference",
          outcomes1_2 = "mean _ SD") %>% #Describes the content of outcome1 and outcome2 variables
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #order variables the same order as elsewhere
 
 
@@ -948,7 +948,7 @@ rrr7 <- rrr7 %>%
   rename(ntreatment = V3, #rename to consistent names
          ncontrol = V5,
          Site = V1) %>% 
-  mutate(rs = "RRR7", #Add some descriptive information
+  mutate(rp = "RRR7", #Add some descriptive information
          effect = "Intuitive-cooperation", 
          in_lab = 1, # Checking the implementation for each lab, they all run the study in qualtrix on lab-computers, https://osf.io/5ciaj/wiki/home/
          B_or_W = "Between", 
@@ -959,7 +959,7 @@ rrr7 <- rrr7 %>%
          Ntotal = ntreatment + ncontrol,
          effect_size = outcome_t1 - outcome_c1) %>% ##%Note that because Table 2 of the article contains rounded values these effect sizes are not exactly the same as those reported in Figure 1 in the paper
   left_join(., labs, by = "Site") %>% #add country information for each lab
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
@@ -1002,7 +1002,7 @@ rrr8 <- rrr8 %>%
          effect_size = V7, #Mean difference
          outcome_c2 = V8, #standard error
          country = V11) %>% 
-  mutate(rs = "RRR8", #Add some descriptive information
+  mutate(rp = "RRR8", #Add some descriptive information
          effect = "Professor priming", 
          in_lab = 1, # All participants required to be in individual cubicles or at independent workstations where they could not see each other
          B_or_W = "Between", 
@@ -1032,7 +1032,7 @@ rrr8 <- rrr8 %>%
                           Colombia = "COL",
                           Singapore = "SGP",
                           Spain = "ESP"))  %>% 
-  select(rs, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 

@@ -64,7 +64,6 @@ I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_text(x = 0.15, y = 80, label = "b = 69.40, R2 = 0.61", size = 3.5) +
   theme_classic()
 
-# ggsave("I2_effect_size.png")
 
 # summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
 
@@ -75,12 +74,10 @@ H2 <- ggplot(res2, aes(x = z, y = H2)) +
   geom_text(x = 0.14, y = 5.9, label = "b = 3.81, R2 = 0.53", size = 3.5) +
   theme_classic()
 
-# ggsave("H2_effect_size.png")
-
 
 effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v") #combine plots
 effect_het
-# save_plot("effect_het.png", effect_het,
+# save_plot("../figures/effect_het.png", effect_het,
           # nrow = 2, base_aspect_ratio = 1.3)
 
 ```
@@ -96,7 +93,7 @@ summary(lm(I2 ~ z, data = dropped_anchoring))
 ```
 
 ```{r Plot_tau_against_I2, fig.asp = 0.618}
-dat3 <- readRDS("temp_sim_results.RDS")
+dat3 <- readRDS("../data/tau_simulation_results.RDS")
 names(dat3) <- sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
 
 dat3 <- dat3 %>% 
@@ -114,24 +111,25 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect)) +
   scale_y_continuous(minor_breaks = NULL) +
   coord_cartesian(ylim = c(0, 100))
 
+# ggsave("../figures/tau-I2.png")
+
 ```
 
 
 ```{r Density_plot, fig.asp= 0.618}
-dens <- readRDS("temp_sim_results_2.RDS")
+dens <- readRDS("../data/power_simulation_results.RDS")
 names(dens) <-  sort(unique(dat$effect))
-
 
 #Simulated data at various heterogeneity levels, prep for plotting
 I2_dist <- dens %>% 
   bind_rows(.id = "effect") %>% 
-  rename(heterogeneity = tau_index) %>% 
-  mutate(heterogeneity = recode(heterogeneity,
+  rename(Heterogeneity = tau_index) %>% 
+  mutate(Heterogeneity = recode(Heterogeneity,
                             '1' = "Zero",
                             '2' = "Small",
                             '3' = "Medium",
                             '4' = "Large"),
-         heterogeneity = as.factor(heterogeneity))
+         Heterogeneity = as.factor(Heterogeneity))
 
 #Observed I2 estimates, i.e, results from main table, see table.rmd
 #Effects estimated with sourced function 'est_heterogeen_smd_raw'
@@ -139,10 +137,10 @@ observed <- dat %>%
   split(.$effect) %>%  
   map_dfr(est_heterogen_smd_raw, .id = "effect") %>% 
   select(effect, I2 = s_I2) %>%
-  mutate(heterogeneity = "Observed")
+  mutate(Heterogeneity = "Observed")
 
-ggplot(I2_dist, aes(x = I2, group = heterogeneity, fill = heterogeneity, linetype = heterogeneity)) +
-  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 50, alpha = 1) +
+ggplot(I2_dist, aes(x = I2, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
+  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 100, alpha = 1) +
   geom_density(alpha = 0.3) +
   theme_classic() +
   coord_cartesian(xlim = c(0, 100))  +
@@ -150,6 +148,6 @@ ggplot(I2_dist, aes(x = I2, group = heterogeneity, fill = heterogeneity, linetyp
   scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"), breaks = c("Zero", "Small", "Medium", "Large", "Observed")) +
   scale_color_brewer(palette = "Dark2", breaks = c("Zero", "Small", "Medium", "Large", "Observed"))
 
-
+# ggsave("../figures/density-I2.png")
 ```
 

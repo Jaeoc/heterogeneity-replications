@@ -4,9 +4,6 @@
 #Script purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
 #Code: Anton Ohlsson Collentine
 
-##TO DO----
-#Should save results as .csv maybe
-
 #******************************************
 
 
@@ -96,12 +93,12 @@ set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 100, tau = tau_values) #100 reps is about 3.5 hours on my (fairly slow) machine
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1000, tau = tau_values) #100 reps is about 3.5 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
- if (e%%5 == 0 | e == 37) saveRDS(res, "temp_sim_results.RDS") #save ocassionally and at finish
+ if (e%%5 == 0 | e == 37) saveRDS(res, "../data/tau_simulation_results.RDS") #save ocassionally and at finish
 })
 
-dat3 <- readRDS("temp_sim_results.RDS")
+dat3 <- readRDS("../data/tau_simulation_results")
 names(dat3) <- names(dat2) #names are lost when looping instead of using lapply
 
 dat3 <- dat3 %>% 
@@ -143,11 +140,11 @@ res2 <- vector("list", length(dat5))
 system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
   res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4, tau = c(0, dat5[[e]][[2]]))
   cat("...RS",e, "/37") #see progress
-  if (e%%5 == 0 | e == 37) saveRDS(res2, "temp_sim_results_2.RDS") #save ocassionally and at finish
+  if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
 })
 
 
-dens <- readRDS("temp_sim_results_2.RDS")
+dens <- readRDS("../data/power_simulation_results.RDS") #very large if saved as .csv
 names(dens) <-  names(dat2)
 
 #Summary of results. These are incorporated into the main table in the paper, see tables.rmd

@@ -25,7 +25,7 @@ est_heterogen_smd_raw <- function(x){
     fit <-  rma(yi = effect_size, sei = outcome_c2,  data = x) 
     
   } else if(any(x[, "effect_type"] == "Raw mean difference")){
-    if(any(x[, "rs"] %in% c("RRR5", "RRR7"))){ #For these us the Knapp and Hartung adjustment of standard errors
+    if(any(x[, "rp"] %in% c("RRR5", "RRR7"))){ #For these us the Knapp and Hartung adjustment of standard errors
       
       fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, test ="knha", data = x)
     } else{
@@ -37,7 +37,7 @@ est_heterogen_smd_raw <- function(x){
     fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x) 
     
   } else if(any(x[, "effect_type"] == "r")){
-    if(any(x[, "rs"] == "ML1")){
+    if(any(x[, "rp"] == "ML1")){
       fit <- rma(measure = "COR", ri = effect_size, ni = Ntotal,  data = x)
     } else{ #for ML3
       fit <- rma(measure = "UCOR", ri = effect_size, ni = Ntotal,  data = x, vtype = "UB")

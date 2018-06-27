@@ -79,20 +79,20 @@ papers <- c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahn
 # "O'Donnell, M., Nelson, L., McLatchie, N. M., & Lynott, D. J. (2017). Registered Replication Report: Dijksterhuis & van Knippenberg (1998): Multilab direct replication of: A variant of study 4 from Dijksterhuis, A., & van Knippenberg, A.(1998). The relation between perception and behavior, or how to win a game of trivial pursuit. Journal of personality and social psychology. Perspectives on Psychological Science."
 
 summary.table <- dat %>% 
-  group_by(rs) %>% 
+  group_by(rp) %>% 
   summarize(k = n_distinct(Site),
             Countries = n_distinct(country), 
             Effects = n_distinct(effect),
             Participants = if(Effects == 1){sum(Ntotal)}
                            else{sum(Ntotal) / Effects}) %>% #average across effects
   mutate(Paper = papers) %>% 
-  select(RS = rs, Paper, everything()) #change order of columns
+  select(RP = rp, Paper, everything()) #change order of columns
 
 summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>% 
   kable_styling() %>% 
   column_spec(2, width = "25em") %>% #specify width of paper column
   footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RS = Replication Study, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (OSF.io/XXXX)")
+           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (OSF.io/XXXX)")
 ```
 
 ```{r prep-heterogeneity-table}
@@ -108,10 +108,10 @@ res <- dat %>%
   map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
 
 
-#Add rs and k to the data-frame and prep for table
+#Add rp and k to the data-frame and prep for table
 het <- dat %>% 
-  select(rs, Site, effect, effect_type) %>% 
-  group_by(rs, effect) %>% 
+  select(rp, Site, effect, effect_type) %>% 
+  group_by(rp, effect) %>% 
   summarize(effect_type = unique(effect_type),
             k = n_distinct(Site)) %>% 
   left_join(res) %>% 
@@ -121,7 +121,7 @@ het <- dat %>%
                               'Risk difference' = "RD")) 
 
 #Load simulation results (power/type 1 error for all effects)
-dens <- readRDS("temp_sim_results_2.RDS")
+dens <- readRDS("../data/power_simulation_results.RDS")
 names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
 
 #Summary of simulation results, needs to be combined with main part of table
@@ -136,19 +136,21 @@ I2_ci_lb <- dens %>%
 #Combine dataframes to create full table
 het <-  het %>% 
   left_join(I2_ci_lb) %>% 
-  select(rs, effect,k , everything()) %>% 
+  select(rp, effect,k , everything()) %>% 
   arrange(desc(s_I2),  desc(s_ci.ub)) #sort by I2 and upper CI bound
+
 ```
 
 ##Heterogeneity in preregistered multi-lab psychology studies
 ```{r heterogeneity-table}
 #library(kableExtra)
 
-het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.names = c("RS", "Effect", "k", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "Zero", "Small", "Medium", "Large")) %>% 
+het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.names = c("RP", "Effect", "k", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "Zero", "Small", "Medium", "Large")) %>% 
   add_header_above(c(" " = 8, "Heterogeneity & error/power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RS = Replication Study, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of I2 95\\\\% confidence interval, ci.ub = upper bound of I2 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (OSF.io/XXXX)")
+           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (OSF.io/XXXX)",
+           alphabet = "These effects were simulated as standardized mean differences")
 
 
 ```
