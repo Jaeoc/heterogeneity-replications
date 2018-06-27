@@ -1,6 +1,6 @@
 #************************************************
 
-##Project: MA heterogeneity project
+##Project: Limited evidence for widespread heterogeneity in psychology
 ##Script purpose: This script creates a nice-looking pdf codebook
 ##Code: Anton Ohlsson Collentine
 

@@ -1,6 +1,6 @@
 #******************************************
 
-#Project: Heterogeneity in direct replications
+#Project: Limited evidence for widespread heterogeneity in psychology
 #Script purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
 #Code: Anton Ohlsson Collentine
 

@@ -1,6 +1,6 @@
 #*************************************************************************************************************************
 
-##Project: MA heterogeneity project
+##Project: Limited evidence for widespread heterogeneity in psychology
 ##Script purpose: This script extracts, cleans and formats summary data from Many labs 1 & 3 and Registered Replication Reports 1 - 8 
 ##Code: Anton Ohlsson Collentine
 
