@@ -92,7 +92,7 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
   kable_styling() %>% 
   column_spec(2, width = "25em") %>% #specify width of paper column
   footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (OSF.io/XXXX)")
+           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (osf.io/kf6pt/)")
 ```
 
 ```{r prep-heterogeneity-table}
@@ -149,7 +149,7 @@ het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.nam
   add_header_above(c(" " = 8, "Heterogeneity & error/power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (OSF.io/XXXX)",
+           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (osf.io/kf6pt/)",
            alphabet = "These effects were simulated as standardized mean differences")
 
 
