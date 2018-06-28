@@ -119,7 +119,7 @@ dat3 <- dat3 %>%
   summarize(I2 = mean(I2)) %>% #Take mean of I2 at each tau-level and for each effect
   ungroup()
 
-#combined line plot gives good overview. Point version of the same is also interesting.
+#combined line plot gives good overview.
 ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
   geom_line(alpha = 0.6) +
   theme_bw() +
@@ -131,7 +131,8 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
   scale_color_brewer(name = "Effect type", palette = "Dark2", 
                      breaks = c("Fisher's z", "MD", "SMD")) +
   theme(legend.position = c(0.8, 0.4),
-        legend.background = element_rect(linetype = "solid", color = "black"))
+        legend.background = element_rect(linetype = "solid", color = "black")) +
+  guides(color = guide_legend(override.aes = list(size = 1.4)))
   
 
 # ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
