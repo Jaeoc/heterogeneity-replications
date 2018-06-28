@@ -5,7 +5,9 @@
 #Code: Anton Ohlsson Collentine
 
 #******************************************
-
+##To do:
+#1) for mean differences add sample sizes
+#2) separate between mean differences and SMD
 
 #******************************************
 #Packages and data----
@@ -31,7 +33,7 @@ dat <- read_csv("../data/collated_summary_data.csv")
 #******************************************
 #Simulation function----
 #******************************************
-simulate_I2 <- function(effect, reps, tau){ #this function applies to a single list object (effect)
+simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies to a single list object (effect), see next section
   
   K <- effect$K #Number of studies
   N <- effect$Ntotal #Sample sizes for all K studies
@@ -43,34 +45,76 @@ simulate_I2 <- function(effect, reps, tau){ #this function applies to a single l
       
       output[[t]] <- map_dfr(1:reps, possibly(function(x){ #For each tau-value repeat below "reps" times and bind into dataframe
         
-        rho <- rnorm(n = K, mean = 0, sd = tau[t]) #Draw true correlation rho for each k at the given value of tau
+        rho <- switch(effect_size, #Draw true correlation rho for each k at the given value of tau and with specified effect size
+                      zero = rnorm(n = K, mean = 0, sd = tau[t]),
+                      small = rnorm(n = K, mean = 0.1, sd = tau[t]),
+                      medium = rnorm(n = K, mean = 0.3, sd = tau[t]),
+                      large = rnorm(n = K, mean = 0.5, sd = tau[t]))
+        
         fr <- rnorm(n = K, mean = rho, sd = sqrt(1 / (N - 3))) #draw observed correlations (fisher's z) for each k
         
         fit <- rma(yi = fr, vi = 1 / (N - 3), method = "REML") #meta-analysis of fisher's z, each study weighted by its N
         
-        data.frame(I2 = fit$I2, ci.lb = confint(fit)$random[3, 2], tau = tau[t], tau_index = t)
+        data.frame(I2 = fit$I2, Qp = fit$QEp, ci.lb = confint(fit)$random[3, 2], 
+                   tau = tau[t], tau_index = t)
         
       }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
     }
     
-  }else{ #if not correlation, treat as t-test
+  }else if(effect$type == "d"){
     
-    N_half <- N%/%2 #divide Ntotal in two equal halves (integer rounded) for treatment and control group
+    n_c <- effect$ncontrol #observed control group sizes
+    n_t <- effect$ntreatment #observed treatment group sizes
     
     for(t in seq_along(tau)){
       
       output[[t]] <- map_dfr(1:reps, possibly(function(x){
         
-        theta <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each study
-        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(N_half)) #Draw means from sampling distribution control group
-        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(N_half)) #Draw means from sampling distribution treatment group
-        var_c <- rchisq(n = K, df = N_half - 1) / (N_half - 1) #draw variances from sampling distribution control group
-        var_t <- rchisq(n = K, df = N_half - 1) / (N_half - 1) #draw variances from sampling distribution treatment group
+        theta <- switch(effect_size,
+                        zero = rnorm(n = K, mean = 0, sd = tau[t]), #draw effect sizes for each K at given tau and effect size
+                        small = rnorm(n = K, mean = 0.2, sd = tau[t]),
+                        medium = rnorm(n = K, mean = 0.5, sd = tau[t]),
+                        large = rnorm(n = K, mean = 0.8, sd = tau[t]))
         
-        fit <- rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t), sd2i = sqrt(var_c), n1i = N_half,
-                   n2i = N_half, method = "REML") #fit meta-analysis transforming into standardized mean difference (Hedge's g)
+        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(n_c)) #Draw means from sampling distribution control group
+        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(n_t)) #Draw means from sampling distribution treatment group
+        var_c <- rchisq(n = K, df = n_c - 1) / (n_c - 1) #draw variances from sampling distribution control group
+        var_t <- rchisq(n = K, df = n_t - 1) / (n_t - 1) #draw variances from sampling distribution treatment group
         
-        data.frame(I2 = fit$I2, ci.lb = confint(fit)$random[3, 2], tau = tau[t], tau_index = t)
+        fit <- rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t), 
+                   sd2i = sqrt(var_c), n1i = n_t, n2i = n_c, method = "REML") #fit meta-analysis transforming into standardized mean difference (Hedge's g)
+        
+        data.frame(I2 = fit$I2, Qp = fit$QEp, ci.lb = confint(fit)$random[3, 2], 
+                   tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL)) #some repetition in the code because must check if model converges each time
+    }
+  }else{ #If effect type = "MD", that is for mean differences, risk ratios and odds ratios, see next code section
+         #Only difference between this segment and the one above is in fitting the model ("MD" vs. "SMD")
+    
+    n_c <- effect$ncontrol #observed control group sizes
+    n_t <- effect$ntreatment #observed treatment group sizes
+    
+    for(t in seq_along(tau)){
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){
+        
+        theta <- switch(effect_size,
+                        zero = rnorm(n = K, mean = 0, sd = tau[t]), #draw effect sizes for each K at given tau and effect size
+                        small = rnorm(n = K, mean = 0.2, sd = tau[t]),
+                        medium = rnorm(n = K, mean = 0.5, sd = tau[t]),
+                        large = rnorm(n = K, mean = 0.8, sd = tau[t]))
+        
+        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(n_c)) #Draw means from sampling distribution control group
+        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(n_t)) #Draw means from sampling distribution treatment group
+        var_c <- rchisq(n = K, df = n_c - 1) / (n_c - 1) #draw variances from sampling distribution control group
+        var_t <- rchisq(n = K, df = n_t - 1) / (n_t - 1) #draw variances from sampling distribution treatment group
+        
+        fit <- rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t),
+                   sd2i = sqrt(var_c), n1i = n_t, n2i = n_c, method = "REML") #fit meta-analysis for mean difference
+        
+        data.frame(I2 = fit$I2, Qp = fit$QEp, ci.lb = confint(fit)$random[3, 2], 
+                   tau = tau[t], tau_index = t)
         
       }, otherwise = NULL))
     }
@@ -83,26 +127,51 @@ simulate_I2 <- function(effect, reps, tau){ #this function applies to a single l
 #Simulation 1 -  estimate tau values that correspond to small/medium/large I2----
 #******************************************
 
-dat2 <- dat %>% #Extract k and effect type for each effect and N of each included study
-  split(.$effect) %>% 
-  map(~ list(K = nrow(.), Ntotal = .$Ntotal, type = unique(.$effect_type))) #~ is shorthand for an anonymous function
+##Prep data for simulation function
+OR2d <- c('Allowed vs. forbidden', 'Gain vs. loss framing', #effects that were transformed from OR to SMD
+          'Norm of reciprocity', 'Low vs. high category scales') 
 
+dat2 <- dat %>% #Extract k, effect type and sample sizes for each effect
+  mutate(effect_type = ifelse(effect %in% OR2d | effect_type == "Risk difference" | #treat all these effects.. 
+                                effect_type == "Raw mean difference", "MD", effect_type)) %>% #..as mean differences in simulation
+  split(.$effect) %>% 
+  map(~ list(K = nrow(.), #~ is shorthand for an anonymous function
+             Ntotal = .$Ntotal, 
+             type = unique(.$effect_type),
+             ncontrol = .$ncontrol,
+             ntreatment = .$ntreatment)) 
+
+##Simulation
 tau_values <- seq(0, 0.5, by = 0.005) #tau values to loop over
 
 set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 1000, tau = tau_values) #100 reps is about 3.5 hours on my (fairly slow) machine
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1e3, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 24 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "../data/tau_simulation_results.RDS") #save ocassionally and at finish
 })
 
-dat3 <- readRDS("../data/tau_simulation_results")
+#*********************
+#Effect size sensitivity simulation for Appendix A
+
+# set.seed(100)
+# res_a <- vector("list", length(dat2)) #output of below loop
+
+# system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
+  # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
+  # cat("...RS",e, "/37") #see progress
+  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/AppendixA_tau_simulation_results.RDS") #save ocassionally and at finish
+# })
+#********************
+
+##Simulation results
+dat3 <- readRDS("../data/tau_simulation_results.RDS")
 names(dat3) <- names(dat2) #names are lost when looping instead of using lapply
 
-dat3 <- dat3 %>% 
-  bind_rows(.id = "effect") %>% #create dataframe with identifier
+dat3 <- dat3 %>% #create dataframe with identifier
+  bind_rows(.id = "effect") %>% 
   select(I2, tau, effect) %>% 
   group_by(tau, effect) %>% 
   summarize(I2 = mean(I2)) %>% #Take mean of I2 at each tau-level and for each effect
@@ -129,21 +198,38 @@ ggplot(dat3, aes(x = tau, y = I2)) +
 #******************************************
 #Simulation 2 - estimate power/type 1 error at zero/small/medium/large heterogeneity----
 #******************************************
-dat5 <- dat4 %>% #add the extracted tau2-values as a vector to each list-element in dat2
+##Prep data for simulation function
+dat5 <- dat4 %>% #add the extracted tau-values as a vector to each list-element in dat2
   split(.$effect) %>% 
   map(., function(x) x %>% select(-effect) %>% as.numeric(t(.))) %>% 
   map2(dat2, ., list) 
 
+##Simulation
 set.seed(56)
 res2 <- vector("list", length(dat5)) 
 
 system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
-  res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4, tau = c(0, dat5[[e]][[2]]))
+  res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
+                           tau = c(0, dat5[[e]][[2]]), effect_size = "zero") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
   cat("...RS",e, "/37") #see progress
   if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
 })
 
+#*********************
+#Effect size sensitivity simulation for Appendix A
 
+# set.seed(50)
+# res2_a <- vector("list", length(dat2)) #output of below loop
+
+# system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
+  # res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
+                           # tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
+  # cat("...RS",e, "/37") #see progress
+  # if (e%%5 == 0 | e == 37) saveRDS(res2_A, "../data/AppendixA_power_simulation_results.RDS") #save ocassionally and at finish
+# })
+#********************
+
+##Simulation results
 dens <- readRDS("../data/power_simulation_results.RDS") #very large if saved as .csv
 names(dens) <-  names(dat2)
 
