@@ -1,0 +1,142 @@
+---
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.asp = 0.618)
+```
+
+```{r load packages, data and source helper functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(metafor)){install.packages("metafor")}
+
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(ggplot2) #Plot data
+library(purrr) #For data iteration
+library(metafor) #To run meta-analyses
+
+dat <- read_csv("../data/collated_summary_data.csv")
+
+source("../code/helper_functions_tables_figures.r") #Load functions to prep data for figures
+```
+
+Appendix A - Sensitivity analysis of effect size for simulations
+
+In our main results we simulated data to estimate type I error and power using an average effect size of zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis we in the Appendix analyze the same data, but generated with an average 'medium' effect size as defined by Cohen (1988).
+
+Table A1.
+
+_Type I error and power for data with an average 'medium' effect size_
+```{r table_results}
+dens <- readRDS("../data/power_simulation_results.RDS") #very large if saved as .csv
+names(dens) <-  sort(unique(dat$effect))
+
+#Summary of results. These are incorporated into the main table in the paper, see tables.rmd
+I2_ci_lb <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(zero = '1', small = '2', medium = '3', large = '4')
+```
+
+```{r}
+knitr::kable(I2_ci_lb, digits = 2)
+```
+
+
+Some comments on type I errors and power in Table A1.Subsequently comments on Figure A1.
+
+```{r Plot_tau_against_I2, fig.asp = 0.618}
+dat3 <- readRDS("../data/appendixA_tau_simulation_results.RDS")
+names(dat3) <- sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
+
+OR2d <- c('Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales') #effects that were transformed from OR to SMD
+
+#Categorize effects by type of simulation for graphing
+effect_type <- distinct(select(dat, effect, effect_type)) %>% 
+  mutate(effect_type = ifelse(effect %in% OR2d | effect_type == "Risk difference" | 
+                                effect_type == "Raw mean difference", "MD", effect_type),
+         effect_type = recode(effect_type, "d" = 'SMD',
+                              "r" = "Fisher's z"))
+
+dat3 <- dat3 %>% 
+  bind_rows(.id = "effect") %>% #create dataframe with identifier
+  left_join(., effect_type) %>% 
+  select(I2, tau, effect, effect_type) %>% 
+  group_by(tau, effect, effect_type) %>% 
+  summarize(I2 = mean(I2)) %>% #Take mean of I2 at each tau-level and for each effect
+  ungroup()
+
+#combined line plot gives good overview.
+ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
+  geom_line(alpha = 0.6) +
+  theme_bw() +
+  scale_x_continuous(name = expression(paste("Between studies standard deviation ", tau)),
+                     minor_breaks = NULL) +
+  scale_y_continuous(name = expression(paste(I^2," index", sep = "")),
+                     minor_breaks = NULL) +
+  coord_cartesian(ylim = c(0, 100)) +
+  scale_color_brewer(name = "Effect type", palette = "Dark2", 
+                     breaks = c("Fisher's z", "MD", "SMD")) +
+  theme(legend.position = c(0.8, 0.4),
+        legend.background = element_rect(linetype = "solid", color = "black"))
+  
+```
+
+_Figure A1._
+
+
+Here some comments on Figure A2.
+```{r Density_plot, fig.asp= 0.618}
+dens <- readRDS("../data/appendixA_power_simulation_results.RDS")
+names(dens) <-  sort(unique(dat$effect))
+
+#Simulated data at various heterogeneity levels, prep for plotting
+I2_dist <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  rename(Heterogeneity = tau_index) %>% 
+  mutate(Heterogeneity = recode(Heterogeneity,
+                            '1' = "Zero",
+                            '2' = "Small",
+                            '3' = "Medium",
+                            '4' = "Large"),
+         Heterogeneity = as.factor(Heterogeneity))
+
+#Observed I2 estimates, i.e, results from main table, see table.rmd
+#Effects estimated with sourced function 'est_heterogeen_smd_raw'
+observed <- dat %>% 
+  split(.$effect) %>%  
+  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% 
+  select(effect, I2 = s_I2) %>%
+  mutate(Heterogeneity = "Observed")
+
+ggplot(I2_dist, aes(x = I2, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
+  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 100, alpha = 1) +
+  geom_density(alpha = 0.3) +
+  theme_classic() +
+  coord_cartesian(xlim = c(0, 100))  +
+  scale_fill_brewer(palette = "Dark2",
+                    breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
+                    labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
+  scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"),
+                        breaks = c("Zero", "Small", "Medium", "Large", "Observed"), 
+                        labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
+  scale_color_brewer(palette = "Dark2", 
+                     breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
+                     labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
+  theme(legend.position = c(0.85, 0.71),
+        legend.background = element_rect(linetype = "solid", color = "black")) +
+  scale_y_continuous(name = "Density") +
+  scale_x_continuous(name = expression(paste(I^2," index", sep = "")))
+
+```
+
+_Figure A2._
+
+Finally, conclusions from sensitivity analysis.
