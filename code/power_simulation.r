@@ -148,7 +148,7 @@ set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 1e3, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 24 hours on my (fairly slow) machine
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1e3, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 36 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "../data/tau_simulation_results.RDS") #save ocassionally and at finish
 })
@@ -210,7 +210,7 @@ res2 <- vector("list", length(dat5))
 
 system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
   res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
-                           tau = c(0, dat5[[e]][[2]]), effect_size = "zero") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
+                           tau = c(0, dat5[[e]][[2]]), effect_size = "zero") #NB! 1e4 reps here is about 14 hours on my (fairly slow) machine
   cat("...RS",e, "/37") #see progress
   if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
 })
@@ -237,7 +237,7 @@ names(dens) <-  names(dat2)
 I2_ci_lb <- dens %>% 
   bind_rows(.id = "effect") %>% 
   group_by(effect, tau_index) %>% 
-  summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
   ungroup() %>% 
   tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')

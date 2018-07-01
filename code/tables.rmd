@@ -130,7 +130,7 @@ names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting
 I2_ci_lb <- dens %>% 
   bind_rows(.id = "effect") %>% 
   group_by(effect, tau_index) %>% 
-  summarize(power = mean(ci.lb > 0)) %>% #Estimate power/type 1 error for each tau level and effect
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
   ungroup() %>% 
   tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')
