@@ -27,22 +27,24 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-##Heterogeneity increases with effect size
+##Heterogeneity may increase with effect size
 ```{r effect-size-heterogeneity-table}
 #library(kableExtra)
-rooted_relabilities <- matrix(rep(c(.8, .7,.6), 3), ncol = 3)
-rho <- c(0, .5, .8)
-rel <- c("R = .8", "R = .7", "R = .6")
+rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
+rho <- c(0, .3, .5)
+rel <- c("R = .6", "R = .7", "R = .8")
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
-diff_row <- data.frame(rel = "Diff.", X1 = 0, X2 = 0.05, X3 = 0.08)
+rooted_relabilities <- data.frame(rel, rooted_relabilities)
 
-het_demo <- data.frame(rel, rooted_relabilities)
-het_demo <- rbind(het_demo, diff_row)
+diff_row <- data.frame(rel = "Standard deviation", X1 = sd(rooted_relabilities$X1), X2 = sd(rooted_relabilities$X2), X3 = sd(rooted_relabilities$X3))
 
-het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("", "Rho = 0", "Rho = .5", "Rho = .8")) %>% 
+het_demo <- rbind(rooted_relabilities, diff_row)
+
+het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("", "Rho = 0", "Rho = .3", "Rho = .5"), digits = 2) %>% 
   kable_styling(position = "left") %>% 
-  footnote(threeparttable = TRUE) %>% 
+  footnote(threeparttable = TRUE,
+           general = "R = square root of the multiplied reliabilities. Rho = true effect size. Code to reproduce table: osf.io/kf6pt/") %>% 
   row_spec(3, hline_after = T)
 
 ```
@@ -92,7 +94,7 @@ summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>%
   kable_styling() %>% 
   column_spec(2, width = "25em") %>% #specify width of paper column
   footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. (osf.io/kf6pt/)")
+           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/")
 ```
 
 ```{r prep-heterogeneity-table}
@@ -149,7 +151,7 @@ het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.nam
   add_header_above(c(" " = 8, "Heterogeneity & error/power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. (osf.io/kf6pt/)",
+           general = " Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
            alphabet = "These effects were simulated as standardized mean differences")
 
 
