@@ -162,7 +162,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 # system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
   # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
   # cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/AppendixA_tau_simulation_results.RDS") #save ocassionally and at finish
+  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/appendixA_tau_simulation_results.RDS") #save ocassionally and at finish
 # })
 #********************
 
@@ -225,7 +225,7 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
   # res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
                            # tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
   # cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res2_A, "../data/AppendixA_power_simulation_results.RDS") #save ocassionally and at finish
+  # if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/appendixA_power_simulation_results.RDS") #save ocassionally and at finish
 # })
 #********************
 
