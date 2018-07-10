@@ -67,7 +67,7 @@ I2 <- ggplot(res2, aes(x = z, y = I2)) +
   scale_x_continuous(name = "Effect size (Fisher's z)")
 
 
-# summary(lm(H2alt ~ z, data = res2)) #b = 3.81, R2 = 0.53
+# summary(lm(H2 ~ z, data = res2)) #b = 3.81, R2 = 0.53
 
 H2 <- ggplot(res2, aes(x = z, y = H2)) + 
   geom_point(alpha = 0.5) +

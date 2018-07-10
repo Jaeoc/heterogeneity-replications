@@ -57,15 +57,15 @@ medium <- dens2 %>%
 comparison <- cbind(zero, medium)
 ```
 
-Appendix A - Sensitivity analysis of effect size for simulations
+Appendix A - Sensitivity analysis assuming a medium true effect size rather than zero true effect size
 
-In our main results we simulated data to estimate type I error and power using an average effect size of zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis we in this Appendix again estimate type I error and power, but generated with an average 'medium' effect size as defined by Cohen (1988).
+In our main results we simulated data to estimate type I error and power using an average true effect size equal to zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis, in this appendix we also estimated type I error and power, but generated with an average 'medium' true effect size as defined by Cohen (1988).
 
-Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table A1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a an effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity respectively. The corresponding power with an average effect size was `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
+Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table A1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
 
 Table A1.
 
-_Type I error and power to detect four heterogeniety levels under two true effect sizes_
+_Type I error and power to detect four heterogeneity levels under two true effect sizes_
 
 ```{r}
 knitr::kable(comparison, digits = 2)
