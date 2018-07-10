@@ -61,7 +61,7 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
       }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
     }
     
-  }else if(effect$type == "d"){
+  }else if(effect$type == "d"){ #That is, for SMD and odds ratios
     
     n_c <- effect$ncontrol #observed control group sizes
     n_t <- effect$ntreatment #observed treatment group sizes
@@ -110,7 +110,7 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
         var_c <- rchisq(n = K, df = n_c - 1) / (n_c - 1) #draw variances from sampling distribution control group
         var_t <- rchisq(n = K, df = n_t - 1) / (n_t - 1) #draw variances from sampling distribution treatment group
         
-        fit <- rma(measure = "SMD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t),
+        fit <- rma(measure = "MD",  m1i = avg_t, m2i = avg_c, sd1i = sqrt(var_t),
                    sd2i = sqrt(var_c), n1i = n_t, n2i = n_c, method = "REML") #fit meta-analysis for mean difference
         
         data.frame(I2 = fit$I2, Qp = fit$QEp, ci.lb = confint(fit)$random[3, 2], 
@@ -128,12 +128,14 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
 #******************************************
 
 ##Prep data for simulation function
-OR2d <- c('Allowed vs. forbidden', 'Gain vs. loss framing', #effects that were transformed from OR to SMD
-          'Norm of reciprocity', 'Low vs. high category scales') 
+
+# OR2d <- c('Allowed vs. forbidden', 'Gain vs. loss framing', #effects that were transformed from OR to SMD
+#           'Norm of reciprocity', 'Low vs. high category scales') #Not used after all
 
 dat2 <- dat %>% #Extract k, effect type and sample sizes for each effect
-  mutate(effect_type = ifelse(effect %in% OR2d | effect_type == "Risk difference" | #treat all these effects.. 
-                                effect_type == "Raw mean difference", "MD", effect_type)) %>% #..as mean differences in simulation
+  mutate(effect_type = recode(effect_type, 
+                              "Risk difference" = "MD",
+                              "Raw mean difference" = "MD")) %>% #as mean differences in simulation
   split(.$effect) %>% 
   map(~ list(K = nrow(.), #~ is shorthand for an anonymous function
              Ntotal = .$Ntotal, 
@@ -162,12 +164,12 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 # system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
   # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
   # cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/appendixA_tau_simulation_results.RDS") #save ocassionally and at finish
+  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/AppendixA_tau_simulation_results.RDS") #save ocassionally and at finish
 # })
 #********************
 
 ##Simulation results
-dat3 <- readRDS("../data/tau_simulation_results.RDS")
+dat3 <- readRDS("../data/AppendixA_tau_simulation_results.RDS")
 names(dat3) <- names(dat2) #names are lost when looping instead of using lapply
 
 dat3 <- dat3 %>% #create dataframe with identifier
@@ -218,15 +220,15 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
 #*********************
 #Effect size sensitivity simulation for Appendix A
 
-# set.seed(50)
-# res2_a <- vector("list", length(dat2)) #output of below loop
+set.seed(50)
+ res2_a <- vector("list", length(dat2)) #output of below loop
 
-# system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
-  # res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
-                           # tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
-  # cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/appendixA_power_simulation_results.RDS") #save ocassionally and at finish
-# })
+ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
+   res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
+                            tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
+  cat("...RS",e, "/37") #see progress
+   if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/AppendixA_power_simulation_results.RDS") #save ocassionally and at finish
+ })
 #********************
 
 ##Simulation results
