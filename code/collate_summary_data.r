@@ -563,7 +563,7 @@ ml3 <- rbind(ml3_stroop, ml3t, nonp, inter, cons_cor) %>%
 #******************************************
 #[3] RRR1 & 2 ----
 #******************************************
-##summary data from Registered Replication Report 1 & 2 https://osf.io/jymhe/
+##summary data from Registered Replication Report 1 & 2 https://osf.io/ybeur/ 
 ##Data RRR1 https://osf.io/dv5ei/
 ##Data RRR2 https://osf.io/dy6at/
 
