@@ -32,19 +32,19 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 #library(kableExtra)
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
-rel <- c("R = .6", "R = .7", "R = .8")
+rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
 rooted_relabilities <- data.frame(rel, rooted_relabilities)
 
-diff_row <- data.frame(rel = "Standard deviation R", X1 = sd(rooted_relabilities$X1), X2 = sd(rooted_relabilities$X2), X3 = sd(rooted_relabilities$X3))
+diff_row <- data.frame(rel = "SD observed effect sizes", X1 = sd(rooted_relabilities$X1), X2 = sd(rooted_relabilities$X2), X3 = sd(rooted_relabilities$X3))
 
 het_demo <- rbind(rooted_relabilities, diff_row)
 
-het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("Effect size", "Rho = 0", "Rho = .3", "Rho = .5"), digits = 2) %>% 
+het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("", "$\\rho$ = 0", "$\\rho$ = .3", "$\\rho$ = .5"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
-  footnote(threeparttable = TRUE,
-           general = "R = square root of the multiplied reliabilities. Rho = true effect size. Code to reproduce table: osf.io/kf6pt/") %>% 
+  footnote(threeparttable = TRUE, escape = FALSE,
+           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$. SD = standard deviation. Code to reproduce table: osf.io/kf6pt/") %>% 
   row_spec(3, hline_after = T)
 
 ```
@@ -59,7 +59,7 @@ het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("Effect size", "R
 #Shortened version of APA reference
 papers <- c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahník, S., Bernstein, M. J., . . . Nosek, B. A. (2014). Investigating variation in replicability: A "many labs" replication project.', 
 'Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., ... & Brown, E. R. (2016). Many Labs 3: Evaluating participant pool quality across the academic semester via replication.',
-'Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., ... & Brown, E. R. (2016). Many Labs 3: Evaluating participant pool quality across the academic semester via replication.',
+'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahník, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990).',
 'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahník, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990).',
 'Eerland, A., Sherrill, A. M., Magliano, J. P., Zwaan, R. A., Arnal, J. D., Aucoin, P., ... & Crocker, C. (2016). Registered replication report: Hart & Albarracín (2011).',
 'Hagger, M. S., Chatzisarantis, N. L., Alberts, H., Anggono, C. O., Batailler, C., Birt, A. R., ... & Calvillo, D. P. (2016). A multilab preregistered replication of the ego-depletion effect.',
@@ -71,7 +71,7 @@ papers <- c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahn
 ##Full APA reference below
 # c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahník, S., Bernstein, M. J., . . . Nosek, B. A. (2014). Investigating variation in replicability: A "many labs" replication project. Social Psychology, 45(3), 142-152.', 
 # 'Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., ... & Brown, E. R. (2016). Many Labs 3: Evaluating participant pool quality across the academic semester via replication. Journal of Experimental Social Psychology, 67, 68-82.',
-# 'Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., ... & Brown, E. R. (2016). Many Labs 3: Evaluating participant pool quality across the academic semester via replication. Journal of Experimental Social Psychology, 67, 68-82.',
+# 'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahník, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990). Perspectives on Psychological Science, 9(5), 556-578.',
 # 'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahník, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990). Perspectives on Psychological Science, 9(5), 556-578.',
 # 'Eerland, A., Sherrill, A. M., Magliano, J. P., Zwaan, R. A., Arnal, J. D., Aucoin, P., ... & Crocker, C. (2016). Registered replication report: Hart & Albarracín (2011). Perspectives on Psychological Science, 11(1), 158-171.',
 # 'Hagger, M. S., Chatzisarantis, N. L., Alberts, H., Anggono, C. O., Batailler, C., Birt, A. R., ... & Calvillo, D. P. (2016). A multilab preregistered replication of the ego-depletion effect. Perspectives on Psychological Science, 11(4), 546-573.',
@@ -138,8 +138,9 @@ I2_ci_lb <- dens %>%
 #Combine dataframes to create full table
 het <-  het %>% 
   left_join(I2_ci_lb) %>% 
-  select(rp, effect,k , everything()) %>% 
-  arrange(desc(s_I2),  desc(s_ci.ub)) #sort by I2 and upper CI bound
+  arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by I2 and upper CI bound
+  mutate(ci = paste0("[", trimws(format(round(s_ci.lb, 2), nsmall = 2)), ", ", trimws(format(round(s_ci.ub, 2), nsmall = 2)), "]")) %>% 
+  select(rp, effect, k, effect_type, eff_size, s_I2, ci, zero, small, medium, large)
 
 ```
 
@@ -147,11 +148,12 @@ het <-  het %>%
 ```{r heterogeneity-table}
 #library(kableExtra)
 
-het %>% knitr::kable("latex", align = "c", booktabs = TRUE,  digits = 2, col.names = c("RP", "Effect", "k", "Effect type", "Estimate", "I2(%)", "ci.lb", "ci.ub", "Zero", "Small", "Medium", "Large")) %>% 
-  add_header_above(c(" " = 8, "Heterogeneity & error/power" = 4)) %>% 
+het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "k", "Effect type", "Effect size estimate", "$I^2$(\\%)", "$I^2$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
+  add_header_above(c(" " = 7, "Level of heterogeneity" = 4)) %>% 
+  add_header_above(c(" " = 7, "Statistical power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, ci.lb = lower bound of $I^2$ 95\\\\% confidence interval, ci.ub = upper bound of $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, $I^2$ 95\\\\% CI = $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
            alphabet = "These effects were simulated as standardized mean differences")
 
 
