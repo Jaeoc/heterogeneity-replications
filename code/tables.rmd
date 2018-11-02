@@ -153,7 +153,7 @@ het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digi
   add_header_above(c(" " = 7, "Statistical power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, $I^2$ 95\\\\% CI = $I^2$ 95\\\\% confidence interval. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, Estimate = Point estimates of effect sizes, $I^2$ 95\\\\% CI = $I^2$ 95\\\\% confidence interval. Statistical power was simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
            alphabet = "These effects were simulated as standardized mean differences")
 
 
