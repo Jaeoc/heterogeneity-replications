@@ -1,6 +1,6 @@
 ---
 title: "Tables"
-author: "Limited evidence for widespread heterogeneity in psychology"
+author: "Heterogeneity in direct replications in psychology and its association with effect size"
 output: pdf_document
 ---
 

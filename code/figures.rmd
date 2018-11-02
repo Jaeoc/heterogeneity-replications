@@ -1,6 +1,6 @@
 ---
 title: "Figures"
-author: "Anton Ohlsson Collentine"
+author: "Heterogeneity in direct replications in psychology and its association with effect size"
 output: pdf_document
 ---
 

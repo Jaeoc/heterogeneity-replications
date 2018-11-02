@@ -1,7 +1,7 @@
 ---
 dataMaid: yes
 title: Codebook for collated_summary_data.csv
-subtitle: "Limited evidence for widespread heterogeneity in psychology"
+subtitle: "Heterogeneity in direct replications in psychology and its association with effect size"
 output: pdf_document
 documentclass: article
 header-includes:

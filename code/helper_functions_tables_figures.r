@@ -1,6 +1,6 @@
 #******************************************
 
-#Project: Limited evidence for widespread heterogeneity in psychology
+#Project: Heterogeneity in direct replications in psychology and its association with effect size
 #Script purpose: Helper functions to prep data for tables and figures
 #Code: Anton Ohlsson Collentine
 #Additional comments: These functions are intended to be 'sourced' into the 
