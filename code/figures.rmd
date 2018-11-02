@@ -42,7 +42,7 @@ summarizer <- function(x){
   fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, data = x) #takes raw correlation as input
   data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1)) #estimates out
 }
-#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method computes H2 as originally specified by Higgins & Thompson instead of using the more general method of metafor (see ?print.rma.uni).
+#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
 
 #Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
   
