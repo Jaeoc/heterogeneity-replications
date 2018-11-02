@@ -15,6 +15,7 @@ if(!require(dplyr)){install.packages("dplyr")}
 if(!require(purrr)){install.packages("purrr")}
 if(!require(ggplot2)){install.packages("ggplot2")}
 if(!require(cowplot)){install.packages("cowplot")}
+if(!require(boot)){install.packages("boot")}
 
 library(readr) #To load data
 library(dplyr) #For data transformation
@@ -22,6 +23,7 @@ library(purrr) #For data iteration
 library(metafor) #To run meta-analyses
 library(ggplot2) #Plot data
 library(cowplot) #Combine several plots into one
+library(boot) #Bootstrap confidence intervals for correlations
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
@@ -52,47 +54,96 @@ res2 <- res %>%
   mutate(z = abs(z)) #Absolute values since we are interested in effect size rather than direction
 ```
 
-```{r plot_res}
+```{r cor_het_z}
+#Basic correlations
+cor.test(res2$I2, res2$z) #pearson
 
-# summary(lm(I2 ~ z, data = res2)) #b = 69.40, R2 = 0.61
+I2_fit <- summary(lm(I2 ~ z, data = res2)) 
 
-I2 <- ggplot(res2, aes(x = z, y = I2)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  xlab("Fisher's z") +
-  coord_cartesian(ylim = c(0, 100)) +
-  geom_text(x = 0.15, y = 80, label = "b = 69.40, R2 = 0.61", size = 3.5) +
-  theme_classic() +
-  scale_y_continuous(name = expression(paste(I^2," index", sep = ""))) +
-  scale_x_continuous(name = "Effect size (Fisher's z)")
+cor.test(res2$H2, res2$z) #pearson
 
+H2_fit <- summary(lm(H2 ~ z, data = res2))
 
-# summary(lm(H2 ~ z, data = res2)) #b = 3.81, R2 = 0.53
+cor.test(res2$I2, res2$z, method = "spearman") #spearman
 
-H2 <- ggplot(res2, aes(x = z, y = H2)) + 
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") +
-  xlab("Fisher's z") +
-  geom_text(x = 0.14, y = 5.9, label = "b = 3.81, R2 = 0.53", size = 3.5) +
-  theme_classic() +
-  scale_y_continuous(name = expression(paste(H^2," index", sep = ""))) +
-  scale_x_continuous(name = "Effect size (Fisher's z)")
-
-
-effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v") #combine plots
-effect_het
-# save_plot("../figures/effect-het.png", effect_het,
-          # nrow = 2, base_aspect_ratio = 1.3, dpi = 600)
-
-```
-
-```{r robustness, results="hide"}
 ##Excluding anchoring effects
 dropped_anchoring <- res2 %>%
   filter(!grepl("Anchoring", effect))
 
-summary(lm(I2 ~ z, data = dropped_anchoring))
-#b = 87.87, R2 = .51
+cor.test(dropped_anchoring$I2, dropped_anchoring$z) #pearson
+
+#bootstrap confidence intervals
+#code by Amir Abdol
+
+#I2
+pear <- function(formula, data, indices){ #pearson
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ I2 + z, data=d)
+     return(fit$estimate)
+}
+
+bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ z + I2)
+
+I2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
+
+spear <- function(formula, data, indices){ #spearman
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ I2 + z, data=d, method = "spearman")
+     return(fit$estimate)
+}
+
+options(warn=-1)
+bootfit <- boot(data=res2, statistic=spear, R=1000, formula= ~ z + I2)
+options(warn=0)
+
+I2_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
+
+#Excluding anchoring effects
+bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ z + I2)
+
+I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
+
+
+#H2
+pear <- function(formula, data, indices){
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ H2 + z, data=d)
+     return(fit$estimate)
+}
+
+bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ z + H2)
+
+H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
+
+
+```
+
+```{r plot_res}
+
+I2 <- ggplot(res2, aes(x = z, y = I2)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  xlab("Fisher's z") +
+  coord_cartesian(ylim = c(0, 100)) +
+  geom_text(x = 0.15, y = 80, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
+  theme_classic() +
+  scale_y_continuous(name = expression(paste(italic(I)^2," index"))) +
+  scale_x_continuous(name = expression(paste("Effect size (Fisher's ", italic(z), ")")))
+
+H2 <- ggplot(res2, aes(x = z, y = H2)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  xlab("Fisher's z") +
+  geom_text(x = 0.14, y = 5.9, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
+  theme_classic() +
+  scale_y_continuous(name = expression(paste(italic(H)^2," index", sep = ""))) +
+  scale_x_continuous(name = expression(paste("Effect size (Fisher's ", italic(z),")")))
+
+
+effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v") #combine plots
+effect_het
+save_plot("../figures/effect-het.png", effect_het,
+          nrow = 2, base_height = 5, base_width = 5, dpi = 600)
 
 ```
 
