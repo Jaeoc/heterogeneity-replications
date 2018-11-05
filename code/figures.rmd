@@ -140,7 +140,7 @@ H2 <- ggplot(res2, aes(x = z, y = H2)) +
   scale_x_continuous(name = expression(paste("Effect size (Fisher's ", italic(z),")")))
 
 
-effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("A", "B"), align = "v") #combine plots
+effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
 effect_het
 save_plot("../figures/effect-het.png", effect_het,
           nrow = 2, base_height = 5, base_width = 5, dpi = 600)
