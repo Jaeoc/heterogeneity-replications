@@ -27,7 +27,8 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-##Heterogeneity may increase with effect size
+##Table 1
+###Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
 ```{r effect-size-heterogeneity-table}
 #library(kableExtra)
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
@@ -37,21 +38,17 @@ rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\time
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
 rooted_relabilities <- data.frame(rel, rooted_relabilities)
 
-diff_row <- data.frame(rel = "SD observed effect sizes", X1 = sd(rooted_relabilities$X1), X2 = sd(rooted_relabilities$X2), X3 = sd(rooted_relabilities$X3))
-
-het_demo <- rbind(rooted_relabilities, diff_row)
-
-het_demo %>% knitr::kable("latex", booktabs = T, col.names = c("", "$\\rho$ = 0", "$\\rho$ = .3", "$\\rho$ = .5"), escape = FALSE, digits = 2) %>% 
+rooted_relabilities %>% knitr::kable("latex", booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$. SD = standard deviation. Code to reproduce table: osf.io/kf6pt/") %>% 
+           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$. Code to reproduce table: osf.io/kf6pt/") %>% 
   row_spec(3, hline_after = T)
 
 ```
 
 
-
-##Summary table
+##Table 2
+###Pre-registered multi-lab replication projects
 ```{r data-summary-table}
 #library(dplyr)
 #library(kableExtra)
@@ -144,7 +141,8 @@ het <-  het %>%
 
 ```
 
-##Heterogeneity in preregistered multi-lab psychology studies
+##Table 3
+###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity
 ```{r heterogeneity-table}
 #library(kableExtra)
 
