@@ -120,7 +120,7 @@ Label   Variable               Class         # unique  Missing  Description
 
 Report generation information:
 
- *  Created by Anton Olsson Collentine.
+ *  Created by .
 
  *  Report creation time: on jun 27 2018 11:39:37
 

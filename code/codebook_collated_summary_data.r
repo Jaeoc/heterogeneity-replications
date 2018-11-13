@@ -2,7 +2,7 @@
 
 ##Project: Heterogeneity in direct replications in psychology and its association with effect size
 ##Script purpose: This script creates a nice-looking pdf codebook
-##Code: Anton Ohlsson Collentine
+##Code: 
 
 #************************************************
 #Packages and data----

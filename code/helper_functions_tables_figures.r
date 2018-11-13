@@ -2,7 +2,7 @@
 
 #Project: Heterogeneity in direct replications in psychology and its association with effect size
 #Script purpose: Helper functions to prep data for tables and figures
-#Code: Anton Ohlsson Collentine
+#Code: 
 #Additional comments: These functions are intended to be 'sourced' into the 
 #                     tables.rmd and figures.rmd files 
 

@@ -2,7 +2,7 @@
 
 ##Project: Heterogeneity in direct replications in psychology and its association with effect size
 ##Script purpose: This script extracts, cleans and formats summary data from Many labs 1 & 3 and Registered Replication Reports 1 - 8 
-##Code: Anton Ohlsson Collentine
+##Code: 
 
 ##Script content:----
 

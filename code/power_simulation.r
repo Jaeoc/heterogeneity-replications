@@ -2,7 +2,7 @@
 
 #Project: Heterogeneity in direct replications in psychology and its association with effect size
 #Script purpose: Simulate I2 distribution for different levels of heterogeneity given data weights
-#Code: Anton Ohlsson Collentine
+#Code: 
 
 #******************************************
 
