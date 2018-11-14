@@ -1,0 +1,47 @@
+---
+header-includes:
+   - \setlength\parindent{24pt}
+   - \usepackage{setspace}
+   - \doublespacing
+   
+output: word_document
+---
+Appendix B - Formulas for effect size transformations
+
+This appendix describes the formulas used to convert effect sizes into a common effect size measure (correlations). All formulas presented can be found in Borenstein (2009). For (standardized) mean differences, we assumed equal population standard deviations $\sigma_1 = \sigma_2$, and calculated (p. 226) the pooled standard deviation $S_p$ as follows:
+
+$$S_p = \sqrt {\frac{(n_1 - 1) \times S_1^2 + (n_2 - 1) \times S_2^2}{n_1 + n_2 - 2}}$$
+
+where $n_1$/$n_2$ are group sample sizes and $S_1^2$/$S_2^2$ are the sample variances. In one case (RR8) we had to convert reported standard errors into pooled standard deviations. Standard errors are the square root of the variance of the mean:
+
+$$SE = \sqrt{v}$$
+The pooled standard deviation is then (p. 224): 
+
+$$S_p = \sqrt {\frac{v}{1 / n_1 + 1/n_2}}$$
+
+We then standardized the mean differences (p.226):
+
+$$d = \frac{\bar{x}_1 - \bar{x}_2}{S_p}$$
+
+where $d$ is the standardized mean difference and $\bar{x}_1$/$\bar{x}_2$ the sample means of the two groups. We finally converted effect sizes to correlations (p. 234):
+
+$$r = \frac{d}{\sqrt{d^2 + a}}$$
+
+Where $a$ is a correction factor for unequal sample sizes $n_1 \neq n_2$. The correction factor is calculated (p. 234) as:
+
+$$a = \frac{(n_1 + n_2)^2}{n_1 \times n_2}$$
+
+For effects that were measured as odds ratios (transformed by ML1 into standardized mean difference) or risk differences, we computed log odds ratios, converted these to standardized mean differences, and proceeded as above to convert these to correlations. We first added one half to any empty cell to avoid dividing by zero and then computed the log odds ratios as follows (p. 266):
+
+$$OR_{log} = ln \frac{a \times d}{b \times c}$$
+where $a$, $b$, $c$, and $d$ are the four cell sizes. The log odds ratios were converted to $d$s as follows (p. 232):
+
+$$d = \frac{OR_{log} \times \sqrt 3}{\pi}$$
+
+
+
+
+
+
+
+

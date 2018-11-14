@@ -1,0 +1,75 @@
+---
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 6, fig.asp = 0.618)
+```
+
+```{r load packages, data and source helper functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(metafor)){install.packages("metafor")}
+
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(ggplot2) #Plot data
+library(purrr) #For data iteration
+library(metafor) #To run meta-analyses
+
+dat <- read_csv("../data/collated_summary_data.csv")
+
+source("../code/helper_functions_tables_figures.r") #Load functions to prep data for figures
+```
+
+```{r results}
+##Zero effect size results
+dens <- readRDS("../data/power_simulation_results.RDS") 
+names(dens) <-  sort(unique(dat$effect))
+
+#Summary of results. These are incorporated into the main table in the paper, see tables.rmd
+zero <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(Zero = '1', Small = '2', Medium = '3', Large = '4', Effect = effect)
+
+##Medium effect size results
+dens2 <- readRDS("../data/appendixA_power_simulation_results.RDS") 
+names(dens2) <-  sort(unique(dat$effect))
+
+#Summary of results.
+medium <- dens2 %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(Zero = '1', Small = '2', Medium = '3', Large = '4') %>% 
+  select(-effect)
+
+##combine for table
+
+comparison <- cbind(zero, medium)
+```
+
+Appendix A - Sensitivity analysis assuming a medium true effect size rather than zero true effect size
+
+In our main results we simulated data to estimate type I error and power using an average true effect size equal to zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis, in this appendix we also estimated type I error and power, but generated with an average 'medium' true effect size as defined by Cohen (1988).
+
+Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table A1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
+
+Table A1.
+
+_Type I error and power to detect four heterogeneity levels under two true effect sizes_
+
+```{r}
+knitr::kable(comparison, digits = 2)
+```
+
+**Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). Code to reproduce table: osf.io/bsjhu/
+
