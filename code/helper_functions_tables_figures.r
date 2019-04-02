@@ -52,9 +52,10 @@ est_heterogen_smd_raw <- function(x){
     
   }
   
-  I2_1 <- confint(fit)$random[3, ] #Gives us the I2 estimate and its confidence interval
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate)
-             s_I2 = I2_1[1], s_ci.lb = I2_1[2], s_ci.ub = I2_1[3]) #I2 + CI
+  hetero <- confint(fit)$random[c(1, 3), ] #Gives us the tau2 and I2 estimates with confidence intervals
+  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
+             s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
+             tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3]) #I2 + CI
 }
 
 
