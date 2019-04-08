@@ -67,22 +67,26 @@ est_heterogen_smd_raw <- function(x){
 #Borenstein, M. (2009). Effect sizes for continuous data. In H. Cooper, L. V. Hedges, & J. C. Valentine (Eds.), 
 #The handbook of research synthesis and meta-analysis (2nd ed., pp. 221-235). New York: Russell Sage Foundation.
 
+#Jacobs, P., & Viechtbauer, W. (2017). Estimation of the biserial correlation and its sampling variance for use
+#in meta-analysis. Research Synthesis Methods, 8(2), 161-180.
+#(provide an exact computation of the point-biserial correlation rather than the approximate in Borenstein)
+
+#Note that Jacobs and Viechtbauer (2017) recommend transforming the point-biserial correlation to a 
+#biserial correlation. However, doing so results in impossible values (r > 1) for 37 of the studies; 
+#those with very large effect sizes (> ~2.5 SD)
+
 #For raw mean difference + SE
 transform_SE <- function(ES, SE, n1, n2){ 
   sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
   d <- ES / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes. p.234
-  r <- d / sqrt(d^2 + corr) #p.234
-  data.frame(r = r, n = n1 + n2)
+  data.frame(d = d, n1 = n1, n2 = n2)
 }
 
 #For mean differrence + SD
 transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
-  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #page 226. 
+  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #Borenstein, M. (2009), p. 226. 
   d <- (m1 - m2) / sdpooled
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p.234
-  r <- d / sqrt(d^2 + corr) #p. 234
-  data.frame(r = r, n = n1 + n2)
+  data.frame(d = d, n1 = n1, n2 = n2)
 }
 
 #For Risk difference/OR
@@ -91,49 +95,61 @@ transform_RD <- function(ai, bi, ci, di){
   bi <- ifelse(bi == 0, 0.5, bi)  #This affects 1 study for Allowed vs. forbidden
   ci <- ifelse(ci == 0, 0.5, ci)  #And several studies for Low vs. high category scales
   di <- ifelse(di == 0, 0.5, di)
-  logOR <- log((ai*di) / (bi*ci)) #p. 266
+  logOR <- log((ai*di) / (bi*ci)) #Borenstein, M. (2009), p. 266
   d = logOR * sqrt(3)/pi #p. 232
   n1 = ai + bi
   n2 = ci + di
-  corr <- (n1 + n2)^2 / (n1*n2) #correction factor if unequal sample sizes, p. 234
-  r <- d / sqrt(d^2 + corr) #p. 234
-  data.frame(r = r, n = ai + bi + ci +di)
+  data.frame(d = d, n1 = n1, n2 = n2)
 }
+
+transform_d_to_r <- function(d, n1, n2){ 
+  m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
+  h <- m/n1 + m/n2 #p. 164
+  rpb <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5
+  data.frame(r = rpb, n = n1 + n2)
+}
+
+
 
 #Function to apply the transformation functions to the data
 transform_MA <- function(x){
   if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
     
-    transformed <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
+    d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
+    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
     #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
     
-    transformed <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
+    d_conversion <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
+    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
     #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
-    transformed <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
+    d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
+    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
     # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
   } else if(any(x[, "effect_type"] == "r")){
     
-    transformed <- data.frame(r = x$effect_size, n = x$Ntotal)
+    out <- data.frame(r = x$effect_size, n = x$Ntotal)
     
     # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
   } else{ #For the many labs OR that were transformed to d [double check]
     
-    transformed <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
+    d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
+    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
   }
   
   # data.frame(b = fit$b[[1]], I2 = fit$I2) #estimate out
-  transformed
+  
+  out
 }
 
 
