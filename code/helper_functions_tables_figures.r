@@ -60,7 +60,7 @@ est_heterogen_smd_raw <- function(x){
 
 
 #******************************************
-#Functions to transform all effect sizes to the same unit of measurement (Fisher's z)----
+#Functions to transform all effect sizes to the same unit of measurement----
 #******************************************
 
 #Formulas found in: 

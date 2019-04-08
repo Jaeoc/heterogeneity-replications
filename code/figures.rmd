@@ -42,7 +42,9 @@ res <- dat %>%
 ```{r MA_df}
 summarizer <- function(x){
   fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, data = x) #takes raw correlation as input
-  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1)) #estimates out
+  fitr <- rma(measure = "COR", ri = x$r, ni = x$n, data = x)
+  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1),
+             r = fitr$b[[1]], tau2r = fitr$I2) #estimates out
 }
 #Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
 
@@ -51,16 +53,20 @@ summarizer <- function(x){
 res2 <- res %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(summarizer, .id = "effect") %>% 
-  mutate(z = abs(z)) #Absolute values since we are interested in effect size rather than direction
+  mutate(z = abs(z), r = abs(r)) #Absolute values since we are interested in effect size rather than direction
 ```
 
-```{r cor_het_z}
+```{r cor_het_effect_size, results = "hide", cache=TRUE}
 #Basic correlations
-cor.test(res2$I2, res2$z) #pearson
+cor.test(res2$I2, res2$z) #pearson I2
 
-I2_fit <- summary(lm(I2 ~ z, data = res2)) 
+I2_fit <- summary(lm(I2 ~ z, data = res2)) #for annotating figures
 
-cor.test(res2$H2, res2$z) #pearson
+cor.test(res2$tau2r, res2$r) #pearson tau2
+
+tau2_fit <- summary(lm(tau2r ~ r, data = res2))
+
+cor.test(res2$H2, res2$z) #pearson H2
 
 H2_fit <- summary(lm(H2 ~ z, data = res2))
 
@@ -118,12 +124,12 @@ H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```
 
-```{r plot_res}
+
+```{r plot_res, cache = TRUE}
 
 I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  xlab("Fisher's z") +
   coord_cartesian(ylim = c(0, 100)) +
   geom_text(x = 0.15, y = 80, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
@@ -133,7 +139,6 @@ I2 <- ggplot(res2, aes(x = z, y = I2)) +
 H2 <- ggplot(res2, aes(x = z, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  xlab("Fisher's z") +
   geom_text(x = 0.14, y = 5.9, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
   scale_y_continuous(name = expression(paste(italic(H)^2," index", sep = ""))) +
@@ -142,12 +147,27 @@ H2 <- ggplot(res2, aes(x = z, y = H2)) +
 
 effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
 effect_het
-save_plot("../figures/effect-het.png", effect_het,
-          nrow = 2, base_height = 5, base_width = 5, dpi = 600)
+#save_plot("../figures/effect-het.png", effect_het,
+#          nrow = 2, base_height = 5, base_width = 5, dpi = 600)
+
 
 ```
 
-```{r Plot_tau_against_I2, fig.asp = 0.618}
+```{r r_vs_tau2, fig.asp = 0.618, cache = TRUE}
+r_tau2 <- ggplot(res2, aes(x = r, y = tau2r)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  geom_text(x = 0.14, y = 75, size = 3.5, fontface = "italic", label = paste("b = ", format(round(tau2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(tau2_fit$r.squared), 2), nsmall = 2))) +
+  theme_classic() +
+  scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
+  scale_x_continuous(name = expression(paste("Point-biserial correlation ", italic(r))))
+
+r_tau2
+# ggsave("../figures/r_tau2.png", dpi = 600, height =  4 , width = 6.47)
+
+```
+
+```{r Plot_tau_against_I2, fig.asp = 0.618, cache = TRUE}
 dat3 <- readRDS("../data/tau_simulation_results.RDS")
 names(dat3) <- sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
 
@@ -191,7 +211,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
 ```
 
 
-```{r Density_plot, fig.asp= 0.618}
+```{r Density_plot, fig.asp= 0.618, cache = TRUE}
 dens <- readRDS("../data/power_simulation_results.RDS")
 names(dens) <-  sort(unique(dat$effect))
 
