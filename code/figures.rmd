@@ -42,7 +42,7 @@ res <- dat %>%
 ```{r MA_df}
 summarizer <- function(x){
   fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, data = x) #takes raw correlation as input
-  fitr <- rma(measure = "COR", ri = x$r, ni = x$n, data = x)
+  fitr <- rma(yi = x$r, vi = x$vi, data = x)
   data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1),
              r = fitr$b[[1]], tau2r = fitr$I2) #estimates out
 }

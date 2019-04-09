@@ -106,7 +106,14 @@ transform_d_to_r <- function(d, n1, n2){
   m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
   h <- m/n1 + m/n2 #p. 164
   rpb <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5
-  data.frame(r = rpb, n = n1 + n2)
+  p <- n1 / (n1 + n2)
+  q <- n2 / (n1 + n2)
+  zp <- qnorm(p)
+  fzp <- dnorm(zp)
+  rb <- sqrt(p*q) / fzp * rpb #biserial correlation, Jacobs and Viechtbauer (2017), equation 8
+  rb_trunc <- ifelse(rb > 1, 1, rb) #truncate if > 1 to avoid neg. variance. p. 166-167
+  var_rb <- 1/(n1 + n2 -1) * (sqrt(p*q) / fzp - rb_trunc^2)^2 #variance biserial r, approximate formula, eq. 13 (only different from exact formula under extreme conditions p. 172
+  data.frame(r = rb_trunc, vi = var_rb) #I use the approximate formula above to decrease the risk of coding error (due to simplicity)
 }
 
 
@@ -136,7 +143,8 @@ transform_MA <- function(x){
     
   } else if(any(x[, "effect_type"] == "r")){
     
-    out <- data.frame(r = x$effect_size, n = x$Ntotal)
+    out <- metafor::escalc(measure = "COR", ri = x$effect_size, ni =x$Ntotal)
+    out <- data.frame(r = out$yi, vi = out$vi)
     
     # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
