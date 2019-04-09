@@ -254,6 +254,6 @@ ggplot(I2_dist, aes(x = I2, group = Heterogeneity, fill = Heterogeneity, linetyp
   scale_x_continuous(name = expression(paste(I^2," index", sep = ""))) +
   guides(fill = guide_legend(override.aes = list(alpha = c(rep(0.3, 4), 1))))
 
-ggsave("../figures/density-I2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
+#ggsave("../figures/density-I2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
 ```
 

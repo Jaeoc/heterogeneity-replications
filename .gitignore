@@ -1,0 +1,7 @@
+#Gitignore file
+#Ignore caching folders used by rmarkdown and R-history
+
+/code/figures_cache
+/code/figures_files
+
+.Rhistory
