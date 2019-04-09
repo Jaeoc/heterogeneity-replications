@@ -40,11 +40,9 @@ res <- dat %>%
 ```
 
 ```{r MA_df}
-summarizer <- function(x){
-  fit <- rma(measure = "ZCOR", ri = x$r, ni = x$n, data = x) #takes raw correlation as input
-  fitr <- rma(yi = x$r, vi = x$vi, data = x)
-  data.frame(z = fit$b[[1]], I2 = fit$I2, H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1),
-             r = fitr$b[[1]], tau2r = fitr$I2) #estimates out
+summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viechtbauer (2017) for biserial correlations, p. 176
+  fitr <- rma(yi = x$r, vi = x$vi, data = x) #rma for biserial and pearson correlations (distinct per effect!)
+  data.frame(r = fitr$b[[1]], tau2r = fitr$tau2, I2 = fitr$I2, H2trunc = fitr$H2, H2 = fitr$QE / (fitr$k - 1)) 
 }
 #Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
 
@@ -53,30 +51,30 @@ summarizer <- function(x){
 res2 <- res %>% 
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(summarizer, .id = "effect") %>% 
-  mutate(z = abs(z), r = abs(r)) #Absolute values since we are interested in effect size rather than direction
+  mutate(r = abs(r)) #Absolute values since we are interested in effect size rather than direction
 ```
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
 #Basic correlations
-cor.test(res2$I2, res2$z) #pearson I2
+cor.test(res2$I2, res2$r) #pearson I2
 
-I2_fit <- summary(lm(I2 ~ z, data = res2)) #for annotating figures
+I2_fit <- summary(lm(I2 ~ r, data = res2)) #for annotating figures
 
 cor.test(res2$tau2r, res2$r) #pearson tau2
 
 tau2_fit <- summary(lm(tau2r ~ r, data = res2))
 
-cor.test(res2$H2, res2$z) #pearson H2
+cor.test(res2$H2, res2$r) #pearson H2
 
-H2_fit <- summary(lm(H2 ~ z, data = res2))
+H2_fit <- summary(lm(H2 ~ r, data = res2))
 
-cor.test(res2$I2, res2$z, method = "spearman") #spearman
+cor.test(res2$I2, res2$r, method = "spearman") #spearman
 
 ##Excluding anchoring effects
 dropped_anchoring <- res2 %>%
   filter(!grepl("Anchoring", effect))
 
-cor.test(dropped_anchoring$I2, dropped_anchoring$z) #pearson
+cor.test(dropped_anchoring$I2, dropped_anchoring$r) #pearson
 
 #bootstrap confidence intervals
 #code by Amir Abdol
@@ -84,28 +82,28 @@ cor.test(dropped_anchoring$I2, dropped_anchoring$z) #pearson
 #I2
 pear <- function(formula, data, indices){ #pearson
      d <- data[indices,]
-     fit <- cor.test(formula = ~ I2 + z, data=d)
+     fit <- cor.test(formula = ~ I2 + r, data=d)
      return(fit$estimate)
 }
 
-bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ z + I2)
+bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ r + I2)
 
 I2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
 
 spear <- function(formula, data, indices){ #spearman
      d <- data[indices,]
-     fit <- cor.test(formula = ~ I2 + z, data=d, method = "spearman")
+     fit <- cor.test(formula = ~ I2 + r, data=d, method = "spearman")
      return(fit$estimate)
 }
 
 options(warn=-1)
-bootfit <- boot(data=res2, statistic=spear, R=1000, formula= ~ z + I2)
+bootfit <- boot(data=res2, statistic=spear, R=1000, formula= ~ r + I2)
 options(warn=0)
 
 I2_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
 
 #Excluding anchoring effects
-bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ z + I2)
+bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ r + I2)
 
 I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
 
@@ -113,11 +111,11 @@ I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and a
 #H2
 pear <- function(formula, data, indices){
      d <- data[indices,]
-     fit <- cor.test(formula = ~ H2 + z, data=d)
+     fit <- cor.test(formula = ~ H2 + r, data=d)
      return(fit$estimate)
 }
 
-bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ z + H2)
+bootfit <- boot(data=res2, statistic=pear, R=1000, formula= ~ r + H2)
 
 H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
@@ -127,24 +125,24 @@ H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```{r plot_res, cache = TRUE}
 
-#Plots of H2 and I2 vs. fisher's z for all effects together
+#Plots of H2 and I2 vs. biserial correlation r for all effects together
 
-I2 <- ggplot(res2, aes(x = z, y = I2)) +
+I2 <- ggplot(res2, aes(x = r, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
   coord_cartesian(ylim = c(0, 100)) +
-  geom_text(x = 0.15, y = 80, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
+  geom_text(x = 0.14, y = Inf, vjust = 7, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
   scale_y_continuous(name = expression(paste(italic(I)^2," index"))) +
-  scale_x_continuous(name = expression(paste("Effect size (Fisher's ", italic(z), ")")))
+  scale_x_continuous(name = expression(paste("Biserial correlation ", italic(r))))
 
-H2 <- ggplot(res2, aes(x = z, y = H2)) + 
+H2 <- ggplot(res2, aes(x = r, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  geom_text(x = 0.14, y = 5.9, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
+  geom_text(x = 0.14, y = Inf, vjust = 7, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
   scale_y_continuous(name = expression(paste(italic(H)^2," index", sep = ""))) +
-  scale_x_continuous(name = expression(paste("Effect size (Fisher's ", italic(z),")")))
+  scale_x_continuous(name = expression(paste("Biserial correlation ", italic(r))))
 
 
 effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
@@ -159,12 +157,12 @@ effect_het
 r_tau2 <- ggplot(res2, aes(x = r, y = tau2r)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  geom_text(x = 0.14, y = 75, size = 3.5, fontface = "italic", label = paste("b = ", format(round(tau2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(tau2_fit$r.squared), 2), nsmall = 2))) +
+  geom_text(x = 0.14, y = Inf, vjust = 7, size = 3.5, fontface = "italic", label = paste("b = ", format(round(tau2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(tau2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
   scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
-  scale_x_continuous(name = expression(paste("Point-biserial correlation ", italic(r))))
+  scale_x_continuous(name = expression(paste("Biserial correlation ", italic(r))))
 
-r_tau2
+r_tau2 
 # ggsave("../figures/r_tau2.png", dpi = 600, height =  4 , width = 6.47)
 
 ```
