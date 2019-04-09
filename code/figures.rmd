@@ -127,6 +127,8 @@ H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```{r plot_res, cache = TRUE}
 
+#Plots of H2 and I2 vs. fisher's z for all effects together
+
 I2 <- ggplot(res2, aes(x = z, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
@@ -166,6 +168,60 @@ r_tau2
 # ggsave("../figures/r_tau2.png", dpi = 600, height =  4 , width = 6.47)
 
 ```
+
+```{r corr_per_effect_type, cache = TRUE}
+#Each set of input datapoints is meta-analyzed as per the original replication project
+#Then correlated with tau2 per effect type
+#Function 'est_heterogen_smd_raw' is sourced, see also tables.rmd
+tau2_per_type <- dat %>% 
+  split(.$effect) %>%  
+  map_dfr(est_heterogen_smd_raw, .id = "effect")
+
+tau2_per_type <- dat %>% #This is to add the effect_type names
+  select(effect, effect_type) %>% 
+  distinct() %>% 
+  mutate(effect_type = recode(effect_type, 
+                              d = "Standardized Mean Difference",
+                              'Raw mean difference' = "Mean Difference",
+                              'Risk difference' = "Risk Difference",
+                              'r' = "Correlation")) %>% 
+  left_join(tau2_per_type) %>% 
+  mutate(eff_size = abs(eff_size)) #need the absolute values for plotting
+
+
+fitter <- function(df){ #function to fit correlations for annotating facet plots
+ fit <- summary(lm(tau2 ~ eff_size, data = df))
+ data.frame(b = format(round(fit$coefficients[2, 1], digits = 2), nsmall = 2), #because map_dfr requires dataframe
+            r = format(round(sqrt(fit$r.squared), digits = 2), nsmall = 2)) #output, the output is kept as two vars
+}
+
+labels <- tau2_per_type %>% 
+  split(.$effect_type) %>% 
+  map_dfr(fitter, .id = "effect_type") %>% 
+  mutate(lab = paste0("b = ", b, ", r = ", r)) #put output into one variable for improved plotting
+  
+
+    
+
+    
+tau2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = tau2)) + 
+  geom_point(alpha = 0.5) +
+  geom_line(stat = "smooth", method = "lm", se = FALSE, color = "black", alpha = .5, linetype = "dashed") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_text(data = labels, aes(label = lab), x = -Inf, y = Inf, hjust = -0.1, vjust = 6, size = 3.5, fontface = "italic") + #hjust and vjust can be used to annotate the same position in all facets
+  scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
+  scale_x_continuous(name = "Effect size") +
+  theme_classic() +
+  theme(strip.background = element_blank(), #remove box around titles
+        strip.text = element_text(size = 12),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid")) + 
+  facet_wrap(~effect_type, scales = "free") #use free scales since scales are different
+
+tau2_facet
+# ggsave("../figures/tau2_facet.png", dpi = 600, height =  7, width = 7)
+
+```
+
 
 ```{r Plot_tau_against_I2, fig.asp = 0.618, cache = TRUE}
 dat3 <- readRDS("../data/tau_simulation_results.RDS")
