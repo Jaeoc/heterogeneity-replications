@@ -29,7 +29,7 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 
 ##Table 1
 ###Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
-```{r effect-size-heterogeneity-table}
+```{r effect-size-heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
@@ -54,16 +54,16 @@ rooted_relabilities %>% knitr::kable("latex", booktabs = T, col.names = c("", "$
 #library(kableExtra)
 
 #Shortened version of APA reference
-papers <- c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahn?k, S., Bernstein, M. J., . . . Nosek, B. A. (2014). Investigating variation in replicability: A "many labs" replication project.', 
-'Ebersole, C. R., Atherton, O. E., Belanger, A. L., Skulborstad, H. M., Allen, J. M., Banks, J. B., ... & Brown, E. R. (2016). Many Labs 3: Evaluating participant pool quality across the academic semester via replication.',
-'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahn?k, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990).',
-'Alogna, V. K., Attaya, M. K., Aucoin, P., Bahn?k, S., Birch, S., Birt, A. R., ... & Buswell, K. (2014). Registered replication report: Schooler and engstler-schooler (1990).',
-'Eerland, A., Sherrill, A. M., Magliano, J. P., Zwaan, R. A., Arnal, J. D., Aucoin, P., ... & Crocker, C. (2016). Registered replication report: Hart & Albarrac?n (2011).',
-'Hagger, M. S., Chatzisarantis, N. L., Alberts, H., Anggono, C. O., Batailler, C., Birt, A. R., ... & Calvillo, D. P. (2016). A multilab preregistered replication of the ego-depletion effect.',
-'Cheung, I., Campbell, L., LeBel, E. P., Ackerman, R. A., Aykutoglu, B., Bahn?k, S., ... & Carcedo, R. J. (2016). Registered Replication Report: Study 1 from Finkel, Rusbult, Kumashiro, & Hannon (2002).',
-'Wagenmakers, E. J., Beek, T., Dijkhoff, L., Gronau, Q. F., Acosta, A., Adams Jr, R. B., ... & Bulnes, L. C. (2016). Registered Replication Report: Strack, Martin, & Stepper (1988).',
-'Bouwmeester, S., Verkoeijen, P. P., Aczel, B., Barbosa, F., B?gue, L., Bra?as-Garza, P., ... & Evans, A. M. (2017). Registered Replication Report: Rand, Greene, and Nowak (2012).',
-"O'Donnell, M., Nelson, L., McLatchie, N. M., & Lynott, D. J. (2017). Registered Replication Report: Dijksterhuis & van Knippenberg (1998)")
+papers <- c('Klein et al. (2014)', 
+'Ebersole et al. (2016)',
+'Alogna et al. (2014)',
+'Alogna et al. (2014)',
+'Eerland et al. (2016)',
+'Hagger et al. (2016)',
+'Cheung et al. (2016)',
+'Wagenmakers et al. (2016)',
+'Bouwmeester et al. (2017)',
+"O'Donnell et al. (2017)")
 
 ##Full APA reference below
 # c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahn?k, S., Bernstein, M. J., . . . Nosek, B. A. (2014). Investigating variation in replicability: A "many labs" replication project. Social Psychology, 45(3), 142-152.', 
@@ -77,6 +77,21 @@ papers <- c('Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr., Bahn
 # 'Bouwmeester, S., Verkoeijen, P. P., Aczel, B., Barbosa, F., B?gue, L., Bra?as-Garza, P., ... & Evans, A. M. (2017). Registered Replication Report: Rand, Greene, and Nowak (2012). Perspectives on Psychological Science, 12(3), 527-542.',
 # "O'Donnell, M., Nelson, L., McLatchie, N. M., & Lynott, D. J. (2017). Registered Replication Report: Dijksterhuis & van Knippenberg (1998): Multilab direct replication of: A variant of study 4 from Dijksterhuis, A., & van Knippenberg, A.(1998). The relation between perception and behavior, or how to win a game of trivial pursuit. Journal of personality and social psychology. Perspectives on Psychological Science."
 
+description <- c("Two correlational effects: 'Gender math attitude' compared implicit attitudes (IAT) towards math between genders and 'IAT correlation math' correlated implicit attitudes with self-reported measures. The remainder were experiments with two independent groups. The groups were primed in some way (Anchoring 1-4; low vs. high category scales; norm of reciprocity; flag priming; currency priming), asked to imagine slightly different situations (Sunk costs; gain vs. loss framing; gambler's fallacy; imagined contact) or asked their agreement with statements presented differently (Allowed vs. forbidden; quote attribution). ", #ML1
+            "Several effects were experiments with two independent groups. The groups were either primed in some way (Power and perspective; warmth perceptions; subjective distance interaction), saw slightly different statements (Elaboration likelihood interaction; credentials interaction) or experienced different situations (weight embodiment). Examined interactions were between treatment conditions and participant characteristics. One priming effect (metaphor) compared two treatment groups with a control. One effect was correlational: 'persistence and conscientiousness' was measured by an unsolvable anagram task and self-report respectively. The Stroop task is a within-person experiment with two conditions and the 'Availability' effect asks participants to judge whether some letters are more common in the first or third position.", #ML2
+                 "Verbal overshadowing 1; Independent groups experiment. Participants either described a robber after watching a video or listed countries/capitals. DV = correctly identifying the robber in a lineup.", #RRR1
+            "Verbal overshadowing 2; Different from 1 only in that the filler task took place before the descriptive task instead of after.", #RRR2
+                 "Grammar on intentionality/intention attribution/detailed processing; Independent groups experiment with three outcome variables. Actions either described in imperfect or perfect.", #RRR3
+            "Ego depletion; Independent groups experiment. Participants either assigned to a cognitively demanding task or a neutral and performance was then measured in a subsequent task.", #RRR4
+            "Commitment on neglect/exit; Independent groups experiment with two outcome variables. Participants either primed to think about commitment or independence from partner.", #RRR5
+            "Facial feedback hypothesis; Independent groups experiment. Participants either induced to 'smile' or 'pouth' with a pen and then rated funniness of cartoons. ", #RRR6
+            "Intuitive cooperation; Independent groups experiment. Economic game with money contribution to a common pool either under time pressure or time delay.",
+                 "Professor priming; Participants were assigned to groups and primed with either a 'professor' or 'hooligan' stimuli. DV = Percentage correct trivia answers.") #RRR8
+
+sample_settings <- c("9 online, 28 in lab, 25 US, Only 3/36 labs did not recruit explicitly from student populations. 25/36>94% from university students, 7 unclear, 2 non-students", #https://osf.io/g3udn/, ML1
+                     "1 mturk sample, rest students, 2 Canadian samples, remainder US. Only mturk sample was online" #ML2, need to add the rest later
+                     )
+
 summary.table <- dat %>% 
   group_by(rp) %>% 
   summarize(k = n_distinct(Site),
@@ -84,17 +99,19 @@ summary.table <- dat %>%
             Effects = n_distinct(effect),
             Participants = if(Effects == 1){sum(Ntotal)}
                            else{sum(Ntotal) / Effects}) %>% #average across effects
-  mutate(Paper = papers) %>% 
+  mutate(Paper = papers,
+         'Description of Effects' = description) %>% 
   select(RP = rp, Paper, everything()) #change order of columns
 
 summary.table %>% knitr::kable("latex", booktabs = T, digits = 0) %>% 
-  kable_styling() %>% 
-  column_spec(2, width = "25em") %>% #specify width of paper column
+  kable_styling("scale_down", font_size = 7) %>% 
+  column_spec(2, width = "8em") %>% #specify width of paper column
+  column_spec(7, width = "25em") %>% 
   footnote(threeparttable = TRUE,
            general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, k = no. primary studies, ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/")
 ```
 
-```{r prep-heterogeneity-table}
+```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
 #library(dplyr)
 #library(purrr)
@@ -145,7 +162,7 @@ het <-  het %>%
 
 ##Table 3
 ###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated between studies variance ($\tau^2$).
-```{r heterogeneity-table}
+```{r heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 
 het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "k", "Effect type", "Effect size estimate", "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau^2$", "$\\tau^2$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
