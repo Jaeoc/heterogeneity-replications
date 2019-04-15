@@ -26,9 +26,9 @@ library(tidyr) #for 'spread'
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
-
+source("./helper_functions_tables_figures.r") #for function to transform d to biserial correlation
 #******************************************
-#Simulation function----
+#Simulation functions----
 #******************************************
 simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies to a single list object (effect), see next section
   
@@ -120,6 +120,74 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
   bind_rows(output) #Combine output across tau-values into one dataframe
 }
 
+
+#*************************
+simulate_biserial <- function(effect, reps, tau){ #similar to above, but only for biserial correlations, effect size -> 0
+  
+  K <- effect$K #Number of studies
+  N <- effect$Ntotal #Sample sizes for all K studies
+  output <- vector("list", length(tau)) #empty list for output
+  
+  if(effect$type == "r"){ #If 'correlation'
+    
+    for(t in seq_along(tau)){ #loop over each tau-value
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){ #For each tau-value repeat below "reps" times and bind into dataframe
+        
+        rho <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each K at given tau
+        
+        fr <- rnorm(n = K, mean = rho, sd = sqrt(1 / (N - 3))) #draw observed correlations (fisher's z) for each k
+        
+        fit <- rma(yi = fr, vi = 1 / (N - 3), method = "REML") #meta-analysis of fisher's z, each study weighted by its N
+        
+        data.frame(tau2_hat = fit$tau2, I2 = fit$I2, Qp = fit$QEp, 
+                   tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
+    }
+    
+  }else{ #for all non-'correlations' transform into biserial correlations
+    
+    n_c <- effect$ncontrol #observed control group sizes
+    n_t <- effect$ntreatment #observed treatment group sizes
+    
+    for(t in seq_along(tau)){
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){
+        
+        theta <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each K at given tau
+        
+        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(n_c)) #Draw means from sampling distribution control group
+        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(n_t)) #Draw means from sampling distribution treatment group
+        var_c <- rchisq(n = K, df = n_c - 1) / (n_c - 1) #draw variances from sampling distribution control group
+        var_t <- rchisq(n = K, df = n_t - 1) / (n_t - 1) #draw variances from sampling distribution treatment group
+        
+        sdpooled <- sqrt(((n_t - 1)*var_t + (n_c - 1)*var_c) / (n_t + n_c - 2)) #Borenstein, M. (2009), p. 226. 
+        d <- (avg_t - avg_c) / sdpooled
+        
+        biserial_r <- transform_d_to_r(d, n_t, n_c) #function sourced from 'helper_functions_tables_figures.r'
+        
+        fit <- rma(yi = biserial_r$r, vi = biserial_r$vi)
+        data.frame(tau2_hat = fit$tau2, I2 = fit$I2, Qp = fit$QEp, 
+                   tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL))
+    }
+  }
+    
+  bind_rows(output)
+}
+
+#******************************
+#apply biserial simulation function (first run data prep)
+tau2 <- c(1/321, 1/107, 3/107)
+aa <- lapply(dat2, simulate_biserial, reps = 10, tau = sqrt(tau2))
+#There are some effects in ML3 which don't have ntreatment or ncontrol, see str(aa, max.level = 1)
+#these thus need to be treated as correlations in the simulations. [actually, we decided that this
+#is what we'll do with all these correlations anyway]
+# -> fixed
+
+fit <- rma(measure = "UCOR", ri = effect_size, ni = Ntotal,  data = x, vtype = "UB") #model used by ML3
 #******************************************
 #Simulation 1 -  estimate tau values that correspond to small/medium/large I2----
 #******************************************
