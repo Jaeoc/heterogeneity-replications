@@ -178,16 +178,7 @@ simulate_biserial <- function(effect, reps, tau){ #similar to above, but only fo
   bind_rows(output)
 }
 
-#******************************
-#apply biserial simulation function (first run data prep)
-tau2 <- c(1/321, 1/107, 3/107)
-aa <- lapply(dat2, simulate_biserial, reps = 10, tau = sqrt(tau2))
-#There are some effects in ML3 which don't have ntreatment or ncontrol, see str(aa, max.level = 1)
-#these thus need to be treated as correlations in the simulations. [actually, we decided that this
-#is what we'll do with all these correlations anyway]
-# -> fixed
 
-fit <- rma(measure = "UCOR", ri = effect_size, ni = Ntotal,  data = x, vtype = "UB") #model used by ML3
 #******************************************
 #Simulation 1 -  estimate tau values that correspond to small/medium/large I2----
 #******************************************
@@ -280,6 +271,21 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
                            tau = c(0, dat5[[e]][[2]]), effect_size = "zero") #NB! 1e4 reps here is about 14 hours on my (fairly slow) machine
   cat("...RS",e, "/37") #see progress
   if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
+})
+
+#******************************
+#apply biserial simulation function (first run data prep)
+tau <- sqrt(c(1/321, 1/107, 3/107)) #tau2 values for Fisher's z corresponding to small/medium/large I2 with N = 108
+
+##Simulation
+set.seed(60)
+res_biserial <- vector("list", length(dat2)) 
+
+system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
+  res_biserial[[e]] <- simulate_biserial(dat2[[e]], reps = 10,
+                           tau = c(0, tau)) #NB! 1e4 reps here is about 14 hours on my (fairly slow) machine
+  cat("...RS",e, "/37") #see progress
+  if (e%%5 == 0 | e == 37) saveRDS(res_biserial, "../data/biserial_simulation_results.RDS") #save ocassionally and at finish
 })
 
 #*********************
