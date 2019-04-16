@@ -274,7 +274,7 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
 })
 
 #******************************
-#apply biserial simulation function (first run data prep)
+#**apply biserial simulation function----
 tau <- sqrt(c(1/321, 1/107, 3/107)) #tau2 values for Fisher's z corresponding to small/medium/large I2 with N = 108
 
 ##Simulation
@@ -282,7 +282,7 @@ set.seed(60)
 res_biserial <- vector("list", length(dat2)) 
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
-  res_biserial[[e]] <- simulate_biserial(dat2[[e]], reps = 10,
+  res_biserial[[e]] <- simulate_biserial(dat2[[e]], reps = 1e4,
                            tau = c(0, tau)) #NB! 1e4 reps here is about 14 hours on my (fairly slow) machine
   cat("...RS",e, "/37") #see progress
   if (e%%5 == 0 | e == 37) saveRDS(res_biserial, "../data/biserial_simulation_results.RDS") #save ocassionally and at finish
