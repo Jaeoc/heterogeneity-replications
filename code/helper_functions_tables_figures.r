@@ -60,7 +60,7 @@ est_heterogen_smd_raw <- function(x){
 
 
 #******************************************
-#Functions to transform all effect sizes to the same unit of measurement----
+#Functions to transform all effect sizes to the same unit of measurement and meta-analyze----
 #******************************************
 
 #Formulas found in: 
@@ -161,5 +161,14 @@ transform_MA <- function(x){
 }
 
 
+#function to run random effect meta-analysis on transformed effect sizes
+summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viechtbauer (2017) for biserial correlations, p. 176
+  fitr <- rma(yi = x$r, vi = x$vi, data = x) #rma for biserial and pearson correlations (distinct per effect!)
+  ci <- confint(fitr)$random[c(1, 3), ] #I2 and tau2 confidence intervals
+  data.frame(r = fitr$b[[1]], tau2 = fitr$tau2, tau2.lb = ci[1, 2], tau2.ub = ci[1, 3],
+             I2 = fitr$I2, I2.lb = ci[2, 2], I2.ub = ci[2, 3], H2trunc = fitr$H2, H2 = fitr$QE / (fitr$k - 1)) 
+}
+#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
 
+#Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
 
