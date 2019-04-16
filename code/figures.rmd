@@ -273,8 +273,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
 
 ```
 
-
-```{r Density_plot, fig.asp= 0.618, cache = TRUE}
+```{r Density_plot, cache = TRUE}
 
 #1) I2 plot----
 dens <- readRDS("../data/power_simulation_results.RDS")
@@ -323,56 +322,55 @@ I2_plot <- ggplot(I2_dist, aes(x = I2, group = Heterogeneity, fill = Heterogenei
 
 #2) tau2 plot----
 
-# dens_tau2 <- readRDS("../data/biserial_simulation_results.RDS")
-# names(dens_tau2) <-  sort(unique(dat$effect))
-# 
-# #Simulated data at various heterogeneity levels, prep for plotting
-# tau2_dist <- dens_tau2 %>% 
-#   bind_rows(.id = "effect") %>% 
-#   rename(Heterogeneity = tau_index) %>% 
-#   mutate(Heterogeneity = recode(Heterogeneity,
-#                             '1' = "Zero",
-#                             '2' = "Small",
-#                             '3' = "Medium",
-#                             '4' = "Large"),
-#          Heterogeneity = as.factor(Heterogeneity))
-# 
-# #Observed tau22 estimates, i.e, results from main table, see table.rmd
-# #Effects estimated with sourced function 'summarizer'
-# observed <- dat %>% 
-#   split(.$effect) %>%  
-#   map_dfr(summarizer, .id = "effect") %>% 
-#   select(effect, tau2 = tau2) %>%
-#   mutate(Heterogeneity = "Observed")
-# 
-# tau2_plot <- ggplot(tau2_dist, aes(x = tau2, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
-#   geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 100, alpha = 1) +
-#   geom_density(alpha = 0.3) +
-#   theme_classic() +
-#   coord_cartesian(xlim = c(0, 100))  +
-#   scale_fill_brewer(palette = "Dark2",
-#                     breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
-#                     labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-#   scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"),
-#                         breaks = c("Zero", "Small", "Medium", "Large", "Observed"), 
-#                         labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-#   scale_color_brewer(palette = "Dark2", 
-#                      breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
-#                      labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-#   theme(legend.position = c(0.85, 0.71),
-#         legend.background = element_rect(linetype = "solid", color = "black")) +
-#   scale_y_continuous(name = "Density") +
-#   scale_x_continuous(name = expression(paste(italic(tau)^2," index", sep = ""))) +
-#   guides(fill = guide_legend(override.aes = list(alpha = c(rep(0.3, 4), 1))))
-# 
-# #ggsave("../figures/density-tau2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
-# 
-# #3) combine I2-tau2-density-plots----
-# 
-# densities <- plot_grid(I2_plot, tau2_plot, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
-# densities
-# #save_plot("../figures/densities_het.png", densities,
-# #          nrow = 2, base_height = 5, base_width = 5, dpi = 600)
+dens_tau2 <- readRDS("../data/biserial_simulation_results.RDS")
+names(dens_tau2) <-  sort(unique(dat$effect))
 
+# Simulated data at various heterogeneity levels, prep for plotting
+tau2_dist <- dens_tau2 %>%
+ bind_rows(.id = "effect") %>%
+ rename(Heterogeneity = tau_index) %>%
+ mutate(Heterogeneity = recode(Heterogeneity,
+                             '1' = "Zero",
+                             '2' = "Small",
+                             '3' = "Medium",
+                             '4' = "Large"),
+          Heterogeneity = as.factor(Heterogeneity))
+
+# Observed tau22 estimates, i.e, results from main table, see table.rmd
+# Effects transformed and estimated with sourced functions 'transform_MA' and 'summarizer'
+observed_tau2 <- dat %>%
+   split(.$effect) %>%
+   map(transform_MA) %>% 
+   map_dfr(summarizer, .id = "effect") %>%
+   select(effect, tau2) %>%
+   mutate(Heterogeneity = "Observed")
+
+tau2_plot <- ggplot(tau2_dist, aes(x = tau2_hat, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
+  geom_histogram(data = observed_tau2, aes(y = ..density.., x = tau2), bins = 200, alpha = 1) +
+  geom_density(alpha = 0.3) +
+  theme_classic() +
+  coord_cartesian(xlim = c(0, 0.05)) +
+  scale_fill_brewer(palette = "Dark2",
+                     breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
+                     labels = c("Zero (0)", "Small (1/321)", "Medium (1/107)", "Large (3/107)", "Observed")) +
+  scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"),
+                         breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
+                         labels = c("Zero (0)", "Small (1/321)", "Medium (1/107)", "Large (3/107)", "Observed")) +
+  scale_color_brewer(palette = "Dark2",
+                      breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
+                      labels = c("Zero (0)", "Small (1/321)", "Medium (1/107)", "Large (3/107)", "Observed")) +
+  theme(legend.position = c(0.85, 0.71),
+       legend.background = element_rect(linetype = "solid", color = "black")) +
+  scale_y_continuous(name = "Density") +
+  scale_x_continuous(name = expression(paste(italic(tau)^2," index", sep = ""))) +
+  guides(fill = guide_legend(override.aes = list(alpha = c(rep(0.3, 4), 1))))
+
+#ggsave("../figures/density-tau2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
+
+#3) combine I2-tau2-density-plots----
+densities <- plot_grid(I2_plot, tau2_plot, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
+densities
+
+# save_plot("../figures/densities_het.png", densities,
+     #      nrow = 2, base_height = 5, base_width = 5, dpi = 600)
 ```
-
