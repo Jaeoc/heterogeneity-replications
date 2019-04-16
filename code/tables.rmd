@@ -126,15 +126,16 @@ summary.table <- dat %>%
 
 summary.table %>% knitr::kable("latex", 
                                booktabs = TRUE,
-                               digits = 0) %>% 
-  kable_styling("repeat_header", font_size = 7) %>% 
+                               digits = 0,
+                               linesep = "\\addlinespace",
+                               longtable = TRUE) %>% 
+  kable_styling(c("hold_position", "repeat_header"), font_size = 7) %>% 
   column_spec(2, width = "7em") %>% #specify width of paper column 
   column_spec(7, width = "16em") %>% 
   column_spec(8, width = "30em") %>% 
-  footnote(threeparttable = TRUE,
-           general = "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/") %>% 
   landscape()
 ```
+Note: "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/"
 
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
