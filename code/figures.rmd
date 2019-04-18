@@ -266,48 +266,51 @@ H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 ##Figure 3
 ```{r plot_res, cache = TRUE}
 
-#Plots of H2 and I2 vs. biserial correlation r for all effects together
+#Plots of H2 and I2 vs. biserial correlation r for all effects together, two above chunks need to be run first
 
 I2 <- ggplot(res2, aes(x = r, y = I2)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
   coord_cartesian(ylim = c(0, 100)) +
-  geom_text(x = 0.14, y = Inf, vjust = 7, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
+  annotate("text", x = 0.14, y = Inf, vjust = 5, fontface = "italic", size = 3.5, label = paste0("b = ", format(round(I2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(I2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
+  theme(axis.text.x = element_blank(), #drop x-axis labels in preparation for combining plots
+        axis.ticks.x = element_blank(),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid")) +
   scale_y_continuous(name = expression(paste(italic(I)^2," index"))) +
-  scale_x_continuous(name = expression(paste("Biserial and pearson correlations ")))
+  scale_x_continuous(name = NULL)
 
 H2 <- ggplot(res2, aes(x = r, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  geom_text(x = 0.14, y = Inf, vjust = 7, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
+  annotate("text", x = 0.14, y = Inf, vjust = 5, size = 3.5, fontface = "italic", label = paste("b = ", format(round(H2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(H2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
+  theme(axis.text.x = element_blank(), #drop x-axis labels in preparation for combining plots
+        axis.ticks.x = element_blank(),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid")) +
   scale_y_continuous(name = expression(paste(italic(H)^2," index", sep = ""))) +
-  scale_x_continuous(name = expression(paste("Biserial and pearson correlations ")))
+  scale_x_continuous(name = NULL)
 
-
-effect_het <- plot_grid(I2, H2, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
-effect_het
-#save_plot("../figures/effect-het.png", effect_het,
-#          nrow = 2, base_height = 5, base_width = 5, dpi = 600)
-
-
-```
-
-##Alternative/additional Figure 3
-```{r r_vs_tau2, fig.asp = 0.618, cache = TRUE}
-r_tau2 <- ggplot(res2, aes(x = r, y = tau2)) + 
+tau2 <- ggplot(res2, aes(x = r, y = tau2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = TRUE, color = "black") +
-  geom_text(x = 0.14, y = Inf, vjust = 7, size = 3.5, fontface = "italic", label = paste("b = ", format(round(tau2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(tau2_fit$r.squared), 2), nsmall = 2))) +
+  annotate("text", x = 0.14, y = Inf, vjust = 5, size = 3.5, fontface = "italic", label = paste("b = ", format(round(tau2_fit$coefficients[2, 1], 2), nsmall = 2), ", r = ", format(round(sqrt(tau2_fit$r.squared), 2), nsmall = 2))) +
   theme_classic() +
+  theme(panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid")) +
   scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
-  scale_x_continuous(name = expression(paste("Biserial and pearson correlations ")))
+  scale_x_continuous(name = expression(paste("Biserial and Pearson's correlations ")))
 
-r_tau2 
-# ggsave("../figures/r_tau2.png", dpi = 600, height =  4 , width = 6.47)
+effect_het <- plot_grid(I2, H2, tau2, ncol = 1, align = "v", rel_heights = c(0.86, 0.86, 1)) #combine plots
+effect_het
+#save_plot("../figures/effect-het.png", effect_het,
+#          ncol = 1, base_height = 7, base_width = 5, dpi = 600)
+
 
 ```
+
 
 ##Correlations per effect type (alternative figure 3, probably drop)
 ```{r corr_per_effect_type, cache = TRUE}
