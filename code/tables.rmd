@@ -5,7 +5,7 @@ output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, miktex.verbose = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
 ```{r load packages, data and source functions}
@@ -41,7 +41,7 @@ rooted_relabilities <- data.frame(rel, rooted_relabilities)
 rooted_relabilities %>% knitr::kable("latex", booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$ when sample size is infinite. Increasing differences between observed effect sizes in the columns illustrate the association between effect size, reliability of measurement and heterogeneity.  Code to reproduce table: osf.io/kf6pt/") %>% 
+           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$ when sample size is infinite. Increasing column-wise variance in observed effect sizes illustrates the association between effect size, reliability of measurement and heterogeneity  Code to reproduce table: osf.io/kf6pt/") %>% 
   row_spec(3, hline_after = T)
 
 ```
@@ -116,7 +116,7 @@ summary.table <- dat %>%
   summarize(Countries = n_distinct(country),
             k = n_distinct(Site), 
             Effects = n_distinct(effect),
-            Participants = if(Effects == 1){sum(Ntotal)}
+            N = if(Effects == 1){sum(Ntotal)}
                            else{sum(Ntotal) / Effects}) %>% #average across effects
   mutate(Paper = papers,
          'Sample and Settings' = sample_settings,
@@ -135,7 +135,7 @@ summary.table %>% knitr::kable("latex",
   column_spec(8, width = "30em") %>% 
   landscape()
 ```
-Note: "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. Participant numbers are those used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/"
+Note: "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/"
 
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
@@ -218,7 +218,7 @@ het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digi
   kable_styling("scale_down", font_size = 7) %>%
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, k = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $/tau^2$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
            alphabet = "These effects were simulated as standardized mean differences") %>% 
   landscape()
 
