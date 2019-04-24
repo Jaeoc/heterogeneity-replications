@@ -73,6 +73,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
 # ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
 
 ```
+Figure 1. Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 37 effects. Tau is not directly comparable across effect size measures. 
 
 ##Figure 2
 ```{r Density_plot, cache = TRUE}
@@ -174,9 +175,9 @@ densities <- plot_grid(I2_plot, tau2_plot, nrow = 2, labels = c("a", "b"), align
 densities
 
 # save_plot("../figures/densities_het.png", densities,
-     #      nrow = 2, base_height = 5, base_width = 5, dpi = 600)
+           # nrow = 2,  base_width = 7, base_aspect_ratio = 0.618, dpi = 600)
 ```
-
+Figure 2. Simulated $I^2$ (a) and $/tau^2$ (b) densities across 37 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed I2 estimates for the 37 effects. For panel b) effects consist of correlations and biserial correlation and heterogeneity levels were approximated by Fisher’s z values corresponding to Higgins’ definitions for the median sample size of 108. Each simulated density consists of approximately 370,000 estimates. 
 
 ```{r transform_effect_and_compute_rma}
 #Transform effect sizes to raw correlations
@@ -300,17 +301,17 @@ tau2 <- ggplot(res2, aes(x = r, y = tau2)) +
   theme_classic() +
   theme(panel.border = element_rect(fill = NA, colour = "black", #add box around plots
                                     size = 0.5, linetype = "solid")) +
-  scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
+  scale_y_continuous(name = expression(paste(italic(tau)^2, " estimate"))) +
   scale_x_continuous(name = expression(paste("Biserial and Pearson's correlations ")))
 
-effect_het <- plot_grid(I2, H2, tau2, ncol = 1, align = "v", rel_heights = c(0.86, 0.86, 1)) #combine plots
+effect_het <- plot_grid(I2, H2, tau2, ncol = 1, align = "v", rel_heights = c(0.86, 0.86, 1), labels = c("a", "b", "c")) #combine plots
 effect_het
-#save_plot("../figures/effect-het.png", effect_het,
-#          ncol = 1, base_height = 7, base_width = 5, dpi = 600)
+# save_plot("../figures/effect-het.png", effect_het,
+         # ncol = 1, base_height = 7, base_width = 5, dpi = 600)
 
 
 ```
-
+Figure 3. The correlation between a) I2 ,and effect size and b) H2 and c)  τ ̂^2and effect size for 37 effects from ten pre-registered multi-lab replication projects. Shaded bands represent 95% confidence intervals
 
 ##Correlations per effect type (alternative figure 3, probably drop)
 ```{r corr_per_effect_type, cache = TRUE}
