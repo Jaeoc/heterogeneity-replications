@@ -71,9 +71,8 @@ est_heterogen_smd_raw <- function(x){
 #in meta-analysis. Research Synthesis Methods, 8(2), 161-180.
 #(provide an exact computation of the point-biserial correlation rather than the approximate in Borenstein)
 
-#Note that Jacobs and Viechtbauer (2017) recommend transforming the point-biserial correlation to a 
-#biserial correlation. However, doing so results in impossible values (r > 1) for 37 of the studies; 
-#those with very large effect sizes (> ~2.5 SD)
+#Jacobs and Viechtbauer (2017) recommend transforming the point-biserial correlation to a 
+#biserial correlation. 
 
 #For raw mean difference + SE
 transform_SE <- function(ES, SE, n1, n2){ 
