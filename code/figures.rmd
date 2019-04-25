@@ -137,22 +137,24 @@ tau2_dist <- dens_tau2 %>%
                              '2' = "Small",
                              '3' = "Medium",
                              '4' = "Large"),
-          Heterogeneity = as.factor(Heterogeneity))
+          Heterogeneity = as.factor(Heterogeneity),
+        tau = sqrt(tau2_hat))
 
-# Observed tau22 estimates, i.e, results from main table, see table.rmd
+# Observed tau2 estimates, i.e, results from main table, see table.rmd
 # Effects transformed and estimated with sourced functions 'transform_MA' and 'summarizer'
-observed_tau2 <- dat %>%
+observed_tau <- dat %>%
    split(.$effect) %>%
    map(transform_MA) %>% 
    map_dfr(summarizer, .id = "effect") %>%
    select(effect, tau2) %>%
-   mutate(Heterogeneity = "Observed")
+   mutate(Heterogeneity = "Observed",
+          tau = sqrt(tau2))
 
-tau2_plot <- ggplot(tau2_dist, aes(x = tau2_hat, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
-  geom_histogram(data = observed_tau2, aes(y = ..density.., x = tau2), bins = 200, alpha = 1) +
+tau_plot <- ggplot(tau2_dist, aes(x = tau, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
+  geom_histogram(data = observed_tau, aes(y = ..density.., x = tau), bins = 130, alpha = 1) +
   geom_density(alpha = 0.3) +
   theme_classic() +
-  coord_cartesian(xlim = c(0, 0.05)) +
+  coord_cartesian(xlim = c(0, 0.25)) + #truncate plot for better visualization
   scale_fill_brewer(palette = "Dark2",
                      breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
                      labels = c("Zero (0)", "Small (1/321)", "Medium (1/107)", "Large (3/107)", "Observed")) +
@@ -165,17 +167,17 @@ tau2_plot <- ggplot(tau2_dist, aes(x = tau2_hat, group = Heterogeneity, fill = H
   theme(legend.position = c(0.85, 0.71),
        legend.background = element_rect(linetype = "solid", color = "black")) +
   scale_y_continuous(name = "Density") +
-  scale_x_continuous(name = expression(paste(italic(tau)^2," index", sep = ""))) +
+  scale_x_continuous(name = expression(paste(italic(tau)," estimate", sep = ""))) +
   guides(fill = guide_legend(override.aes = list(alpha = c(rep(0.3, 4), 1))))
 
 #ggsave("../figures/density-tau2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
 
 #3) combine I2-tau2-density-plots----
-densities <- plot_grid(I2_plot, tau2_plot, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
+densities <- plot_grid(I2_plot, tau_plot, nrow = 2, labels = c("a", "b"), align = "v") #combine plots
 densities
 
 # save_plot("../figures/densities_het.png", densities,
-           # nrow = 2,  base_width = 7, base_aspect_ratio = 0.618, dpi = 600)
+#            nrow = 2,  base_width = 7, base_aspect_ratio = 0.618, dpi = 600)
 ```
 Figure 2. Simulated $I^2$ (a) and $/tau^2$ (b) densities across 37 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed I2 estimates for the 37 effects. For panel b) effects consist of correlations and biserial correlation and heterogeneity levels were approximated by Fisher’s z values corresponding to Higgins’ definitions for the median sample size of 108. Each simulated density consists of approximately 370,000 estimates. 
 
