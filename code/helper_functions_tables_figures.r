@@ -111,9 +111,9 @@ transform_d_to_r <- function(d, n1, n2){
   zp <- qnorm(p)
   fzp <- dnorm(zp)
   rb <- sqrt(p*q) / fzp * rpb #biserial correlation, Jacobs and Viechtbauer (2017), equation 8
-  rb_trunc <- ifelse(rb > 1, 1, rb) #truncate if > 1 to avoid neg. variance. p. 166-167
+  rb_trunc <- ifelse(rb > 1, 1, rb) #truncate for > 1 when computing variance to avoid neg. variance. p. 166-167
   var_rb <- 1/(n1 + n2 -1) * (sqrt(p*q) / fzp - rb_trunc^2)^2 #variance biserial r, approximate formula, eq. 13 
-  data.frame(r = rb_trunc, vi = var_rb, n = n1 + n2) #I use the approximate formula above to decrease the risk of coding error (due to simplicity)
+  data.frame(r = rb, vi = var_rb, n = n1 + n2) #I use the approximate formula (eq 13) above to decrease the risk of coding error
 }
 
 
