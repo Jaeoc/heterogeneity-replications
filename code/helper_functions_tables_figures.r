@@ -117,7 +117,6 @@ transform_d_to_r <- function(d, n1, n2){
 }
 
 
-
 #Function to apply the transformation functions to the data
 transform_MA <- function(x){
   if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
@@ -125,37 +124,27 @@ transform_MA <- function(x){
     d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
     out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
-    #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
-    
   } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
     
     d_conversion <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol)
     out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
-    
-    #fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
     d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
     out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
-    # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
-    
   } else if(any(x[, "effect_type"] == "r")){
     
     out <- metafor::escalc(measure = "COR", ri = x$effect_size, ni =x$Ntotal)
     out <- data.frame(r = out$yi, vi = out$vi)
     
-    # fit <- rma(measure = "ZCOR", ri = zcor, ni = n, test = "knha", data = transformed)
-    
-  } else{ #For the many labs OR that were transformed to d [double check]
+  } else{ #For the many labs OR that were transformed to d
     
     d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
     out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
   }
-  
-  # data.frame(b = fit$b[[1]], I2 = fit$I2) #estimate out
   
   out
 }
@@ -165,10 +154,8 @@ transform_MA <- function(x){
 summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viechtbauer (2017) for biserial correlations, p. 176
   fitr <- rma(yi = x$r, vi = x$vi, data = x) #rma for biserial and pearson correlations (distinct per effect!)
   ci <- confint(fitr)$random[c(1, 3), ] #I2 and tau2 confidence intervals
+  
   data.frame(r = fitr$b[[1]], tau2 = fitr$tau2, tau2.lb = ci[1, 2], tau2.ub = ci[1, 3],
              I2 = fitr$I2, I2.lb = ci[2, 2], I2.ub = ci[2, 3], H2trunc = fitr$H2, H2 = fitr$QE / (fitr$k - 1)) 
 }
-#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
-
-#Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
 
