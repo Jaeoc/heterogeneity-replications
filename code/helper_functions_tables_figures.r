@@ -159,3 +159,7 @@ summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viecht
              I2 = fitr$I2, I2.lb = ci[2, 2], I2.ub = ci[2, 3], H2trunc = fitr$H2, H2 = fitr$QE / (fitr$k - 1)) 
 }
 
+#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
+
+#Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
+

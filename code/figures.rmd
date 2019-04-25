@@ -182,17 +182,13 @@ densities
 Figure 2. Simulated $I^2$ (a) and $/tau^2$ (b) densities across 37 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed I2 estimates for the 37 effects. For panel b) effects consist of correlations and biserial correlation and heterogeneity levels were approximated by Fisher’s z values corresponding to Higgins’ definitions for the median sample size of 108. Each simulated density consists of approximately 370,000 estimates. 
 
 ```{r transform_effect_and_compute_rma}
-#Transform effect sizes to raw correlations
-#'transform_MA' is a sourced function
+#Transform effect sizes to biserial correlations (pearson's correlations as is)
+#then compute random effects meta-analyses per effect
+#'transform_MA' and 'summarizer' are sourced functions
 res <- dat %>% 
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(transform_MA, .id = "effect") #apply function and transform back from list to dataframe
-
-#compute random effect meta-analysis of transformed effects
-#'summarizer' is a sourced function
-res2 <- res %>% 
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(summarizer, .id = "effect") %>% 
+  split(.$effect) %>%  #necessary step otherwise the function is applied overall
+  map(transform_MA) %>% #apply function each effect in the list
+  map_dfr(summarizer, .id = "effect") %>%  #apply function and transform to dataframe
   mutate(r = abs(r)) #Absolute values since we are interested in effect size rather than direction
 ```
 
