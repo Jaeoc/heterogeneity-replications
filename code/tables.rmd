@@ -159,8 +159,6 @@ res2 <- dat %>%
   map(transform_MA) %>% #
   map_dfr(summarizer, .id = "effect")
 
-
-
 #NB! note that for low vs. high category scales, the I2 lower bound is zero, but after transformation
 #the tau2 lower bound is *not* zero. This is an indication of the problems with effect size tranformations.
 
