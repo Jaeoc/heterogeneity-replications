@@ -100,6 +100,7 @@ transform_d_to_r <- function(d, n1, n2){
 #Note that above function gives the same result as
 #metafor::escalc(measure = "RBIS", ml1, ml2, sd1, sd2, n1, n2, data = x)
 #The only reason I wrote the above function is because of the effect that has SE rather than SD
+#For convenience I also use it on line 168 in 'power_simulation.r'
 
 #Function to apply the transformation functions to the data
 transform_MA <- function(x){
