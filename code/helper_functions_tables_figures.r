@@ -69,37 +69,33 @@ est_heterogen_smd_raw <- function(x){
 
 #Jacobs, P., & Viechtbauer, W. (2017). Estimation of the biserial correlation and its sampling variance for use
 #in meta-analysis. Research Synthesis Methods, 8(2), 161-180.
-#(provide an exact computation of the point-biserial correlation rather than the approximate in Borenstein)
+#(provide an exact computation of the point-biserial correlation rather than the approximate [Hunter & Schmitd] in Borenstein)
 
 #Jacobs and Viechtbauer (2017) recommend transforming the point-biserial correlation to a 
 #biserial correlation. 
 
-#For raw mean difference + SE
+#Brown, M. B., & Benedetti, J. K. (1977). On the mean and variance of the tetrachoric correlation coefficient. 
+#Psychometrika, 42(3), 347-355.
+#(Equation 9 used to compute the tetrachoric correlation variance)
+
+#Olsson, U. (1979) Maximum likelihood estimation of the polychoric correlation coefficient. 
+#Psychometrika 44, 443-460.
+#ML approach used by polycor::polychoric to compute the tetrachoric correlations
+
+##For raw mean difference + SE
 transform_SE <- function(ES, SE, n1, n2){ 
   sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
   d <- ES / sdpooled
   data.frame(d = d, n1 = n1, n2 = n2)
 }
 
-#For mean differrence + SD
+##For mean differrence + SD
 transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
   sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #Borenstein, M. (2009), p. 226. 
   d <- (m1 - m2) / sdpooled
   data.frame(d = d, n1 = n1, n2 = n2)
 }
 
-#For Risk difference/OR
-transform_RD <- function(ai, bi, ci, di){
-  ai <- ifelse(ai == 0, 0.5, ai)  #If value is equal to zero add one half so as to not divide by zero
-  bi <- ifelse(bi == 0, 0.5, bi)  #This affects 1 study for Allowed vs. forbidden
-  ci <- ifelse(ci == 0, 0.5, ci)  #And several studies for Low vs. high category scales
-  di <- ifelse(di == 0, 0.5, di)
-  logOR <- log((ai*di) / (bi*ci)) #Borenstein, M. (2009), p. 266
-  d = logOR * sqrt(3)/pi #p. 232
-  n1 = ai + bi
-  n2 = ci + di
-  data.frame(d = d, n1 = n1, n2 = n2)
-}
 
 transform_d_to_r <- function(d, n1, n2){ 
   m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
@@ -116,12 +112,58 @@ transform_d_to_r <- function(d, n1, n2){
 }
 
 
+##For Risk difference/OR [first function no longer used. Instead compute tetrachoric correlations]
+
+#transform_RD <- function(ai, bi, ci, di){
+#  ai <- ifelse(ai == 0, 0.5, ai)  #If value is equal to zero add one half so as to not divide by zero
+#  bi <- ifelse(bi == 0, 0.5, bi)  #This affects 1 study for Allowed vs. forbidden
+#  ci <- ifelse(ci == 0, 0.5, ci)  #And several studies for Low vs. high category scales
+#  di <- ifelse(di == 0, 0.5, di)
+#  logOR <- log((ai*di) / (bi*ci)) #Borenstein, M. (2009), p. 266
+#  d = logOR * sqrt(3)/pi #p. 232
+#  n1 = ai + bi
+#  n2 = ci + di
+#  data.frame(d = d, n1 = n1, n2 = n2)
+#}
+
+#bivariate normal density formula (below) from http://mathworld.wolfram.com/BivariateNormalDistribution.html
+#Used in the following function
+bdnorm <- function(z1, z2, r){ #standardized, i.e, mu1 = mu2 = 0 and sigma1 = sigma2 = 1
+  z <- z1^2 - 2*r*z1*z2 - z2^2
+  1 / (2*pi*sqrt(1-r^2)) * exp(-z / (2*(1-r^2)))
+}
+#correctness of bdnorm function checked with online calculator: https://www.easycalculation.com/statistics/bivariate-distribution-calculator.php
+
+#For computing standard errors of the tetrachoric correlations Hamdan 1970 proposed a relatively simple
+#formula, which is recommended by Brown and Benedetti 1977, as well as Olsson 1979. 
+#[these also all cited by Jacobs and Viechtbauer in regards to tetrachoric correlations]
+#Equation 9 in Brown and Benedetti is the Hamdan equation, but presented in a slightly nicer way
+
+var_tetra <- function(ai, bi, ci, di, ri){ #Equation 9 in Brown and Benedetti 1977
+  N <- ai+bi+ci+di
+  z1 <- (ai + ci) / N
+  z2 <- (bi + di) / N
+  SE <- 1 / (N*bdnorm(z1, z2, ri)) * (1/ai + 1/bi + 1/ci + 1/di)^-0.5
+  data.frame(vi = SE^2, n = N)
+}
+
+#Below we use polycor::polychor(q, ML = TRUE) to compute the tetrachoric correlation (where q is a 2x2 matrix)
+#this uses Olsson's ML approach
+
+
 #Function to apply the transformation functions to the data
+#Note that this function requires library(dplyr), and that the purrr and polycor packages are installed
 transform_MA <- function(x){
   if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
     
-    d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
-    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
+    ri <- x %>%  #compute tetrachoric correlations, polychor function needs 2x2 table as input
+      split(.$Site) %>% 
+      purrr::map(~matrix(c(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2), 2, 2)) %>% 
+      purrr::map(polycor::polychor, ML = TRUE) %>% 
+      purrr::map_dfr(~data.frame(r = .[[1]])) #map_dfr column binds vectors, hence this extra map_dfr step
+    vi <- var_tetra(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2, ri = ri$r)
+    
+    out <- data.frame(r = ri$r, vi = vi$vi, n = vi$n)
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
     
@@ -140,8 +182,14 @@ transform_MA <- function(x){
     
   } else{ #For the many labs OR that were transformed to d
     
-    d_conversion <- transform_RD(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2)
-    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
+    ri <- x %>%  #compute tetrachoric correlations, polychor function needs 2x2 table as input
+      split(.$Site) %>% 
+      purrr::map(~matrix(c(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2), 2, 2)) %>% 
+      purrr::map(polycor::polychor, ML = TRUE) %>% 
+      purrr::map_dfr(~data.frame(r = .[[1]])) #map_dfr column binds vectors, hence this extra map_dfr step
+    vi <- var_tetra(ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2, ri = ri$r)
+    
+    out <- data.frame(r = ri$r, vi = vi$vi, n = vi$n)
     
   }
   

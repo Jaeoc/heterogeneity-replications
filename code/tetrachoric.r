@@ -37,4 +37,14 @@ var_tetra <- function(a, b, c, d, r){
 #we use polycor::polychor(q, ML = TRUE) to compute the tetrachoric correlation (where q is a 2x2 matrix)
 #this uses, I believe, Olsson's ML approach
 
+dat %>% filter(
+
+ri <- a %>% 
+  split(.$Site) %>% 
+  map(~matrix(c(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2), 2, 2)) %>% 
+  map(polycor::polychor, ML = TRUE) %>% 
+  map_dfr(~data.frame(r = .[[1]]))
+
+vi <- var_tetra(a$outcome_t1, a$outcome_c1, a$outcome_t2, a$outcome_c2, r = ri$r)
+
 

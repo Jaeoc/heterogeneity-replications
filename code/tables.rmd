@@ -137,6 +137,8 @@ summary.table %>% knitr::kable("latex",
 ```
 Note: "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/"
 
+##Table 3
+###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated between studies variance ($\tau^2$).
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
 #library(dplyr)
@@ -204,8 +206,7 @@ het <-  het %>%
 
 ```
 
-##Table 3
-###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated between studies variance ($\tau^2$).
+
 ```{r heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 
