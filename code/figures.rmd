@@ -185,6 +185,7 @@ densities
 
 Figure 2. Simulated $I^2$ (a) and $/tau^2$ (b) densities across 37 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed I2 estimates for the 37 effects. For panel b) effects consist of correlations and biserial correlation and heterogeneity levels were approximated by Fisher’s z values corresponding to Higgins’ definitions for the median sample size of 108. Each simulated density consists of approximately 370,000 estimates. 
 
+##Figure 3
 ```{r transform_effect_and_compute_rma}
 #Transform effect sizes to biserial correlations (pearson's correlations as is)
 #then compute random effects meta-analyses per effect
@@ -195,7 +196,6 @@ res <- dat %>%
   map_dfr(summarizer, .id = "effect") %>%  #apply function and transform to dataframe
   mutate(r = abs(r)) #Absolute values since we are interested in effect size rather than direction
 ```
-
 
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
@@ -263,10 +263,20 @@ bootfit <- boot(data=res, statistic=pear, R=1000, formula= ~ r + H2)
 
 H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
+#Tau2
+pear <- function(formula, data, indices){
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ tau2 + r, data=d)
+     return(fit$estimate)
+}
+
+bootfit <- boot(data=res, statistic=pear, R=1000, formula= ~ r + tau2)
+
+tau2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```
 
-##Figure 3
+
 ```{r plot_res, cache = TRUE}
 
 #Plots of H2 and I2 vs. biserial correlation r for all effects together, two above chunks need to be run first
