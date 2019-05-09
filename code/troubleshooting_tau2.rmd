@@ -1,0 +1,127 @@
+---
+title: "Troubleshooting tau2"
+author: "Anton Olsson Collentine"
+date: "7 mei 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r load packages, data and source functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(metafor)){install.packages("metafor")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(purrr)){install.packages("purrr")}
+if(!require(kableExtra)){install.packages("kableExtra")}
+
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(purrr) #For data iteration
+library(metafor) #To run meta-analyses
+library(kableExtra) #For creating good-looking pdf tables
+library(ggplot2)
+library(cowplot)
+
+
+dat <- read_csv("../data/collated_summary_data.csv")
+
+source("helper_functions_tables_figures.r") #Load functions to prep data for figures
+```
+
+
+TO DO:
+* First figure: replicate panel 2 but with untruncated
+* Hopefully the last 3 points will move up
+* Also compare mu for truncated and untruncated versions
+* Maybe see if can figure out contribution of each lab to overall effect size mu
+
+```{r, cache = TRUE}
+res <- dat %>% 
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
+
+het <- dat %>% 
+  select(rp, Site, effect, effect_type) %>% 
+  group_by(rp, effect) %>% 
+  summarize(effect_type = unique(effect_type),
+            k = n_distinct(Site)) %>% 
+  left_join(res) %>% 
+  mutate(effect_type = recode(effect_type, 
+                              d = "SMD.",
+                              'Raw mean difference' = "MD",
+                              'Risk difference' = "RD")) %>% 
+  ungroup()
+
+a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.") 
+
+a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2), label = effect)) + geom_point() + ggtitle("ML1 SMD - untransformed effect sizes") + geom_text()
+
+```
+
+
+```{r prepping, cache = TRUE}
+
+#Transform effect sizes to biserial correlations (pearson's correlations left as is)
+#estimate tau2 for correlations
+#'transform_MA' and 'summarizer' are sourced functions
+res2 <- dat %>% 
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map(transform_MA) %>% #
+  map_dfr(summarizer, .id = "effect")
+
+
+
+#Add rp and k to the data-frame and prep for table
+het <- dat %>% 
+  select(rp, Site, effect, effect_type) %>% 
+  group_by(rp, effect) %>% 
+  summarize(effect_type = unique(effect_type),
+            k = n_distinct(Site)) %>% 
+  left_join(res2) %>% 
+  mutate(effect_type = recode(effect_type, 
+                              d = "SMD.",
+                              'Raw mean difference' = "MD",
+                              'Risk difference' = "RD")) %>% 
+  ungroup()
+
+b <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.") 
+
+b_plot <- ggplot(b, aes(x = I2, y = sqrt(tau2), label = effect)) + geom_point() + ggtitle("ML1 biserial r - transformed SMD effect sizes") + geom_text()
+
+
+
+```
+
+```{r}
+cowplot::plot_grid(a_plot, b_plot, ncol = 1)
+```
+
+**The four effects at the end are Anchoring 1,2,3,4**
+
+
+```{r, }
+het %>% filter(rp == "ML3") %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + facet_wrap(~effect_type) + ggtitle("ML3 (SMD transformed to biserial correlations)")
+```
+
+**The one non-increasing effect in the left plot above is 'Credentials interaction'. **
+However, note that all the ML3 'correlations' are either transformed partial eta-squared of 2x2 tables in the first table (we can't fix this, would have to get into the raw data which seems liek too much work, I mentioned this in the revised draft)
+
+**Check which effects get truncated:**
+
+```{r, echo = TRUE, cache = TRUE}
+dat %>% 
+  split(.$effect) %>% 
+  map_dfr(transform_MA, .id = "effect") %>% 
+  filter(r > 1)
+```
+
+Basically the anchoring effects.
+
+```{r}
+het %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("All effects - tetrachoric, biserial & product-moment r")
+```
+The effect that is close to one of the anchoring effects (I2 ~75, tau ~.05) is Allowed vs. forbidden which also has r = .90.
+
+
