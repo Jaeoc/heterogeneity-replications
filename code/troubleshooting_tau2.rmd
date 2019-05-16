@@ -32,6 +32,7 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 
 
 TO DO:
+
 * First figure: replicate panel 2 but with untruncated
 * Hopefully the last 3 points will move up
 * Also compare mu for truncated and untruncated versions
@@ -56,7 +57,7 @@ het <- dat %>%
 
 a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.") 
 
-a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2), label = effect)) + geom_point() + ggtitle("ML1 SMD - untransformed effect sizes") + geom_text()
+a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("ML1 SMD - untransformed effect sizes")
 
 ```
 
@@ -73,7 +74,7 @@ res2 <- dat %>%
 
 
 
-#Add rp and k to the data-frame and prep for table
+#Add rp and k to the data-frame 
 het <- dat %>% 
   select(rp, Site, effect, effect_type) %>% 
   group_by(rp, effect) %>% 
@@ -88,25 +89,58 @@ het <- dat %>%
 
 b <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.") 
 
-b_plot <- ggplot(b, aes(x = I2, y = sqrt(tau2), label = effect)) + geom_point() + ggtitle("ML1 biserial r - transformed SMD effect sizes") + geom_text()
+b_plot <- ggplot(b, aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("ML1 biserial r - transformed SMD effect sizes")
 
 
 
 ```
+
+```{r untruncated-biserial, cache = TRUE}
+
+
+res3 <- dat %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & outcomes1_2 == "mean _ SD") %>% 
+  split(.$effect) %>% 
+  map(~transform_SD(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2, .$ntreatment, .$ncontrol)) %>% 
+  map(~untruncated_d_to_r(.$d, .$n1, .$n2)) %>% 
+  map_dfr(summarizer, .id = "effect")
+
+c_plot <- b_plot + geom_point(data = res3, shape = 4, aes(x = I2, y = sqrt(tau2)))
+
+
+
+
+```
+
 
 ```{r}
-cowplot::plot_grid(a_plot, b_plot, ncol = 1)
+cowplot::plot_grid(a_plot, c_plot, ncol = 1)
 ```
 
-**The four effects at the end are Anchoring 1,2,3,4**
+**The four effects at the end are Anchoring 1,2,3,4. X corresponds to untruncated and circles are truncated**
+
+**Compare the actual values**
+```{r, cache = TRUE, echo = TRUE}
+b %>% select(effect, r, tau2, I2) %>% left_join(res3 %>% select(effect, r, tau2, I2), by = "effect") %>% 
+  rename(trunc_ES = r.x, trunc_tau2 = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau2 = tau2.y, nontrunc_I2 = I2.y)
 
 
-```{r, }
-het %>% filter(rp == "ML3") %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + facet_wrap(~effect_type) + ggtitle("ML3 (SMD transformed to biserial correlations)")
 ```
 
-**The one non-increasing effect in the left plot above is 'Credentials interaction'. **
-However, note that all the ML3 'correlations' are either transformed partial eta-squared of 2x2 tables in the first table (we can't fix this, would have to get into the raw data which seems liek too much work, I mentioned this in the revised draft)
+It is strange that there are (very slightly) different outcomes for non-truncated effects, this is probably due to metafor (which I use for truncation) uses the exact variance formula whereas I use the approximate. Compare truncated vs. non-truncated manual formulas to check:
+```{r}
+res4 <- dat %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & outcomes1_2 == "mean _ SD") %>% 
+  split(.$effect) %>% 
+  map(~transform_SD(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2, .$ntreatment, .$ncontrol)) %>% 
+  map(~transform_d_to_r(.$d, .$n1, .$n2)) %>% 
+  map_dfr(summarizer, .id = "effect")
+
+res4 %>% select(effect, r, tau2, I2) %>% left_join(res3 %>% select(effect, r, tau2, I2), by = "effect") %>% 
+  rename(trunc_ES = r.x, trunc_tau2 = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau2 = tau2.y, nontrunc_I2 = I2.y)
+```
+**Exactly the same result for non-truncated effects, so that seems to be the case**
+
 
 **Check which effects get truncated:**
 
@@ -118,6 +152,15 @@ dat %>%
 ```
 
 Basically the anchoring effects.
+
+```{r, }
+het %>% filter(rp == "ML3") %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + facet_wrap(~effect_type) + ggtitle("ML3 (SMD transformed to biserial correlations)")
+```
+
+**The one non-increasing effect in the left plot above is 'Credentials interaction'. **
+However, note that all the ML3 'correlations' are either transformed partial eta-squared of 2x2 tables in the first table (we can't fix this, would have to get into the raw data which seems liek too much work, I mentioned this in the revised draft)
+
+
 
 ```{r}
 het %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("All effects - tetrachoric, biserial & product-moment r")

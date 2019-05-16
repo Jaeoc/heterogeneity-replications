@@ -99,7 +99,8 @@ transform_d_to_r <- function(d, n1, n2){
 
 #Note that above function gives the same result as
 #metafor::escalc(measure = "RBIS", ml1, ml2, sd1, sd2, n1, n2, data = x)
-#The only reason I wrote the above function is because of the effect that has SE rather than SD
+#With the difference that metafor used the exact variance equation (eq 12, Jacobs and Viechtbauer, 2017)
+#and I use the approximate (eq. 13).
 #For convenience I also use it on line 168 in 'power_simulation.r'
 
 #Function to apply the transformation functions to the data
@@ -152,3 +153,29 @@ summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viecht
 
 #Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
 
+
+
+##****************
+#Function to compute biserial correlations without truncation 
+#identical to function on line 86 but with the truncation removed when computing the variance
+untruncated_d_to_r <- function(d, n1, n2){ 
+  m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
+  h <- m/n1 + m/n2 #p. 164
+  rpb <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5
+  p <- n1 / (n1 + n2)
+  q <- n2 / (n1 + n2)
+  zp <- qnorm(p)
+  fzp <- dnorm(zp)
+  rb <- sqrt(p*q) / fzp * rpb #biserial correlation, Jacobs and Viechtbauer (2017), equation 8
+  var_rb <- 1/(n1 + n2 -1) * (sqrt(p*q) / fzp - rb^2)^2 #variance biserial r, approximate formula, eq. 13 
+  data.frame(r = rb, vi = var_rb, n = n1 + n2) #I use the approximate formula (eq 13) above to decrease the risk of coding error
+}
+
+
+
+#Helper to compute SMD (hedge's g)
+transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
+  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #Borenstein, M. (2009), p. 226. 
+  d <- (m1 - m2) / sdpooled
+  data.frame(d = d, n1 = n1, n2 = n2)
+}
