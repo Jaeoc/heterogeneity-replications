@@ -163,9 +163,9 @@ res2 <- dat %>%
 #the tau2 lower bound is *not* zero. This is an indication of the problems with effect size tranformations.
 
 res <- res %>%
-  mutate(tau2 = res2$tau2, #For table 3, report tau2 and transformed effect sizes (biserial correlations)
-         tau2_ci.lb = res2$tau2.lb,
-         tau2_ci.ub = res2$tau2.ub,
+  mutate(tau = sqrt(res2$tau2), #For table 3, report tau and transformed effect sizes (biserial correlations)
+         tau_ci.lb = sqrt(res2$tau2.lb),
+         tau_ci.ub = sqrt(res2$tau2.ub),
          r = res2$r)
 
 #Add rp and k to the data-frame and prep for table
@@ -199,9 +199,9 @@ het <-  het %>%
   left_join(I2_power) %>% 
   arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by tau2 and upper CI bound
   mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 2), nsmall = 2)), ", ", trimws(format(round(s_ci.ub, 2), nsmall = 2)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
-         tau2_ci = paste0("[", trimws(format(round(tau2_ci.lb, 4), nsmall = 4)), ", ", trimws(format(round(tau2_ci.ub, 4), nsmall = 4)), "]"),
-         tau2 = format(round(tau2, 4), nsmall = 4)) %>% #rounded here instead of in table function because should have 4 digits
-  select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, r, tau2, tau2_ci, zero, small, medium, large)
+         tau_ci = paste0("[", trimws(format(round(tau_ci.lb, 4), nsmall = 4)), ", ", trimws(format(round(tau_ci.ub, 4), nsmall = 4)), "]"),
+         tau = format(round(tau, 4), nsmall = 4)) %>% #rounded here instead of in table function because should have 4 digits
+  select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, r, tau, tau_ci, zero, small, medium, large)
 
 ```
 
@@ -209,7 +209,7 @@ het <-  het %>%
 ```{r heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 
-het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "r*" , "$\\tau^2$", "$\\tau^2$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
+het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "r*" , "$\\tau$", "$\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
   add_header_above(c(" " = 10, "Level of heterogeneity" = 4)) %>% 
   add_header_above(c(" " = 10, "Type I Error Rate & Statistical Power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>%
