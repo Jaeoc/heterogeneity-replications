@@ -1,7 +1,7 @@
 ---
 title: "Troubleshooting tau2"
 author: "Anton Olsson Collentine"
-date: "7 mei 2019"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 ---
 
@@ -33,10 +33,10 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 
 TO DO:
 
-* First figure: replicate panel 2 but with untruncated
-* Hopefully the last 3 points will move up
-* Also compare mu for truncated and untruncated versions
-* Maybe see if can figure out contribution of each lab to overall effect size mu
+* First figure: replicate panel 2 but with untruncated [done]
+* Hopefully the last 3 points will move up [nope :(]
+* Also compare mu for truncated and untruncated versions [done]
+* Maybe see if can figure out contribution of each lab to overall effect size mu [dunno]
 
 ```{r, cache = TRUE}
 res <- dat %>% 
@@ -120,9 +120,11 @@ cowplot::plot_grid(a_plot, c_plot, ncol = 1)
 **The four effects at the end are Anchoring 1,2,3,4. X corresponds to untruncated and circles are truncated**
 
 **Compare the actual values**
-```{r, cache = TRUE, echo = TRUE}
+```{r, cache = TRUE}
 b %>% select(effect, r, tau2, I2) %>% left_join(res3 %>% select(effect, r, tau2, I2), by = "effect") %>% 
-  rename(trunc_ES = r.x, trunc_tau2 = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau2 = tau2.y, nontrunc_I2 = I2.y)
+  rename(trunc_ES = r.x, trunc_tau = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau = tau2.y, nontrunc_I2 = I2.y) %>% 
+  mutate(trunc_tau = sqrt(trunc_tau), nontrunc_tau = sqrt(nontrunc_tau)) %>% 
+  knitr::kable(booktabs = TRUE)
 
 
 ```
@@ -137,12 +139,44 @@ res4 <- dat %>%
   map_dfr(summarizer, .id = "effect")
 
 res4 %>% select(effect, r, tau2, I2) %>% left_join(res3 %>% select(effect, r, tau2, I2), by = "effect") %>% 
-  rename(trunc_ES = r.x, trunc_tau2 = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau2 = tau2.y, nontrunc_I2 = I2.y)
+  rename(trunc_ES = r.x, trunc_tau = tau2.x, trunc_I2 = I2.x, nontrunc_ES  = r.y, nontrunc_tau = tau2.y, nontrunc_I2 = I2.y) %>% 
+  mutate(trunc_tau = sqrt(trunc_tau), nontrunc_tau = sqrt(nontrunc_tau)) %>% 
+  knitr::kable(booktabs = TRUE) 
 ```
-**Exactly the same result for non-truncated effects, so that seems to be the case**
+Exactly the same result for non-truncated effects, so that seems to be the case
+
+Let's take a closer look at the truncated vs. untruncated variance estimates for Anchoring 4 which has the largest change in I2.
+
+```{r, cache = TRUE}
+anch4 <- dat %>%
+  filter(effect == "Anchoring 4 - Babies") %>% 
+  rowwise() %>% 
+  do(transform_SD(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2, .$ntreatment, .$ncontrol)) 
+#See this stackoverflow question to understand the usage of rowwise and 'do'
+#https://stackoverflow.com/questions/22240816/dplyr-summarise-with-multiple-return-values-from-a-single-function
+
+anch4_trunc <- anch4 %>% 
+  do(transform_d_to_r(.$d, .$n1, .$n2))
+
+anch4_nontrunc <- anch4 %>% 
+  do(untruncated_d_to_r(.$d, .$n1, .$n2))
+
+bind_cols(anch4_trunc, anch4_nontrunc) %>% 
+  rename(trunc_vi = vi, nontrunc_vi = vi1) %>% 
+  select(r, trunc_vi, nontrunc_vi, n) %>% 
+  arrange(desc(r)) %>% 
+  knitr::kable(booktabs = TRUE)
 
 
-**Check which effects get truncated:**
+```
+Note that the (biserial) r itself is not truncated and so the same between the two. It is clear truncation leads to a larger estimate of the variance for an effect. 
+
+**To summarize: Truncation leads to an increase in estimated study variance, but a (small) decrease in meta-analytic effect size estimate. In other words, truncation (as seen in the first figure) leads to a lower I2 but does not affect the $\tau$ particularly**
+
+
+##Old stuff
+
+Check which effects get truncated:
 
 ```{r, echo = TRUE, cache = TRUE}
 dat %>% 
@@ -152,6 +186,7 @@ dat %>%
 ```
 
 Basically the anchoring effects.
+
 
 ```{r, }
 het %>% filter(rp == "ML3") %>% ggplot(aes(x = I2, y = sqrt(tau2))) + geom_point() + facet_wrap(~effect_type) + ggtitle("ML3 (SMD transformed to biserial correlations)")
