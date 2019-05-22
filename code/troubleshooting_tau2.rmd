@@ -15,6 +15,7 @@ if(!require(metafor)){install.packages("metafor")}
 if(!require(dplyr)){install.packages("dplyr")}
 if(!require(purrr)){install.packages("purrr")}
 if(!require(kableExtra)){install.packages("kableExtra")}
+if(!require(writexl)){install.packages("writexl")}
 
 library(readr) #To load data
 library(dplyr) #For data transformation
@@ -23,6 +24,7 @@ library(metafor) #To run meta-analyses
 library(kableExtra) #For creating good-looking pdf tables
 library(ggplot2)
 library(cowplot)
+library(writexl)
 
 
 dat <- read_csv("../data/collated_summary_data.csv")
@@ -31,12 +33,7 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 ```
 
 
-TO DO:
 
-* First figure: replicate panel 2 but with untruncated [done]
-* Hopefully the last 3 points will move up [nope :(]
-* Also compare mu for truncated and untruncated versions [done]
-* Maybe see if can figure out contribution of each lab to overall effect size mu [dunno]
 
 ```{r, cache = TRUE}
 res <- dat %>% 
@@ -112,13 +109,90 @@ c_plot <- b_plot + geom_point(data = res3, shape = 4, aes(x = I2, y = sqrt(tau2)
 
 ```
 
-
+Figure 1.
 ```{r}
 cowplot::plot_grid(a_plot, c_plot, ncol = 1)
 ```
 
 **The four effects at the end are Anchoring 1,2,3,4. X corresponds to untruncated and circles are truncated**
 
+We see that the non-monotonicity after transformation is not explained by truncation. Rather (especially in view of the 4th to last effect which wasn't truncated) there seems like there might be a relation with effect size.
+
+##Effect size?
+```{r, cache = TRUE}
+
+both <- dat %>%
+  filter(effect %in% c("Quote Attribution", "Anchoring 1 - NYC")) %>% 
+  split(.$effect) %>% 
+  map(function(x){
+    metafor::escalc(measure = "SMD", m1i = x$outcome_t1, m2i = x$outcome_c1, sd1i = x$outcome_t2, sd2i = x$outcome_c2, n1i = x$ntreatment, n2i = x$ncontrol, data = x)
+    })
+
+both_trunc <- both %>% 
+  map(~transform_d_to_r(.$yi, .$ntreatment, .$ncontrol)) 
+
+both_nontrunc <- both %>% 
+  map(~untruncated_d_to_r(.$yi, .$ntreatment, .$ncontrol)) 
+
+
+
+#For excel
+out <- bind_cols(both[[1]][, c("yi", "vi")], both[[2]][, c("yi", "vi")],
+          both_trunc[[1]][, c("r", "vi")], both_trunc[[2]][, c("r", "vi")],
+          both_nontrunc[[1]][, c("r", "vi")], both_nontrunc[[2]][, c("r", "vi")],
+          both[[1]][, c("ntreatment", "ncontrol")], both[[2]][,c("ntreatment", "ncontrol")]) %>% 
+  mutate_at(vars(contains("vi")), sqrt) %>% 
+  select(yi, vi, yi1, vi1, r, r1, everything(), -r2, -r3) %>% 
+  rename("Anch_d" = yi, "Anch_d_SE" = vi, "Quote_d" = yi1, "Quote_d_SE" = vi1,
+         "Anch_r" = r, "Anch_trunc_SE" = vi2, "Quote_r" = r1, "Quote_trunc_SE" = vi3,
+         "Anch_nontrunc_SE" = vi4, "Quote_nontrunc_SE" = vi5,
+         "Anch_n1" = ntreatment, "Anch_n2" = ncontrol, "Quote_n1" = ntreatment1, "Quote_n2" = ncontrol1)
+  
+
+
+
+write_xlsx(out, "effect_sizes_with_SE.xlsx")
+```
+
+```{r}
+eff <- out %>% 
+  mutate(ratio_SE_d = Anch_d_SE / Quote_d_SE,
+         ratio_SE_biserial = Anch_trunc_SE / Quote_trunc_SE,
+         Quote_ratio = Quote_d_SE / Quote_trunc_SE,
+         Anch_ratio = Anch_d_SE / Anch_trunc_SE,
+         diff = ratio_SE_d - ratio_SE_biserial) %>%
+  arrange(desc(Anch_d)) %>%
+  select(Anch_d, Quote_d, Quote_ratio, Anch_ratio, ratio_SE_d, ratio_SE_biserial, diff)
+
+```
+
+- The transformation is not monotonic for large values and this is not explained by the truncation (see next section) which almost only affects the I2
+
+- Let's take a closer look at two effects with very different effect sizes (mean SMD `r round(mean(eff$Quote_d), 2)` vs. `r round(mean(eff$Anch_d), 2)`): Quote attribution [fifth effect from the right Figure 1] vs. Anchoring 1. [4th effect from the right Figure 1].
+
+**Consider the following:**
+
+a) higher variance for large effect sizes -> less weight for these effects -> higher tau2 estimate
+
+b) The formulas for variance for hedge's g and for variance for biserial correlations both include effect size
+
+c) For hedge's g larger effect size -> more variance (see Borenstein for formula) and not clear for biserial
+
+d) If the impact of effect size on variance is larger for hedge's g than for biserial it makes sense to expect some differences in the variance (and tau2) estimates after transformation
+
+e) If the weight of large effect sizes (inverse variance) is relatively higher after transformation (i.e., their relative variance decreases) then we would expect lower tau2 estimates after transformation. This effect should be larger for larger effect sizes. 
+
+f) This is exactly what we see below and in figure 1. In the table below, note the large difference in SE ratios before vs. after transformation to biserial correlations. The relative variance of the larger effect sizes (anchoring) decreases considerably after transformation. The same is true of larger effect sizes _within_ the Anchoring effect: the correlation between the Anchoring effect sizes and the difference in ratios is _r_ = `r cor(eff$Anch_d, eff$diff)`. 
+
+```{r}
+
+knitr::kable(eff, booktabs = TRUE) 
+```
+Note: Anch_d = SMD Anchoring, Quote_d = SMD Quote attribution, ratio_SE_d = Ratio SMD SEs: Anchoring / Quote attribution, ratio_SE_biserial = Ratio biserial SEs: Anchoring / Quote attribution, diff = Ratio SMD - Ratio biserial.
+
+Correlation Anch_d and Anch_ratio _r_ = `r cor(eff$Anch_ratio, eff$Anch_d)`
+
+##Truncation problems?
 **Compare the actual values**
 ```{r, cache = TRUE}
 b %>% select(effect, r, tau2, I2) %>% left_join(res3 %>% select(effect, r, tau2, I2), by = "effect") %>% 
@@ -172,6 +246,7 @@ bind_cols(anch4_trunc, anch4_nontrunc) %>%
 Note that the (biserial) r itself is not truncated and so the same between the two. It is clear truncation leads to a larger estimate of the variance for an effect. 
 
 **To summarize: Truncation leads to an increase in estimated study variance, but a (small) decrease in meta-analytic effect size estimate. In other words, truncation (as seen in the first figure) leads to a lower I2 but does not affect the $\tau$ particularly**
+
 
 
 ##Old stuff
