@@ -134,24 +134,36 @@ both_trunc <- both %>%
 both_nontrunc <- both %>% 
   map(~untruncated_d_to_r(.$yi, .$ntreatment, .$ncontrol)) 
 
+both_tau2_d <- lapply(both, function(x){
+  d_DL <-  rma(yi = x$yi, vi = x$vi, data = x, method = "DL")$tau2
+  d_REML <-  rma(yi = x$yi, vi = x$vi, data = x)$tau2
+  data.frame(d_DL = rep(d_DL, 36), d_REML = rep(d_REML, 36))})
 
+both_tau2_trunc <- lapply(both_trunc, function(x){
+  trunc_DL = rma(yi = x$r, vi = x$vi, data = x, method = "DL")$tau2
+  trunc_REML = rma(yi = x$r, vi = x$vi, data = x)$tau2
+  data.frame(trunc_DL = rep(trunc_DL, 36), trunc_REML = rep(trunc_REML, 36))})
 
 #For excel
 out <- bind_cols(both[[1]][, c("yi", "vi")], both[[2]][, c("yi", "vi")],
           both_trunc[[1]][, c("r", "vi")], both_trunc[[2]][, c("r", "vi")],
           both_nontrunc[[1]][, c("r", "vi")], both_nontrunc[[2]][, c("r", "vi")],
-          both[[1]][, c("ntreatment", "ncontrol")], both[[2]][,c("ntreatment", "ncontrol")]) %>% 
+          both[[1]][, c("ntreatment", "ncontrol")], both[[2]][,c("ntreatment", "ncontrol")],
+          both_tau2_d[[1]], both_tau2_d[[2]],
+          both_tau2_trunc[[1]], both_tau2_trunc[[2]]) %>% 
   mutate_at(vars(contains("vi")), sqrt) %>% 
   select(yi, vi, yi1, vi1, r, r1, everything(), -r2, -r3) %>% 
   rename("Anch_d" = yi, "Anch_d_SE" = vi, "Quote_d" = yi1, "Quote_d_SE" = vi1,
          "Anch_r" = r, "Anch_trunc_SE" = vi2, "Quote_r" = r1, "Quote_trunc_SE" = vi3,
          "Anch_nontrunc_SE" = vi4, "Quote_nontrunc_SE" = vi5,
-         "Anch_n1" = ntreatment, "Anch_n2" = ncontrol, "Quote_n1" = ntreatment1, "Quote_n2" = ncontrol1)
+         "Anch_n1" = ntreatment, "Anch_n2" = ncontrol, "Quote_n1" = ntreatment1, "Quote_n2" = ncontrol1,
+         "Anch_d_tau2_DL" = d_DL, "Anch_d_tau2_REML" = d_REML, "Quote_d_tau2_DL" = d_DL1, "Quote_d_tau2_REML" = d_REML1,
+         "Anch_trunc_tau2_DL" = trunc_DL, "Anch_trunc_tau2_REML" = trunc_REML, "Quote_trunc_tau2_DL" = trunc_DL1, "Quote_trunc_tau2_REML" = trunc_REML1)
   
 
 
 
-write_xlsx(out, "effect_sizes_with_SE.xlsx")
+# write_xlsx(out, "effect_sizes_with_SE.xlsx")
 ```
 
 ```{r}
@@ -166,31 +178,33 @@ eff <- out %>%
 
 ```
 
+
 - The transformation is not monotonic for large values and this is not explained by the truncation (see next section) which almost only affects the I2
 
 - Let's take a closer look at two effects with very different effect sizes (mean SMD `r round(mean(eff$Quote_d), 2)` vs. `r round(mean(eff$Anch_d), 2)`): Quote attribution [fifth effect from the right Figure 1] vs. Anchoring 1. [4th effect from the right Figure 1].
 
-**Consider the following:**
+**Facts so far:**
 
-a) higher variance for large effect sizes -> less weight for these effects -> higher tau2 estimate
+a) After transformation we see an unexpected pattern in heterogeneity estimates amongst the four largest effect sizes; tau2 seems too low compared to I2
 
-b) The formulas for variance for hedge's g and for variance for biserial correlations both include effect size
+b) The transformation affects sampling variance estimates differently depending on effect size; the relative decrease in sampling variance is larger the larger the effect size. In other words, after transformation the larger effect sizes have relatively more weight than before the transformation (see table below).
 
-c) For hedge's g larger effect size -> more variance (see Borenstein for formula) and not clear for biserial
+c) This is true both across effects and within effects. E.g., for the Anchoring effect size d = 1.94 the ratio of the  pre-transformation variance to post-transformation variance is 4.92 whereas for the effect size d = .78 it is 1.98. This correlation is almost perfect (_r_ = `r cor(eff$Anch_ratio, eff$Anch_d)`) 
 
-d) If the impact of effect size on variance is larger for hedge's g than for biserial it makes sense to expect some differences in the variance (and tau2) estimates after transformation
+d) For anchoring 1, 15/36 effect sizes are above the mean
 
-e) If the weight of large effect sizes (inverse variance) is relatively higher after transformation (i.e., their relative variance decreases) then we would expect lower tau2 estimates after transformation. This effect should be larger for larger effect sizes. 
-
-f) This is exactly what we see below and in figure 1. In the table below, note the large difference in SE ratios before vs. after transformation to biserial correlations. The relative variance of the larger effect sizes (anchoring) decreases considerably after transformation. The same is true of larger effect sizes _within_ the Anchoring effect: the correlation between the Anchoring effect sizes and the difference in ratios is _r_ = `r cor(eff$Anch_d, eff$diff)`. 
 
 ```{r}
 
 knitr::kable(eff, booktabs = TRUE) 
 ```
-Note: Anch_d = SMD Anchoring, Quote_d = SMD Quote attribution, ratio_SE_d = Ratio SMD SEs: Anchoring / Quote attribution, ratio_SE_biserial = Ratio biserial SEs: Anchoring / Quote attribution, diff = Ratio SMD - Ratio biserial.
+Note: Anch_d = SMD Anchoring, Quote_d = SMD Quote attribution, Quote_ratio = pre-transformation SE / post-transformation SE for Quote attribution, Anch_ratio = pre-transformation SE / post-transformation SE for Anchoring 1, ratio_SE_d = Ratio SMD SEs: Anchoring / Quote attribution, ratio_SE_biserial = Ratio biserial SEs: Anchoring / Quote attribution, diff = Ratio SMD - Ratio biserial.
 
-Correlation Anch_d and Anch_ratio _r_ = `r cor(eff$Anch_ratio, eff$Anch_d)`
+```{r above_average_anchoring}
+dat %>% filter(grepl("Anchoring", effect)) %>% 
+  group_by(effect) %>% 
+  summarize(above_average = sum(effect_size - mean(effect_size) > 0))
+```
 
 ##Truncation problems?
 **Compare the actual values**
