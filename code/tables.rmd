@@ -38,7 +38,7 @@ rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\time
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
 rooted_relabilities <- data.frame(rel, rooted_relabilities)
 
-rooted_relabilities %>% knitr::kable("latex", booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
+rooted_relabilities %>% knitr::kable(booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
   footnote(threeparttable = TRUE, escape = FALSE,
            general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$ when sample size is infinite. Increasing column-wise variance in observed effect sizes illustrates the association between effect size, reliability of measurement and heterogeneity  Code to reproduce table: osf.io/kf6pt/") %>% 
@@ -124,8 +124,7 @@ summary.table <- dat %>%
          'K (US)' = paste0(k, " (", US_online$US, ")")) %>% 
   select(RP = rp, Paper, Countries,'K (US)', everything(), -k) #change order of columns
 
-summary.table %>% knitr::kable("latex", 
-                               booktabs = TRUE,
+summary.table %>% knitr::kable(booktabs = TRUE,
                                digits = 0,
                                linesep = "\\addlinespace",
                                longtable = TRUE) %>% 
@@ -213,10 +212,10 @@ het <-  het %>%
 ```{r heterogeneity-table, cache = FALSE}
 #library(kableExtra)
 
-het %>% knitr::kable("latex", align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
+het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
   add_header_above(c(" " = 12, "Level of heterogeneity" = 4)) %>% 
   add_header_above(c(" " = 12, "Type I Error Rate & Statistical Power" = 4)) %>% 
-  kable_styling("scale_down", font_size = 7) %>%
+  kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
            general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
