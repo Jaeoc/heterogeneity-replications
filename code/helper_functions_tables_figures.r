@@ -76,10 +76,17 @@ est_heterogen_smd_raw <- function(x){
 #biserial correlation. 
 
 
-##For raw mean difference + SE
+##For raw mean difference + SE -> Hedge's g
 transform_SE <- function(ES, SE, n1, n2){ 
   sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
   d <- ES / sdpooled
+  data.frame(d = d, n1 = n1, n2 = n2)
+}
+
+#For raw mean difference + SD -> Hedge's g
+transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
+  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #Borenstein, M. (2009), p. 226. 
+  d <- (m1 - m2) / sdpooled
   data.frame(d = d, n1 = n1, n2 = n2)
 }
 
@@ -99,9 +106,9 @@ transform_d_to_r <- function(d, n1, n2){
 
 #Note that above function gives the same result as
 #metafor::escalc(measure = "RBIS", ml1, ml2, sd1, sd2, n1, n2, data = x)
-#With the difference that metafor used the exact variance equation (eq 12, Jacobs and Viechtbauer, 2017)
-#and I use the approximate (eq. 13).
-#For convenience I also use it on line 168 in 'power_simulation.r'
+#With the difference that metafor uses the exact variance equation (eq 12, Jacobs and Viechtbauer, 2017)
+#and we use the approximate (eq. 13). For consistency we only apply the approximate method
+#We chose this version because the escalc approach cannot handle the effect where SE are reported rather than SD
 
 #Function to apply the transformation functions to the data
 transform_MA <- function(x){
@@ -118,10 +125,8 @@ transform_MA <- function(x){
     
   } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
-    converted <- metafor::escalc("RBIS", m1i = x$outcome_t1, m2i  = x$outcome_c1, #convert to biserial correlations
-                         sd1i = x$outcome_t2, sd2i = x$outcome_c2,
-                         n1i = x$ntreatment, n2i = x$ncontrol)
-    out <- data.frame(r = converted$yi, vi = converted$vi)
+    d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
+    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
     
   } else if(any(x[, "effect_type"] == "r")){
     
@@ -173,9 +178,3 @@ untruncated_d_to_r <- function(d, n1, n2){
 
 
 
-#Helper to compute SMD (hedge's g)
-transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
-  sdpooled <- sqrt(((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2)) #Borenstein, M. (2009), p. 226. 
-  d <- (m1 - m2) / sdpooled
-  data.frame(d = d, n1 = n1, n2 = n2)
-}
