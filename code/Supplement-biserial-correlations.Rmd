@@ -1,0 +1,137 @@
+---
+title: "Supplement - Biserial correlation transformations"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: word_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+Sys.setlocale("LC_TIME", "English" ) #to print date in YAML in English
+```
+
+```{r load packages, data and source functions}
+if(!require(readr)){install.packages("readr")}
+if(!require(metafor)){install.packages("metafor")}
+if(!require(dplyr)){install.packages("dplyr")}
+if(!require(purrr)){install.packages("purrr")}
+
+library(readr) #To load data
+library(dplyr) #For data transformation
+library(purrr) #For data iteration
+library(metafor) #To run meta-analyses
+library(ggplot2) #plotting figures
+library(cowplot) #combine plots
+
+dat <- read_csv("../data/collated_summary_data.csv")
+
+source("helper_functions_tables_figures.r") #Load functions to prep data for figures
+```
+
+
+```{r a-plot-prep, cache = TRUE}
+res <- dat %>% 
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
+
+het <- dat %>% 
+  select(rp, Site, effect, effect_type) %>% 
+  group_by(rp, effect) %>% 
+  summarize(effect_type = unique(effect_type),
+            k = n_distinct(Site)) %>% 
+  left_join(res) %>% 
+  mutate(effect_type = recode(effect_type, 
+                              d = "SMD.",
+                              'Raw mean difference' = "MD",
+                              'Risk difference' = "RD")) %>% 
+  ungroup()
+
+a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.")
+```
+
+
+```{r, cache = FALSE}
+a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("SMD (untransformed)") +
+  scale_x_continuous(name = expression(paste(italic(I)^2, "Index"))) +
+  scale_y_continuous(name = "Tau")
+
+```
+
+
+```{r trunc-biserial, cache = TRUE}
+#Transform effect sizes to biserial correlations (pearson's correlations left as is)
+#estimate tau2 for correlations
+#'transform_MA' and 'summarizer' are sourced functions
+res2 <- dat %>% 
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map(transform_MA) %>% #
+  map_dfr(summarizer, .id = "effect")
+
+
+
+#Add rp and k to the data-frame 
+het <- dat %>% 
+  select(rp, Site, effect, effect_type) %>% 
+  group_by(rp, effect) %>% 
+  summarize(effect_type = unique(effect_type),
+            k = n_distinct(Site)) %>% 
+  left_join(res2) %>% 
+  mutate(effect_type = recode(effect_type, 
+                              d = "SMD.",
+                              'Raw mean difference' = "MD",
+                              'Risk difference' = "RD")) %>% 
+  ungroup()
+
+b <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.")
+```
+
+
+```{r b-plot-1, cache = FALSE}
+b_plot_1 <- ggplot(b, aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("Biserial r (transformed SMD)")
+
+
+
+```
+
+```{r untruncated-biserial, cache = TRUE}
+res3 <- dat %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & outcomes1_2 == "mean _ SD") %>% 
+  split(.$effect) %>% 
+  map(~transform_SD(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2, .$ntreatment, .$ncontrol)) %>% 
+  map(~untruncated_d_to_r(.$d, .$n1, .$n2)) %>% 
+  map_dfr(summarizer, .id = "effect")
+```
+
+
+```{r b-plot, cache = FALSE}
+b_plot <- b_plot_1 + geom_point(data = res3, shape = 4, aes(x = I2, y = sqrt(tau2))) +
+  scale_x_continuous(name = expression(paste(italic(I)^2, " Index"))) +
+  scale_y_continuous(name = "Tau")
+
+
+
+
+```
+
+```{r tau-vs-tau}
+d <- select(a, effect, tau2) %>% 
+  left_join(select(b, effect, tau2), by = "effect")
+```
+
+
+```{r d-plot}
+d_plot <- ggplot(d, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) + 
+  geom_point() + 
+  ggtitle("SMD vs. biserial") +
+  scale_x_continuous(name = "Tau (SMD)") +
+  scale_y_continuous(name = "Tau (biserial r)")
+
+```
+
+
+
+```{r, fig.width = 6, fig.asp = 1.3}
+cowplot::plot_grid(a_plot, b_plot, d_plot, ncol = 1, labels = "AUTO")
+```
+
+_Figure S.1_ Association between $\tau$ and $I^2$ after and before standardized mean difference (SMD) effects were transformed into biserial correlations for all effects reported as SMDs in ManyLabs 1. Panel A shows the association between $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the same associations for the same effects after transformation to biserial correlations, either with truncation of correlations over 1 (circles) or without (crosses). Panel C shows the association between $\tau$ for the same effects before and after transformation.

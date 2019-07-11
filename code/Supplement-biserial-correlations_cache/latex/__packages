@@ -1,0 +1,10 @@
+base
+readr
+Matrix
+metafor
+dplyr
+purrr
+kableExtra
+writexl
+ggplot2
+cowplot

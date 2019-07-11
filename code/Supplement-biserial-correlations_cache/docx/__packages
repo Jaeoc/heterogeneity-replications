@@ -1,0 +1,8 @@
+base
+readr
+Matrix
+metafor
+dplyr
+purrr
+ggplot2
+cowplot
