@@ -27,6 +27,9 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
 ##Table 1
 ###Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
 ```{r effect-size-heterogeneity-table, cache = TRUE}
@@ -41,7 +44,7 @@ rooted_relabilities <- data.frame(rel, rooted_relabilities)
 rooted_relabilities %>% knitr::kable(booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$ when sample size is infinite. Increasing column-wise variance in observed effect sizes illustrates the association between effect size, reliability of measurement and heterogeneity  Code to reproduce table: osf.io/kf6pt/") %>% 
+           general = "Values in cells are observed effect sizes arising from the true effect size $\\\\rho_{xy}$ and measurement reliabilites $\\\\sqrt{R_{xx'}}\\\\times\\\\sqrt{R_{yy'}}$ when sample size is infinite. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06") %>% 
   row_spec(3, hline_after = T)
 
 ```
@@ -134,10 +137,10 @@ summary.table %>% knitr::kable(booktabs = TRUE,
   column_spec(8, width = "30em") %>% 
   landscape()
 ```
-Note: "For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/"
+Note: For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
 
 ##Table 3
-###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated between studies variance ($\tau^2$).
+###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
 #library(dplyr)
@@ -154,19 +157,6 @@ res <- dat %>%
          tau_ci.ub = sqrt(tau2_ci.ub)) %>% 
   select(-tau2, - tau2_ci.lb, -tau2_ci.ub) #drop redundant variables
 
-#Transform effect sizes to biserial correlations (pearson's correlations left as is)
-#estimate tau2 for correlations
-#'transform_MA' and 'summarizer' are sourced functions
-res2 <- dat %>% 
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map(transform_MA) %>% #
-  map_dfr(summarizer, .id = "effect")
-
-res <- res %>%
-  mutate(r = res2$r,
-         tau_r = sqrt(res2$tau2), #For table 3, report tau and transformed effect sizes (biserial correlations)
-         tau_r_ci.lb = sqrt(res2$tau2.lb),
-         tau_r_ci.ub = sqrt(res2$tau2.ub))
 
 #Add rp and k to the data-frame and prep for table
 het <- dat %>% 
@@ -201,10 +191,8 @@ het <-  het %>%
   mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 1), nsmall = 1)), ", ", trimws(format(round(s_ci.ub, 1), nsmall = 1)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
          s_I2 = format(round(s_I2, 1), nsmall = 1),
          tau_ci = paste0("[", trimws(format(round(tau_ci.lb, 3), nsmall = 3)), ", ", trimws(format(round(tau_ci.ub, 3), nsmall = 3)), "]"),
-         tau = format(round(tau, 3), nsmall = 3),
-         tau_r = format(round(tau_r, 3), nsmall = 3),
-         tau_r_ci = paste0("[", trimws(format(round(tau_r_ci.lb, 3), nsmall = 3)), ", ", trimws(format(round(tau_r_ci.ub, 3), nsmall = 3)), "]")) %>% #rounded here instead of in table function because should have 4 digits
-  select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, tau, tau_ci, r, tau_r, tau_r_ci, zero, small, medium, large)
+         tau = format(round(tau, 3), nsmall = 3)) %>% #rounded here instead of in table function because should have 4 digits
+  select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, tau, tau_ci, zero, small, medium, large)
 
 ```
 
@@ -212,13 +200,13 @@ het <-  het %>%
 ```{r heterogeneity-table, cache = FALSE}
 #library(kableExtra)
 
-het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
+het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
   add_header_above(c(" " = 12, "Level of heterogeneity" = 4)) %>% 
   add_header_above(c(" " = 12, "Type I Error Rate & Statistical Power" = 4)) %>% 
   kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, tau = between studies standard deviation, CI = confidence intervals. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06",
            alphabet = "These effects were simulated as standardized mean differences") %>% 
   landscape()
 
