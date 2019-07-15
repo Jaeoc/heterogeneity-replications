@@ -81,10 +81,10 @@ description <- c("Two correlational effects: 'Gender math attitude' compared imp
             "Several effects were experiments with two independent groups. The groups were either primed in some way (Power and perspective; warmth perceptions; subjective distance interaction), saw slightly different statements (Elaboration likelihood interaction; credentials interaction) or experienced different situations (weight embodiment). Examined interactions were between treatment conditions and participant characteristics. One priming effect (metaphor) compared two treatment groups with a control. One effect was correlational: 'persistence and conscientiousness' was measured by an unsolvable anagram task and self-report respectively. The Stroop task is a within-person experiment with two conditions and the 'Availability' effect asks participants to judge whether some letters are more common in the first or third position.", #ML2
                  "Verbal overshadowing 1; Independent two-group experiment. Participants either described a robber after watching a video or listed countries/capitals and after a filler task attempted to identify the robber in a lineup.", #RRR1
             "Verbal overshadowing 2; Different from 1 only in that the filler task took place before the descriptive task instead of after.", #RRR2
-                 "Grammar on intentionality/intention attribution/detailed processing; Independent two-group experiment with three outcome variables. Actions either described in imperfect or perfect.", #RRR3
+                 "Grammar's effect on interpretation; Independent two-group vignette experiment with three outcome variables. Participants read about actions either described in imperfect or perfect tense and then rated protagonist's intentions (intentionality/intention attribution/detailed processing).", #RRR3
             "Ego depletion; Independent two-group experiment. Participants either assigned to a cognitively demanding task or a neutral, and performance was then measured in a subsequent cognitive task.", #RRR4
             "Commitment on neglect/exit; Independent two-group experiment with two outcome variables. Participants either primed to think about commitment to or independence from partner.", #RRR5
-            "Facial feedback hypothesis; Independent two-group experiment. Participants either induced to 'smile' or 'pouth' with a pen and then rated funniness of cartoons. ", #RRR6
+            "Facial feedback hypothesis; Independent two-group experiment. Participants either induced to 'smile' or 'pouth' by holding a pen in their mouth differently and simultaneously rated funniness of cartoons. ", #RRR6
             "Intuitive cooperation; Independent two-group experiment. Economic game with money contribution to a common pool either under time pressure or time delay.",
                  "Professor priming; Independent two-group experiment. Participants primed with either a 'professor' or 'hooligan' stimuli. Outcome was percentage correct trivia answers.") #RRR8
 
@@ -100,14 +100,14 @@ US_online <- dat %>% #Extract the (max when multiple effects) number of US/onlin
 
 sample_settings <- c("26/36 samples were primarily university students, 3 general population and 7 undescribed. 9/36 samples were online, including all the general population ones.", #https://osf.io/g3udn/, ML1
                      "20/21 samples were university students, 1 general population which was also the only online sample.", #Ml3
-                     "31/32 samples were undergraduate students between 18-25, 1 general population which was also the only online sample.", #RRR1
-                     "22/23 samples were undergraduate students between 18-25, 1 general population which was also the only online sample.", #RRR2
-                     "11/12 samples were undergraduate students mostly between 18-25, one of which was online. 1 sample was a broader online sample.", #RRR3
+                     "31/32 samples were undergraduate students aged 18-25, 1 general population which was also the only online sample.", #RRR1
+                     "22/23 samples were undergraduate students aged 18-25, 1 general population which was also the only online sample.", #RRR2
+                     "11/12 samples were undergraduate students mostly aged 18-25, one of which was online. 1 sample was a broader online sample.", #RRR3
                      "All samples consisted of in-lab undergraduate students", #RRR4
-                     "All samples consisted of in-lab undergraduate students between 18-25", #RRR5
+                     "All samples consisted of in-lab undergraduate students aged 18-25", #RRR5
                "All but one sample explicitly consisted of students and all took place in-lab. The last sample was recruited at university grounds.", #RRR6
-               'All samples consisted of in-lab undergraduate students between 18-34.', #RRR7
-                     "All samples consisted of in-lab undergraduate students betweeb 18-25") #RRR8
+               'All samples consisted of in-lab undergraduate students aged 18-34.', #RRR7
+                     "All samples consisted of in-lab undergraduate students aged 18-25") #RRR8
 
 #1) what kind of samples
 
