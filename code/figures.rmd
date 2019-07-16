@@ -139,6 +139,7 @@ Figure 2. Simulated $I^2$  densities across 37 effects for zero, small, medium, 
 
 ##Figure 3, correlations per effect type
 
+
 ```{r corr_per_effect_type-prep, cache = TRUE}
 #Each set of input datapoints is meta-analyzed as per the original replication project
 #Then correlated with tau2 per effect type
@@ -196,21 +197,65 @@ tau2_per_type <- dat %>% #This is to add the effect_type names
   filter(effect_type %in% c("Standardized Mean Difference", "Fisher's z"))
 
 
+#labels for figure 3----
 fitter <- function(df){  #function to fit correlations for annotating facet plots
  fit_tau2 <- summary(lm(tau2 ~ eff_size, data = df))
  fit_I2 <- summary(lm(s_I2 ~ eff_size, data = df))
  fit_H2 <- summary(lm(H2 ~ eff_size, data = df))
  b <- c(fit_tau2$coefficients[2, 1], fit_I2$coefficients[2, 1], fit_H2$coefficients[2, 1])
  r <- c(sqrt(fit_tau2$r.squared), sqrt(fit_I2$r.squared), sqrt(fit_H2$r.squared))
- data.frame(b = format(round(b, digits = 2), nsmall = 2), #because map_dfr requires dataframe
+ data.frame(b = format(round(b, digits = 2), nsmall = 2), 
             r = format(round(r, digits = 2), nsmall = 2),
-            index = c("tau2", "I2", "H2")) #output, the output is kept as two vars
+            index = c("tau2", "I2", "H2")) 
 }
+
+
+#functions to estimate bootstrapped confidence intervals to add to plot correlations
+pear_tau2 <- function(formula, data, indices){ #pearson
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ tau2 + eff_size, data=d)
+     return(fit$estimate)
+}
+pear_I2 <- function(formula, data, indices){ #pearson
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ s_I2 + eff_size, data=d)
+     return(fit$estimate)
+}
+pear_H2 <- function(formula, data, indices){ #pearson
+     d <- data[indices,]
+     fit <- cor.test(formula = ~ H2 + eff_size, data=d)
+     return(fit$estimate)
+}
+
+bootfitter <- function(x){ #function that computes the bootstrapped confidence intervals using above functions to annotate plots
+  bootfit <- boot(data=x, statistic=pear_tau2, R=1000, formula= ~ eff_size + tau2)
+  tau2_ci_pears <- boot.ci(bootfit, type="perc")
+  bootfit <- boot(data=x, statistic=pear_I2, R=1000, formula= ~ eff_size + s_I2)
+  I2_ci_pears <- boot.ci(bootfit, type="perc")
+  bootfit <- boot(data=x, statistic=pear_H2, R=1000, formula= ~ eff_size + H2)
+  H2_ci_pears <- boot.ci(bootfit, type="perc")
+
+  ci.lb <- c(tau2_ci_pears$percent[4], I2_ci_pears$percent[4], H2_ci_pears$percent[4])
+  ci.ub <- c(tau2_ci_pears$percent[5], I2_ci_pears$percent[5], H2_ci_pears$percent[5])
+
+  ci <- paste0("[", format(round(ci.lb, 2), nsmall = 2), ", ",
+       format(round(ci.ub, 2), nsmall = 2), "]")#percentile 
+  data.frame(ci, index = c("tau2", "I2", "H2"))
+}
+
+set.seed(435) #for the bootstrapping
+fig3_ci <- tau2_per_type %>% 
+  split(.$effect_type) %>% 
+  map_dfr(bootfitter, .id = "effect_type")
+
 
 labels <- tau2_per_type %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
   split(.$effect_type) %>% 
   map_dfr(fitter, .id = "effect_type") %>%
-  mutate(lab = paste0("b = ", b, ", r = ", r)) #put output into one variable for improved plotting
+  mutate(r = ifelse(r == 0.15, -0.15, r), #should be negative, but I took squared root of R^2 to get correlations so needs correction
+         lab = paste0("b = ", b, ", r = ", r, " ", fig3_ci$ci)) #put output into one variable for improved plotting
+
+
 ```
 
 
@@ -266,6 +311,7 @@ combo
 
 Figure 3. The correlation between effect size and A) tau2, b) I2 and c) H2 respectively  22 effects that were measured as mean or standardized mean differences and 6 effects measured as correlations from ten pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and correlations were transformed into Fisher’s z. Shaded bands represent 95% confidence intervals
 
+
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
 
 #This section gives the correlations reported in the section 'Heterogeneity and effect sizes' in the main manuscript 
@@ -290,6 +336,7 @@ cor.test(dropped_anchoring$s_I2, dropped_anchoring$eff_size) #pearson
 
 #bootstrap confidence intervals
 #code by Amir Abdol
+
 
 #1.1 I2 confidence intervals----
 pear <- function(formula, data, indices){ #pearson
@@ -373,5 +420,4 @@ cor.test(fish$s_I2, fish$eff_size) #pearson I2
 cor.test(fish$H2, fish$eff_size)
 
 ```
-
 

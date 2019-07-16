@@ -1,0 +1,9 @@
+base
+readr
+Matrix
+metafor
+dplyr
+purrr
+kableExtra
+ggplot2
+cowplot
