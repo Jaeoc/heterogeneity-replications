@@ -263,7 +263,7 @@ labels <- tau2_per_type %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
 #tau2plot----
 tau2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = tau2)) + 
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
   geom_text(data = labels[labels$index == "tau2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.1, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste("Between studies variance ", italic(tau)^2))) +
   scale_x_continuous(name = "Effect size") +
@@ -277,7 +277,7 @@ tau2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = tau2)) +
 #I2plot----
 I2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = s_I2)) + 
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
   geom_text(data = labels[labels$index == "I2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.1, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste(italic(I)^2, " Index"))) +
   scale_x_continuous(name = "Effect size") +
@@ -292,7 +292,7 @@ I2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = s_I2)) +
 #H2plot----
 H2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = H2)) + 
   geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
   geom_text(data = labels[labels$index == "H2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.1, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste(italic(H)^2, " Index"))) +
   scale_x_continuous(name = "Effect size") +
