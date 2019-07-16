@@ -309,7 +309,7 @@ combo <- cowplot::plot_grid(tau2_facet, I2_facet, H2_facet, labels = "AUTO")
 combo
 ```
 
-Figure 3. The correlation between effect size and A) tau2, b) I2 and c) H2 respectively  22 effects that were measured as mean or standardized mean differences and 6 effects measured as correlations from ten pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and correlations were transformed into Fisher’s z. Shaded bands represent 95% confidence intervals
+Figure 3. The correlation between effect size and A) tau2, b) I2 and c) H2 respectively  22 effects that were measured as mean or standardized mean differences and 6 effects measured as correlations from ten pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and correlations were transformed into Fisher’s z. Square brackets contain 95% bootstrapped percentile confidence intervals.
 
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
