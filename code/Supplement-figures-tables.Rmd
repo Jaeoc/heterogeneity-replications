@@ -256,7 +256,7 @@ zero <- dens %>%
   rename(Zero = '1', Small = '2', Medium = '3', Large = '4', Effect = effect)
 
 ##Medium effect size results
-dens2 <- readRDS("../data/appendixA_power_simulation_results.RDS") 
+dens2 <- readRDS("../data/supplementB_power_simulation_results.RDS") 
 names(dens2) <-  sort(unique(dat$effect))
 
 #Summary of results.

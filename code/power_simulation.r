@@ -26,9 +26,8 @@ library(tidyr) #for 'spread'
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
-source("./helper_functions_tables_figures.r") #for function to transform d to biserial correlation
 #******************************************
-#Simulation functions----
+#Simulation function----
 #******************************************
 simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies to a single list object (effect), see next section
   
@@ -121,63 +120,6 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
 }
 
 
-#*************************
-simulate_biserial <- function(effect, reps, tau){ #similar to above, but only for biserial correlations, effect size -> 0
-  
-  K <- effect$K #Number of studies
-  N <- effect$Ntotal #Sample sizes for all K studies
-  output <- vector("list", length(tau)) #empty list for output
-  
-  if(effect$type == "r"){ #If 'correlation'
-    
-    for(t in seq_along(tau)){ #loop over each tau-value
-      
-      output[[t]] <- map_dfr(1:reps, possibly(function(x){ #For each tau-value repeat below "reps" times and bind into dataframe
-        
-        rho <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each K at given tau
-        
-        fr <- rnorm(n = K, mean = rho, sd = sqrt(1 / (N - 3))) #draw observed correlations (fisher's z) for each k
-        
-        fit <- rma(yi = fr, vi = 1 / (N - 3), method = "REML") #meta-analysis of fisher's z, each study weighted by its N
-        
-        data.frame(tau2_hat = fit$tau2, I2 = fit$I2, Qp = fit$QEp, 
-                   tau = tau[t], tau_index = t)
-        
-      }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
-    }
-    
-  }else{ #for all non-'correlations' transform into biserial correlations
-    
-    n_c <- effect$ncontrol #observed control group sizes
-    n_t <- effect$ntreatment #observed treatment group sizes
-    
-    for(t in seq_along(tau)){
-      
-      output[[t]] <- map_dfr(1:reps, possibly(function(x){
-        
-        theta <- rnorm(n = K, mean = 0, sd = tau[t]) #draw effect sizes for each K at given tau
-        
-        avg_c <- rnorm(n = K, mean = 0, sd = 1 / sqrt(n_c)) #Draw means from sampling distribution control group
-        avg_t <- rnorm(n = K, mean = theta, sd = 1 / sqrt(n_t)) #Draw means from sampling distribution treatment group
-        var_c <- rchisq(n = K, df = n_c - 1) / (n_c - 1) #draw variances from sampling distribution control group
-        var_t <- rchisq(n = K, df = n_t - 1) / (n_t - 1) #draw variances from sampling distribution treatment group
-        
-        sdpooled <- sqrt(((n_t - 1)*var_t + (n_c - 1)*var_c) / (n_t + n_c - 2)) #Borenstein, M. (2009), p. 226. 
-        d <- (avg_t - avg_c) / sdpooled
-        
-        biserial_r <- transform_d_to_r(d, n_t, n_c) #function sourced from 'helper_functions_tables_figures.r'
-        
-        fit <- rma(yi = biserial_r$r, vi = biserial_r$vi)
-        data.frame(tau2_hat = fit$tau2, I2 = fit$I2, Qp = fit$QEp, 
-                   tau = tau[t], tau_index = t)
-        
-      }, otherwise = NULL))
-    }
-  }
-    
-  bind_rows(output)
-}
-
 
 #******************************************
 #Simulation 1 -  estimate tau values that correspond to small/medium/large I2----
@@ -212,7 +154,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 })
 
 #*********************
-#Effect size sensitivity simulation for Appendix A
+#Effect size sensitivity simulation for Supplement B
 
 # set.seed(100)
 # res_a <- vector("list", length(dat2)) #output of below loop
@@ -220,7 +162,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 # system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
   # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
   # cat("...RS",e, "/37") #see progress
-  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/AppendixA_tau_simulation_results.RDS") #save ocassionally and at finish
+  # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/supplementB_tau_simulation_results.RDS") #save ocassionally and at finish
 # })
 #********************
 
@@ -273,23 +215,9 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
   if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
 })
 
-#******************************
-#**apply biserial simulation function----
-tau <- sqrt(c(1/321, 1/107, 3/107)) #tau2 values for Fisher's z corresponding to small/medium/large I2 with N = 108
-
-##Simulation
-set.seed(60)
-res_biserial <- vector("list", length(dat2)) 
-
-system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
-  res_biserial[[e]] <- simulate_biserial(dat2[[e]], reps = 1e4,
-                           tau = c(0, tau)) #NB! 1e4 reps here is about 14 hours on my (fairly slow) machine
-  cat("...RS",e, "/37") #see progress
-  if (e%%5 == 0 | e == 37) saveRDS(res_biserial, "../data/biserial_simulation_results.RDS") #save ocassionally and at finish
-})
 
 #*********************
-#Effect size sensitivity simulation for Appendix A
+#Effect size sensitivity simulation for Supplement B
 
 # set.seed(50)
 #  res2_a <- vector("list", length(dat2)) #output of below loop
@@ -298,7 +226,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 #    res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
 #                             tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
 #   cat("...RS",e, "/37") #see progress
-#    if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/AppendixA_power_simulation_results.RDS") #save ocassionally and at finish
+#    if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/supplementB_power_simulation_results.RDS") #save ocassionally and at finish
 #  })
 #********************
 
