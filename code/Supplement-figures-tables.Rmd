@@ -1,9 +1,11 @@
 ---
-title: "Supplement - Biserial correlation transformations"
+title: "Tables and Figures - Supplement A and B"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: pdf_document
 ---
 
+
+This document contains the code to reproduce tables and figures from Supplement A and Supplement B for the project "Heterogeneity in direct replications in psychology and its association with effect size". 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
@@ -30,6 +32,7 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
+##Supplement A
 
 ```{r a-plot-prep, cache = TRUE}
 res <- dat %>% 
@@ -231,11 +234,57 @@ het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, c
   kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/",
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: https://osf.io/j9zyd/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06",
            alphabet = "These effects were simulated as standardized mean differences") %>% 
   landscape()
 
 
 ```
 
+##Supplement B
+
+
+```{r Supplement-B-table}
+
+#Summary of results. These are incorporated into the main table in the paper, see tables.rmd
+zero <- dens %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(Zero = '1', Small = '2', Medium = '3', Large = '4', Effect = effect)
+
+##Medium effect size results
+dens2 <- readRDS("../data/appendixA_power_simulation_results.RDS") 
+names(dens2) <-  sort(unique(dat$effect))
+
+#Summary of results.
+medium <- dens2 %>% 
+  bind_rows(.id = "effect") %>% 
+  group_by(effect, tau_index) %>% 
+  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
+  ungroup() %>% 
+  tidyr::spread(key = tau_index, value = power) %>% #prep for table
+  rename(Zero = '1', Small = '2', Medium = '3', Large = '4') %>% 
+  select(-effect)
+
+##combine for table
+
+comparison <- cbind(zero, medium)
+```
+
+Sensitivity analysis assuming a medium true effect size rather than zero true effect size
+
+In our main results we simulated data to estimate type I error and power using an average true effect size equal to zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis, in Supplement B we also estimated type I error and power, but generated with an average 'medium' true effect size as defined by Cohen (1988).
+
+Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table A1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
+
+_Type I error and power to detect four heterogeneity levels under two true effect sizes_
+
+```{r}
+knitr::kable(comparison, digits = 2)
+```
+
+**Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). Code to reproduce table: https://osf.io/j9zyd/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
