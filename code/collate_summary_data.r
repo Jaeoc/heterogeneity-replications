@@ -27,7 +27,9 @@
 #[7] RRR6 
 #[8] RRR7 
 #[9] RRR8 
-#[10] Collate and save data
+#[10] RRR9
+#[11] RRR10
+#[12] Collate and save data
 
 ##Additional comments: To be able to run the entire script presumes this script is saved in a folder with the following relationship
 #                      to the raw data "../data/" followed by a folder for each origin of data, see code in each section for details. 
@@ -1037,11 +1039,278 @@ rrr8 <- rrr8 %>%
 
 
 
+#NB! NEW from here
+
+#******************************************
+#[11] RRR9 ----
+#******************************************
+##summary data from Registered Replication Report 10 https://osf.io/k27hm/
+##Direct link to .zip file with raw data: https://osf.io/qegfd/
+##To extract summary data we ran the RRR9 code in the file above on their raw data
+
+#library(dplyr)
+
+rrr9 <- read.csv("../data/source/rrr9/RRR9_summary_data.csv", stringsAsFactors = FALSE)
+
+rrr9 <- rrr9 %>% 
+  rename(Site = lab.name, #rename variables to consistent names
+         outcome_t1 = mean.beh.80, #mean treatment group
+         ntreatment = n.80,
+         outcome_c1 = mean.beh.20,#mean control group
+         ncontrol = n.20,
+         outcome_t2 = sd.beh.80, 
+         outcome_c2 = sd.beh.20) %>% 
+  mutate(rp = "RRR9", #Add some descriptive information
+         effect = "Hostility priming", 
+         in_lab = 1, # All participants in large group of at least 50 people
+         B_or_W = "Between", 
+         design = "control vs. treatment", 
+         effect_size = outcome_t1 - outcome_c1, #Mean difference
+         or_stat_test = "ANOVA", #No particular test, just looked at the effect and CI
+         effect_type = "Raw mean difference",
+         outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
+         Ntotal = ntreatment + ncontrol,
+         country = c("GBR", #Acar, country for each lab from https://osf.io/uskr8/,
+                     "HUN", #Aczel
+                     "CAN", #Birt
+                     "USA", #Evans
+                     "PRT", #Ferreira-Santos
+                     "GBR", #Iraizoz
+                     "AUS", #Holzmeister
+                     "ISR", #Rozmann
+                     "SWE", #Koppel
+                     "FRA", #Laine
+                     "GER", #Loschelder
+                     "USA", #McCarthy
+                     "NLD", #Meijer
+                     "TUR", #özdogru
+                     "GBR", #Pennington
+                     "BEL", #Roets
+                     "GER", #Suchotzki
+                     "FRA", #Sutan
+                     "NLD", #Vanpaemel
+                     "NLD", #Veschuere
+                     "USA", #Wick
+                     "USA"), #Wiggins
+         Site = tolower(Site)) %>% #Make site-names lower-case 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+#******************************************
+#[10] RRR10 ----
+#******************************************
+##summary data from Registered Replication Report 9 https://osf.io/k27hm/
+##Direct link to .zip file with data: https://osf.io/fwnc2/
+##Summary data located at Meta-Analysis_2018-07-09.zip\Meta-Analysis\Results_perMAA\Main\Tables\10 commandments effect_table_data.csv
+#Additional comments:  standard error of difference, no SD per group
+
+#library(dplyr)
+
+rrr10 <- read.csv("../data/source/RRR10/10 commandments effect_table_data.csv", stringsAsFactors = FALSE)
+
+rrr10$authors[grep("Iraizoz", rrr10$authors)] <- "Gonzales-Iraizoz" #simplify names not read properly
+rrr10$authors[grep("ru", rrr10$authors)] <- "Ozdogru"
+
+rrr10 <- rrr10 %>% 
+  slice(-c(1, 21)) %>% #drop original effect and meta-analytic summmary from data
+  rename(Site = authors, #rename variables to consistent names
+         outcome_t1 = mean1, #mean treatment group
+         ntreatment = n1,
+         outcome_c1 = mean2,#mean control group
+         ncontrol = n2,
+         effect_size = means, #Mean difference
+         outcome_c2 = se) %>%  #standard error of the difference 
+  mutate(rp = "RRR10", #Add some descriptive information
+         effect = "Moral reminder", 
+         in_lab = 1, # All participants in large group of 50 people
+         B_or_W = "Between", 
+         design = "control vs. treatment", 
+         or_stat_test = "ANOVA", #No particular test, just looked at the effect and CI
+         effect_type = "Raw mean difference",
+         outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
+         Ntotal = ntreatment + ncontrol,
+         outcome_t2 = NA, #only have sE of the effect (difference of means) and no SDs, so nothing for this variable
+         country = c("HUN", #country for each lab from https://osf.io/uskr8/, Aczel
+                     "CAN", #Birt
+                     "USA", #Evans
+                     "PRT", #Ferreira-Santos
+                     "GBR", #Iraizoz
+                     "AUS", #Holzmeister
+                     "ISR", #Rozmann
+                     "SWE", #Koppel
+                     "FRA", #Laine
+                     "GER", #Loschelder
+                     "USA", #McCarthy
+                     "NLD", #Meijer
+                     "TUR", #özdogru
+                     "GER", #Suchotzki
+                     "FRA", #Sutan
+                     "NLD", #Vanpaemel
+                     "NLD", #Veschuere
+                     "USA", #Wick
+                     "USA")) %>% #Wiggins
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+
+#HERE! TO do: add descriptive information and organize data using same standard as above----
+#******************************************
+#[12] ML2 ----
+#******************************************
+##summary data from Many Labs 2 https://osf.io/8cd4r/
+##Direct link to file with summary data: https://osf.io/j7mhf/
+##The relevant data file was identified in the meta-analysis script ("ML2_meta_analyses_simple.R") on line 32: https://osf.io/4akjw/
+
+#library(dplyr)
+
+#Load data
+ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
+
+#Clean and format data
+ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+
+#******************************************
+#Here - progress ----
+#Summary of efforts 2019-10-08
+
+#Using the file indicated above does not work when computing rma using stat.cond1.mean and stat.cond1.sd as one would expect
+#this lead to incorrect results
+#However, the file meta_analysis_wide.xlsx was produced by the ML2_meta_analyses_simple.R script and the non-moderator values
+#therein correspond to the (corrected) tau values in Table 3 https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit
+#In the script the variables ESCI.r and ESCI.var.r are used for the meta-analyses
+#Yet in Table 3 ML2 authors claim to report ES and tau as cohen's d values
+#Next step is thus to re-run the meta-analyses using these variables and see if this results in the correct output
+#In which case it is perhaps only that hte variables have very misleading names...
+#We can then compare different stat.cond.mean computations of cohen's d and see which ones are actually correct...
+
+#Other things I've tried today
+#1) Look through the different aggregated data-files available on OSF -> on the Data_Figure_NOweird.csv seems complete
+#2) talked to Robbie and tried to re-run the full analyses -> get errors due to the get.analyses_1.r file which I cannot solve
+#Error in gzfile(file, "rb") : cannot open the connection
+
+
+#******************************************
+
+#ML2_meta_analyses_simple.R
+##nrow(d)>0) & !grepl("Graham|Inbar|Schwarz",an)
+##runs meta-analysis per effect (as indicated by analysis.name variable)
+#does not include any effects with zero rows or the Graham|Inbar|Schwarz effects
+#length(unique(ml2$analysis.name)) gives 28 effects -> double-check in paper that this was how many they had
+#The variable ESCI.r is used as effect size and ESCI.var.r as its variance for the meta-analyses
+#did they convert everything to correlations for the analysis? 
+#No, they convert everything to cohen's d for the heterogeneity analysis (Table 3), or Cohen's Q for the Inbar and Schwarz effects
+
+#Should 1) extract all SMD effects, and then the data for each effect. As long as I have the raw info metafor can do the SMD conversion
+
+##SMD effects
+ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd))
+length(unique(ml2_smd$analysis.name)) #23 effects i.e., the remaining 5 effects are OR (checked 2019-10-08)
+
+# [1] "Structure & Goal Pursuit (Kay et al., 2014)"      #SMD
+# [2] "Moral Foundations (Graham et al., 2009)"          #r
+# [3] "Priming Consumerism (Bauer et al., 2012)"         #SMD
+# [4] "Correspondence Bias (Miyamoto & Kitayama, 2002)"  #SMD
+# [5] "Disgust & Homophobia (Inbar et al., 2009)"        #r
+# [6] "Incidental Anchors (Critcher & Gilovich, 2008)"   #q (difference between r)
+# [7] "Social Value Orientation (Van Lange et al., 1997)" #r
+# [8] "SMS & Well-Being (Anderson et al., 2012)"         #SMD
+# [9] "False Consensus 1 (Ross et al., 1977)"            #%,, two groups, compare what % they answer, maybe SMD?
+# [10] "False Consensus 2 (Ross et al., 1977)"            #% same as above, maybe SMD
+# [11] "Position & Power (Giessner & Schubert, 2007)"     #SMD
+# [12] "Intuitive Reasoning (Norenzayan et al., 2002)"    #SMD 
+# [13] "Less is Better (Hsee, 1998)"                      #SMD
+# [14] "Moral Typecasting (Gray & Wegner, 2009)"          #SMD
+# [15] "Moral Cleansing (Zhong & Liljenquist, 2006)"      #SMD
+# [16] "Assimilation & Contrast (Schwarz et al., 1991)"   #q (difference between r)
+# [17] "Choosing or Rejecting (Shafir, 1993)"             #Sum of prob (%) different from 100%, strange one
+# [18] "Intentional Side-Effects (Knobe, 2003)"           #SMD
+# [19] "Direction & Similarity (Tversky & Gati, 1978)"    #SMD
+# [20] "Direction & SES (Huang et al., 2014)"             #SMD
+# [21] "Incidental Disfluency (Alter et al., 2007)"       #SMD
+# [22] "Tempting Fate (Risen & Gilovich, 2008)"           #SMD
+# [23] "Priming Warmth (Zaval et al., 2014)"              #SMD
+
+ml2_smd <- ml2_smd %>% filter(! analysis.name %in% c("Graham.1", "Inbar.1a", "Critcher.1", "vanLange.1", "Shafir.1", "Schwarz.1a"))
+
+a <- ml2_smd %>% 
+  split(.$analysis.name) %>% 
+  lapply(., function(x) rma(yi = x$ESCI.r, vi = x$ESCI.var.r, method = "REML"))
+
+a2 <- a %>% lapply(., function(x) data.frame(ES = x$b, tau2 = x$tau2)) %>% 
+  bind_rows(., .id = "analysis.name")
+
+a2 <- rbind(a2, data.frame(analysis.name = rep(NA, 8), ES = rep(NA, 8), tau2 = rep(NA, 8))) 
+
+wide <- readxl::read_excel("../data/source/Ml2/meta_analysis_wide.xlsx") %>% 
+  filter(`.id` == "nomod_uni") %>% 
+  select(analysis.name, tau2) %>% 
+  arrange(analysis.name)
+
+a2 %>% bind_cols(wide) %>% mutate(tau2 = sqrt(tau2))
+
+#**********************
+##Here - progress 2019-10-09----: 
+#I have been able to reproduce the taus from Table 3, these correspond to using
+#the correlations and their variance (ESCI.r and ESCI.var.r)
+#However, they seem to indeed be correlations and the effect sizes are not reproduced
+#Instead using the ESCI.d and ESCI.var.d the tau values are completely off 
+#However, the effect sizes are very close, but consistently off by something like .035 SD (rounding?)
+#Or more in some cases (Knobe.1). So not clear how these effect sizes were computed.
+#Maybe I include the original study in my meta-analyses but ML2 doesn't when they report 'global' effect size?
+#-> Doesn't seem to be in the data (which makes sense since taus were correct)
+#Or maybe they just take the average effect size across replications rather than meta-analyze them?
+#-> no, = 1.95 for Knobe.1 then, still too high (should be 1.75)
+
+#I can't seem to resolve this, I've emailed the corresponding author and we'll see if it is worth the effort
+#*************************************************************************
+
+rrr10 <- rrr10 %>% 
+  slice(-c(1, 21)) %>% #drop original effect and meta-analytic summmary from data
+  rename(Site = authors, #rename variables to consistent names
+         outcome_t1 = mean1, #mean treatment group
+         ntreatment = n1,
+         outcome_c1 = mean2,#mean control group
+         ncontrol = n2,
+         effect_size = means, #Mean difference
+         outcome_c2 = se) %>%  #standard error of the difference 
+  mutate(rp = "RRR10", #Add some descriptive information
+         effect = "Moral reminder", 
+         in_lab = 1, # All participants in large group of 50 people
+         B_or_W = "Between", 
+         design = "control vs. treatment", 
+         or_stat_test = "ANOVA", #No particular test, just looked at the effect and CI
+         effect_type = "Raw mean difference",
+         outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
+         Ntotal = ntreatment + ncontrol,
+         outcome_t2 = NA, #only have sE of the effect (difference of means) and no SDs, so nothing for this variable
+         country = c("HUN", #country for each lab from https://osf.io/uskr8/, Aczel
+                     "CAN", #Birt
+                     "USA", #Evans
+                     "PRT", #Ferreira-Santos
+                     "GBR", #Iraizoz
+                     "AUS", #Holzmeister
+                     "ISR", #Rozmann
+                     "SWE", #Koppel
+                     "FRA", #Laine
+                     "GER", #Loschelder
+                     "USA", #McCarthy
+                     "NLD", #Meijer
+                     "TUR", #özdogru
+                     "GER", #Suchotzki
+                     "FRA", #Sutan
+                     "NLD", #Vanpaemel
+                     "NLD", #Veschuere
+                     "USA", #Wick
+                     "USA")) %>% #Wiggins
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
 #******************************************
 #[10] Collate and save data ----
 #******************************************
 
-effects <- rbind(ml1, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8)
+effects <- rbind(ml1, ml2, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8, rrr9, rrr10)
 
 write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
 
