@@ -320,10 +320,11 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 
 #library(dplyr)
 
+#******************************************
 #Load data
 ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
 
-#Clean and format data
+#Initial clean and format data
 ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 #******************************************
@@ -350,14 +351,6 @@ ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 3
 # [17] "Tempting Fate (Risen & Gilovich, 2008)"         
 # [18] "Priming Warmth (Zaval et al., 2014)"   
 #**************
-#library(dplyr)
-
-#Load data
-ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
-
-#Clean and format data
-ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
-ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 
 ##SMD effects
 ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd)) #drop all effects withouth standard deviation (= 4 odds ratio effects, 1 regression effect)
@@ -798,22 +791,6 @@ ml2_shafir <- ml2_shafir %>%
 
 ml2 <- rbind(ml2_smd, ml2_or,ml2_r, ml2_q, ml2_savani, ml2_shafir)
 
-#******************************************
-#Attempts 2019-10-22 ----
-#******************************************
-#1) The error in the data "cirtcher stats are duplicated across columns fo rhte pencil-and-paper sites
-#(variables crit2.1 and crit1.1, of which only one should contain a values).
-#https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit point 3: consequences not clear to me
-
-#2) Test tatistics (like t-tests) were fed into MBESS to get the ncp and CIs
-#then ncp and CIs fed into compute.es to compute effect sizes
-#not for OR and fisher's Z
-
-#3) Meta-analyzing Inbar and Schwarz
-#resolved
-
-#4) for savani and shafir I save just what was used to compute tau-values in ML2
-
 
 #******************************************
 #[3] Many Labs 3----
@@ -1103,15 +1080,16 @@ names(rrr1_2) <- c("RRR1", "RRR2") #set names
 
 #Clean and format data
 rrr1_2 <- lapply(rrr1_2, function(x) x[-c(1:2),]) #Remove first two rows which are of no interest (old headers and original study data)
+rrr1_2 <- lapply(rrr1_2, setNames, c("lab", "country", "language", paste0("treatment", 1:8), paste0("control", 1:8))) 
 
 for(i in seq_along(files)){
   rrr1_2[[i]] <- rrr1_2[[i]] %>% 
-    rename(Site = X__1, #rename variables to consistent names
-           country = X__2,
-           ntreatment = X__7, #total n treatment group after exclusions
-           outcome_t1 = X__8, #n correcttreatment group
-           ncontrol = X__14, #Total n control group after exclusions
-           outcome_c1 = X__15) %>%  #n correct control group
+    rename(Site = lab, #rename variables to consistent names
+           country = country,
+           ntreatment = treatment5, #total n treatment group after exclusions
+           outcome_t1 = treatment6, #n correcttreatment group
+           ncontrol = control5, #Total n control group after exclusions
+           outcome_c1 = control6) %>%  #n correct control group
     mutate(rp = names(rrr1_2)[i], #Add some descriptive information
            Site = ifelse(grepl("MTURK", Site), "mturk", Site), #if Site name contains MTURK recode to mturk
            effect = paste("Verbal overshadowing", i), 
@@ -1121,8 +1099,8 @@ for(i in seq_along(files)){
            or_stat_test = "Chisquare", 
            effect_type = "Risk difference",
            outcomes1_2 = "count correct _ count incorrect", #Describes the content of outcome1 and outcome2 variables
-           outcome_t2 = as.numeric(X__9) + as.numeric(X__10), #n unsuccessful identifications treatment group
-           outcome_c2 = as.numeric(X__16) + as.numeric(X__17), #n unsuccessful identifications control group
+           outcome_t2 = as.numeric(treatment7) + as.numeric(treatment8), #n unsuccessful identifications treatment group
+           outcome_c2 = as.numeric(control7) + as.numeric(control8), #n unsuccessful identifications control group
            outcome_t1 = as.numeric(outcome_t1), #Necessary to convert these to numeric for the below calculations
            outcome_c1 = as.numeric(outcome_c1), 
            ntreatment = as.numeric(ntreatment),
@@ -1678,5 +1656,5 @@ rrr10 <- rrr10 %>%
 
 effects <- rbind(ml1, ml2, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8, rrr9, rrr10)
 
-write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
+# write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
 
