@@ -13,23 +13,31 @@
 #**[1.3] Math_Art Gender
 #**[1.4] Math explicit/implicit attitude correlation
 #**[1.5] ML1 combined
-#[2] Many Labs 3
-#**[2.1] Stroop effect
-#**[2.2] t-test effects
-#**[2.3] Non-parametric tests
-#**[2.4] Interaction effects
-#**[2.5] Correlation conscientiousness and persistence
-#**[2.6] Ml3 combined
-#[3] RRR1 & 2
-#[4] RRR3 
-#[5] RRR4 
-#[6] RRR5 
-#[7] RRR6 
-#[8] RRR7 
-#[9] RRR8 
-#[10] RRR9
-#[11] RRR10
-#[12] Collate and save data
+#[2] Many Labs 2
+#**[2.1] t-test effects
+#**[2.2] Chi-square effects (odds ratios)
+#**[2.3] Correlation effects
+#**[2.4] Cohen's q effects
+#**[2.5] Actions are Choices (Savani et al., 2010)
+#**[2.5] Choosing or Rejecting (Shafir, 1993)
+#**[2.6] ML2 combined
+#[3] Many Labs 3
+#**[3.1] Stroop effect
+#**[3.2] t-test effects
+#**[3.3] Non-parametric tests
+#**[3.4] Interaction effects
+#**[3.5] Correlation conscientiousness and persistence
+#**[3.6] ML3 combined
+#[4] RRR1 & 2
+#[5] RRR3 
+#[6] RRR4 
+#[7] RRR5 
+#[8] RRR6 
+#[9] RRR7 
+#[10] RRR8 
+#[11] RRR9
+#[12] RRR10
+#[13] Collate and save data
 
 ##Additional comments: To be able to run the entire script presumes this script is saved in a folder with the following relationship
 #                      to the raw data "../data/" followed by a folder for each origin of data, see code in each section for details. 
@@ -296,7 +304,651 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 
 
 #******************************************
-#[2] Many Labs 3----
+#[2] Many Labs 2 ----
+#******************************************
+##summary data from Many Labs 2 https://osf.io/8cd4r/
+##Direct link to file with summary data: https://osf.io/j7mhf/
+##The relevant data file was identified in the meta-analysis script ("ML2_meta_analyses_simple.R") on line 32: https://osf.io/4akjw/
+
+#library(dplyr)
+
+#Load data
+ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
+
+#Clean and format data
+ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+
+#******************************************
+#Here - progress ----
+#Summary of efforts 2019-10-08
+
+#Using the file indicated above does not work when computing rma using stat.cond1.mean and stat.cond1.sd as one would expect
+#this lead to incorrect results
+#However, the file meta_analysis_wide.xlsx was produced by the ML2_meta_analyses_simple.R script and the non-moderator values
+#therein correspond to the (corrected) tau values in Table 3 https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit
+#In the script the variables ESCI.r and ESCI.var.r are used for the meta-analyses
+#Yet in Table 3 ML2 authors claim to report ES and tau as cohen's d values
+#Next step is thus to re-run the meta-analyses using these variables and see if this results in the correct output
+#In which case it is perhaps only that hte variables have very misleading names...
+#We can then compare different stat.cond.mean computations of cohen's d and see which ones are actually correct...
+
+#Other things I've tried today
+#1) Look through the different aggregated data-files available on OSF -> on the Data_Figure_NOweird.csv seems complete
+#2) talked to Robbie and tried to re-run the full analyses -> get errors due to the get.analyses_1.r file which I cannot solve
+#Error in gzfile(file, "rb") : cannot open the connection
+
+
+#******************************************
+
+#ML2_meta_analyses_simple.R
+##nrow(d)>0) & !grepl("Graham|Inbar|Schwarz",an)
+##runs meta-analysis per effect (as indicated by analysis.name variable)
+#does not include any effects with zero rows or the Graham|Inbar|Schwarz effects
+#length(unique(ml2$analysis.name)) gives 28 effects -> double-check in paper that this was how many they had
+#The variable ESCI.r is used as effect size and ESCI.var.r as its variance for the meta-analyses
+#did they convert everything to correlations for the analysis? 
+#No, they convert everything to cohen's d for the heterogeneity analysis (Table 3), or Cohen's Q for the Inbar and Schwarz effects
+
+#Should 1) extract all SMD effects, and then the data for each effect. As long as I have the raw info metafor can do the SMD conversion
+
+##SMD effects
+ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd))
+length(unique(ml2_smd$analysis.name)) #23 effects i.e., the remaining 5 effects are OR (checked 2019-10-08)
+
+# [1] "Structure & Goal Pursuit (Kay et al., 2014)"      #SMD
+# [2] "Moral Foundations (Graham et al., 2009)"          #r
+# [3] "Priming Consumerism (Bauer et al., 2012)"         #SMD
+# [4] "Correspondence Bias (Miyamoto & Kitayama, 2002)"  #SMD
+# [5] "Disgust & Homophobia (Inbar et al., 2009)"        #q difference between r
+# [6] "Incidental Anchors (Critcher & Gilovich, 2008)"   #SMD
+# [7] "Social Value Orientation (Van Lange et al., 1997)" #r
+# [8] "SMS & Well-Being (Anderson et al., 2012)"         #SMD
+# [9] "False Consensus 1 (Ross et al., 1977)"            #%,, two groups, compare what % they answer, maybe SMD?
+# [10] "False Consensus 2 (Ross et al., 1977)"            #% same as above, maybe SMD
+# [11] "Position & Power (Giessner & Schubert, 2007)"     #SMD
+# [12] "Intuitive Reasoning (Norenzayan et al., 2002)"    #SMD 
+# [13] "Less is Better (Hsee, 1998)"                      #SMD
+# [14] "Moral Typecasting (Gray & Wegner, 2009)"          #SMD
+# [15] "Moral Cleansing (Zhong & Liljenquist, 2006)"      #SMD
+# [16] "Assimilation & Contrast (Schwarz et al., 1991)"   #q (difference between r)
+# [17] "Choosing or Rejecting (Shafir, 1993)"             #Sum of prob (%) different from 100%, strange one
+# [18] "Intentional Side-Effects (Knobe, 2003)"           #SMD
+# [19] "Direction & Similarity (Tversky & Gati, 1978)"    #SMD
+# [20] "Direction & SES (Huang et al., 2014)"             #SMD
+# [21] "Incidental Disfluency (Alter et al., 2007)"       #SMD
+# [22] "Tempting Fate (Risen & Gilovich, 2008)"           #SMD
+# [23] "Priming Warmth (Zaval et al., 2014)"              #SMD
+
+ml2_smd <- ml2_smd %>% filter(! analysis.name %in% c("Graham.1", "Inbar.1a", "vanLange.1", "Shafir.1", "Schwarz.1a"))
+
+a <- ml2_smd %>% 
+  split(.$analysis.name) %>% 
+  lapply(., function(x) rma(yi = x$ESCI.r, vi = x$ESCI.var.r, method = "REML"))
+
+a2 <- a %>% lapply(., function(x) data.frame(ES = x$b, tau2 = x$tau2)) %>% 
+  bind_rows(., .id = "analysis.name")
+
+a2 <- rbind(a2, data.frame(analysis.name = rep(NA, 7), ES = rep(NA, 7), tau2 = rep(NA, 7))) 
+
+wide <- readxl::read_excel("../data/source/Ml2/meta_analysis_wide.xlsx") %>% 
+  filter(`.id` == "nomod_uni") %>% 
+  select(analysis.name, tau2) %>% 
+  arrange(analysis.name)
+
+a2 %>% bind_cols(wide) %>% mutate(tau2 = tau2)
+
+#**********************
+##Here - progress 2019-10-09----: 
+#I have been able to reproduce the taus from Table 3, these correspond to using
+#the correlations and their variance (ESCI.r and ESCI.var.r)
+#However, they seem to indeed be correlations and the effect sizes are not reproduced
+#Instead using the ESCI.d and ESCI.var.d the tau values are completely off 
+#However, the effect sizes are very close, but consistently off by something like .035 SD (rounding?)
+#Or more in some cases (Knobe.1). So not clear how these effect sizes were computed.
+#Maybe I include the original study in my meta-analyses but ML2 doesn't when they report 'global' effect size?
+#-> Doesn't seem to be in the data (which makes sense since taus were correct)
+#Or maybe they just take the average effect size across replications rather than meta-analyze them?
+#-> no, = 1.95 for Knobe.1 then, still too high (should be 1.75)
+
+#I can't seem to resolve this, I've emailed the corresponding author and we'll see if it is worth the effort
+#*************************************************************************
+#Attempt after Fred Hasselman's email 10-10-2019
+
+huang <- ml2_smd %>% filter(analysis.name == "Huang.1")
+head(huang[, grepl("test\\.", names(huang))])
+head(huang[, grepl("ESCI\\.", names(huang))])
+
+OR <- ml2 %>% filter(is.na(stat.cond1.sd))
+head(OR[, grepl("stat\\.", names(OR))])
+head(OR[, grepl("test\\.", names(OR))])
+
+strangers <- ml2_smd %>% filter(analysis.name %in% c("Graham.1", "Inbar.1a", "vanLange.1", "Shafir.1", "Schwarz.1a"))
+#Gramham = correlation, (which can be computed from means and SD in the two groups)
+#inbar = Difference between correlations, q, 4 means and SDs
+#vanLange = correlation (which can be computed from means and SD in the two groups)
+#shafir = wtf? Ok, think similar to an OR, we have 4 categories with results
+#Schwarz.1a = difference between correlations, q, 4 means and SDs
+
+#Double-check which those excluded in simple.met
+31+36+50+41 = 158
+41 + 50 + 36 + 31 = 158
+0.4251243
+67/158 = 0.42405
+77/158
+81
+36/77 #.4675%
+31/81 #38.27
+#Can't seem to figure out shafir, email and ask
+5.562500 - 5.568627
+
+#Need to double-check the strangers taus
+strangers %>% filter(analysis.name == "Schwarz.1a") %>% 
+  rma(yi = .$ESCI.r, vi = .$ESCI.var.r, method = "REML")
+#Graham and vanLange1 are fine
+#shafir as well
+#Inbar and Schwarz (the cohen's q effects) don't run as all the others, can't find how to meta-analyze this
+
+#Emailed Frank about cohen's q and Shafir 2019-10-11
+
+
+##What information do I need to extract?
+#1) for table 3 I wish to do the analysis the same way they did -> use the correlations to run meta-analysis
+#However, these correlations are based on converted t-test values and for our secondary analysis we want 
+#untransformed values. Such that 
+#2) I need to download the mean and standard deviation of each effect as well.
+#If I save the effect size variable as the correlation I can get all of this
+
+#*****************************************
+#**[2.1] t-test effects----
+#*****************************************
+#Effects extracted in this section
+# [1] "Structure & Goal Pursuit (Kay et al., 2014)"    
+# [2] "Priming Consumerism (Bauer et al., 2012)"       
+# [3] "Correspondence Bias (Miyamoto & Kitayama, 2002)"
+# [4] "Incidental Anchors (Critcher & Gilovich, 2008)" 
+# [5] "SMS & Well-Being (Anderson et al., 2012)"       
+# [6] "False Consensus 1 (Ross et al., 1977)"          
+# [7] "False Consensus 2 (Ross et al., 1977)"          
+# [8] "Position & Power (Giessner & Schubert, 2007)"   
+# [9] "Intuitive Reasoning (Norenzayan et al., 2002)"  
+# [10] "Less is Better (Hsee, 1998)"                    
+# [11] "Moral Typecasting (Gray & Wegner, 2009)"        
+# [12] "Moral Cleansing (Zhong & Liljenquist, 2006)"    
+# [13] "Intentional Side-Effects (Knobe, 2003)"         
+# [14] "Direction & Similarity (Tversky & Gati, 1978)"  
+# [15] "Direction & SES (Huang et al., 2014)"           
+# [16] "Incidental Disfluency (Alter et al., 2007)"     
+# [17] "Tempting Fate (Risen & Gilovich, 2008)"         
+# [18] "Priming Warmth (Zaval et al., 2014)"   
+#**************
+#library(dplyr)
+
+#Load data
+ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
+
+#Clean and format data
+ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+
+##SMD effects
+ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd)) #drop all effects withouth standard deviation (= 4 odds ratio effects, 1 regression effect)
+ml2_smd <- ml2_smd %>% #Drop remaining non-standard SMD effects
+  filter(!analysis.name %in% c("Graham.1", #correlation r
+                               "Inbar.1a", #difference between correlations q
+                               "vanLange.1", #correlation r
+                               "Shafir.1", #strange effect 
+                               "Schwarz.1a")) #difference between correlations q
+
+
+ml2_smd <- ml2_smd %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         outcome_t1 = stat.cond1.mean, #mean treatment group
+         ntreatment = stat.n1,
+         outcome_c1 = stat.cond2.mean,#mean control group
+         ncontrol = stat.n2,
+         outcome_t2 = stat.cond1.sd,
+         outcome_c2 = stat.cond2.sd,
+         effect_size = ESCI.r, #NB! ML2 used correlations for computing tau-values in their Table 3. First t-tests were computed (either Welch's or not) and then transformed into correlations uisng compute.es package
+         Ntotal = stat.N,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Between", 
+         design = "control vs. treatment", 
+         or_stat_test = "t-test", 
+         effect_type = "r",
+         outcomes1_2 = "mean _ SD", 
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>%
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+#*****************************************
+#**[2.2] Chi-squre effects (odds ratios)----
+#*****************************************
+#Effects extracted in this section
+# [1] "Affect & Risk (Rottenstreich & Hsee, 2001)"
+# [2] "Trolley Dilemma 1 (Hauser et al., 2007)"   
+# [3] "Framing (Tversky & Kahneman, 1981)"        
+# [4] "Trolley Dilemma 2 (Hauser et al., 2007)"   
+#**************
+ml2_or <- ml2 %>% filter(is.na(stat.cond1.sd)) %>% #Keep only effects without SD (= 4 odds ratio effects, 1 )
+  filter(!study.description == "Actions are Choices (Savani et al., 2010)") #hierarchical logistic regression effect, drop from this section
+
+ml2_or <- ml2_or %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         outcome_t1 = stat.cond1.count, #
+         outcome_c1 = stat.cond3.count ,#
+         outcome_t2 = stat.cond2.count,
+         outcome_c2 = stat.cond4.count,
+         effect_size = ESCI.r, #NB! ML2 used correlations for computing tau-values in their Table 3. First non-central chi-square values were computen and then transformed into correlations uisng compute.es package (and then OR, which is why computing the OR directly results in slightly different values compared to those in ML2 dataset)
+         Ntotal = stat.N,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Between", 
+         design = "Choice of outcome 1 vs. 2 between groups", 
+         ntreatment = outcome_t1 + outcome_t2,
+         ncontrol = outcome_c1 + outcome_c2,
+         or_stat_test = "Chisquare", 
+         effect_type = "r",
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         outcomes1_2 = case_when( #Description of outcomes in the shape: "outcome 1 (t, c) _ outcome 2 (t, c)" where (t,c) are the between subjects groups
+           effect == "Affect & Risk" ~ "count moviestar (low, certain) _ count money (low, certain)", #I use the parentheses to clarify here because there is no clear treatment/control division
+           effect == "Trolley Dilemma 1" ~ "count yes (side effect, greater good) _ count no (side effect, greater good)",
+           effect == "Framing" ~ "count yes (cheap, costly) _ count no (cheap, costly)",
+           effect == "Trolley Dilemma  2" ~  "count yes (side effect, greater good) _ count no (side effect, greater good)"),
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>% 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+##NB! Should maybe change the order of outcome_c1 and outcome_t1 in the final select everywhere, right now it makes it confusing for these effects what's what
+#with the Odds ratios
+
+#*****************************************
+#**[2.3] Correlations----
+#*****************************************
+#Effects extracted in this section
+# [1] "Moral Foundations (Graham et al., 2009)"          
+# [2] "Social Value Orientation (Van Lange et al., 1997)" 
+#**************
+
+#NB! Check with Marcel about this converting to non-central statistic and then to correlation in this case and what it means
+
+ml2_r <- ml2 %>%  filter(analysis.name %in% c("Graham.1", "vanLange.1")) 
+
+ml2_r <- ml2_r %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         effect_size = ESCI.r, #NB! ML2 computed effect sizes by first computing non-central test statics and then transformed into correlations uisng compute.es package (I believe, although seems strange, check with Marcel)
+         Ntotal = stat.N,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Within", 
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         design = case_when(
+           effect == "Moral Foundations" ~ "moral foundations with political leaning",
+           effect == "Social Value Orientation" ~ "SVO with family size"),
+         or_stat_test = "Fisher's r-to-z 1-cor", 
+         effect_type = "r",
+         outcomes1_2 = "NA _ NA",
+         outcome_t1 = NA,
+         outcome_c1 = NA,
+         outcome_t2 = NA,
+         outcome_c2 = NA,
+         ntreatment = NA,
+         ncontrol = NA,
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>% 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+
+#*****************************************
+#**[2.3] Cohen's q effects----
+#*****************************************
+#Effects extracted in this section
+# [1] "Disgust & Homophobia (Inbar et al., 2009)"     
+# [2] "Assimilation & Contrast (Schwarz et al., 1991)"
+#******************************************
+#code to meta-analyze [private communcation] and file "Code_Inbar_Schwarz.R" available at https://github.com/ManyLabsOpenScience/ManyLabs2/tree/master/Script%20-%20Meta%20analyses [2019-10-22]
+
+ml2_q <- ml2 %>% filter(analysis.name %in% c("Inbar.1a", #difference between correlations q
+                                             "Schwarz.1a")) #difference between correlations q
+
+ml2_q <- ml2_q %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         effect_size = ESCI.cohensQ, #NB! ML2 computed effect sizes by first computing non-central test statics and then transformed into correlations uisng compute.es package (I believe, although seems strange, check with Marcel)
+         Ntotal = stat.N,
+         ntreatment = stat.n1,
+         ncontrol = stat.n2,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Between", 
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         design = case_when(
+           effect == "Disgust & Homophobia" ~ "Disgust sensitivity with intentionality group1 vs. disgust sensitivity with intentionality group2",
+           effect == "Assimilation & Contrast" ~ "Question1 with question2 vs. question2 with question1"),
+         or_stat_test = "Cohen's q", 
+         effect_type = "q",
+         outcomes1_2 = "t1 = sampling_var(q) _ NA",
+         outcome_t1 = 1/(ntreatment-3) + 1/(ncontrol-3), #sampling variance of cohen's q as used by ML2, see "Code_Inbar_Schwarz.r" line 24
+         outcome_c1 = NA,
+         outcome_t2 = NA,
+         outcome_c2 = NA,
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>% 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+#*****************************************
+#**[2.4] Actions are Choices (Savani et al., 2010)----
+#*****************************************
+#Effects extracted in this section
+# [1] "Actions are Choices (Savani et al., 2010)" 
+#**************
+
+ml2_savani <- ml2 %>% filter(analysis.name == "Savani.3a")
+#"The effect of interest was the odds of an action being construed as a choice, 
+#depending on the participant's condition, controlling for the reported importance of the action."
+#An Hierarchical logistic regression analysis was used.
+
+#NB! This effect is presumably an Odds ratio as well, but the sum of stat.cond1.count etc do not correspond to stat.N
+#sum of all counts would be very large for each lab (minimum around 460 ss) which seems unrealistic
+#What I can do so far is to recompute the tau from Table 3, this is simply using the r and var r
+
+ml2_savani <- ml2_savani %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         effect_size = ESCI.r, #NB! ML2 computed effect sizes by first computing non-central test statics and then transformed into correlations uisng compute.es package (I believe, although seems strange, check with Marcel)
+         Ntotal = stat.N,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Between", 
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         design = "Hierarchical logistic regression",
+         or_stat_test = "z-test", 
+         effect_type = "r",
+         outcomes1_2 = "NA _ NA",
+         outcome_t1 = NA, 
+         outcome_c1 = NA,
+         outcome_t2 = NA,
+         outcome_c2 = NA,
+         ntreatment = NA,
+         ncontrol = NA,
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>% 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+
+
+#*****************************************
+#**[2.5] Choosing or Rejecting (Shafir, 1993) ----
+#*****************************************
+# [1] "Choosing or Rejecting (Shafir, 1993)"
+#******************************************
+ml2_shafir <- ml2 %>% filter(analysis.name == "Shafir.1") #strange effect, summed percentage different from 100%
+
+#could not make sense of this one so saved as its correlation data
+ml2_shafir <- ml2_shafir %>% 
+  rename(effect = study.description, #rename variables to consistent names
+         Site = study.source, 
+         in_lab = online, #
+         effect_size = ESCI.r, #NB! ML2 computed effect sizes by first computing non-central test statics and then transformed into correlations uisng compute.es package (I believe, although seems strange, check with Marcel)
+         Ntotal = stat.N,
+         country = source.Country) %>%  
+  mutate(rp = "ML2", #Add some descriptive information
+         B_or_W = "Between", 
+         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
+         design = "Sum of % choosing option A across two groups",
+         or_stat_test = "1 sided proportion z-test", 
+         effect_type = "r",
+         outcomes1_2 = "NA _ NA",
+         outcome_t1 = NA, 
+         outcome_c1 = NA,
+         outcome_t2 = NA,
+         outcome_c2 = NA,
+         ntreatment = NA,
+         ncontrol = NA,
+         country = recode(country, #Recode country names to official three letter acronyms for consistency
+                          Hungary = "HUN", #
+                          'United Arab Emirates' = "ARE", #
+                          `Hong Kong, China` = "HKG",
+                          India = "IND",
+                          Italy = "ITA",
+                          Japan = "JPN",
+                          Malaysia = "MYS",
+                          Mexico = "MEX",
+                          Nigeria = "NGA",
+                          Portugal = "PRT",
+                          Serbia = "SRB", 
+                          `South Africa` = "ZAF",
+                          Taiwan = "TWN",
+                          Tanzania = "TZA",
+                          Uruguay = "URY",
+                          Poland = "POL", #
+                          Canada = "CAN", #
+                          `The Netherlands` = "NLD",
+                          Belgium = "BEL", #
+                          Sweden = "SWE", #
+                          France = "FRA", #
+                          UK = "GBR",
+                          Australia = "AUS", #
+                          Brazil = "BRA",
+                          Chile = "CHL",
+                          China = "CHN",
+                          Turkey = "TUR",
+                          'Czech Republic' = "CZE",
+                          'New Zealand' = "NZL", #
+                          Germany = "DEU", #
+                          Switzerland = "CHE", #
+                          Colombia = "COL", #
+                          `Costa Rica` = "CRI",
+                          Spain = "ESP")) %>% 
+  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
+         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+
+
+#******************************************
+#**[2.6] ML2 combined----
+#******************************************
+
+ml2 <- rbind(ml2_smd, ml2_or,ml2_r, ml2_q, ml2_savani, ml2_shafir)
+
+#******************************************
+#Attempts 2019-10-22 ----
+#******************************************
+#1) The error in the data "cirtcher stats are duplicated across columns fo rhte pencil-and-paper sites
+#(variables crit2.1 and crit1.1, of which only one should contain a values).
+#https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit point 3: consequences not clear to me
+
+#2) Test tatistics (like t-tests) were fed into MBESS to get the ncp and CIs
+#then ncp and CIs fed into compute.es to compute effect sizes
+#not for OR and fisher's Z
+
+#3) Meta-analyzing Inbar and Schwarz
+#resolved
+
+#4) for savani and shafir I save just what was used to compute tau-values in ML2
+
+
+#******************************************
+#[3] Many Labs 3----
 #******************************************
 ##summary data from Many labs 3 https://osf.io/ct89g/
 #Data extracted from https://osf.io/yhdau/
@@ -315,7 +967,7 @@ names(ml3) <- gsub(".csv", "", files) #set names
 
 
 #*****************************************
-#**[2.1] Stroop effect----
+#**[3.1] Stroop effect----
 #*****************************************
 #Effects extracted in this section
 #[1] "Stroop effect"
@@ -354,7 +1006,7 @@ ml3_stroop <- ml3_stroop %>%
 
 
 #******************************************
-#**[2.2] t-test effects----
+#**[3.2] t-test effects----
 #******************************************
 #Effects extracted in this section
 #[1]"Power and Perspective"
@@ -434,7 +1086,7 @@ for(i in seq_along(ml3t_names)){
 ml3t <- do.call("rbind", ml3t) #bind into dataframe
 
 #******************************************
-#**[2.3] Non-parametric tests----
+#**[3.3] Non-parametric tests----
 #******************************************
 #Effects extracted in this section
 #[1] "Availability"
@@ -480,7 +1132,7 @@ nonp <- do.call("rbind", nonp) #bind together in one dataframe
 
 
 #******************************************
-#**[2.4] Interaction effects----
+#**[3.4] Interaction effects----
 #******************************************
 #Effects extracted in this section
 #[1] "Credentials interaction"           
@@ -523,7 +1175,7 @@ inter <- do.call("rbind", inter) #bind together in one dataframe
 
 
 #******************************************
-#**[2.5] Correlation conscientiousness and persistence----
+#**[3.5] Correlation conscientiousness and persistence----
 #******************************************
 #Effects extracted in this section
 #[1] "Conscientiousness and persistence"
@@ -554,13 +1206,11 @@ cons_cor <- cons_cor %>%
 
 
 #******************************************
-#**[2.6] Ml3 combined----
+#**[3.6] ML3 combined----
 #******************************************
 
 ml3 <- rbind(ml3_stroop, ml3t, nonp, inter, cons_cor) %>% 
   mutate(Site = recode(Site, mTurk = "mturk")) 
-
-
 
 #******************************************
 #[3] RRR1 & 2 ----
@@ -1042,7 +1692,7 @@ rrr8 <- rrr8 %>%
 #NB! NEW from here
 
 #******************************************
-#[11] RRR9 ----
+#[10] RRR9 ----
 #******************************************
 ##summary data from Registered Replication Report 10 https://osf.io/k27hm/
 ##Direct link to .zip file with raw data: https://osf.io/qegfd/
@@ -1083,7 +1733,7 @@ rrr9 <- rrr9 %>%
                      "GER", #Loschelder
                      "USA", #McCarthy
                      "NLD", #Meijer
-                     "TUR", #özdogru
+                     "TUR", #?zdogru
                      "GBR", #Pennington
                      "BEL", #Roets
                      "GER", #Suchotzki
@@ -1097,7 +1747,7 @@ rrr9 <- rrr9 %>%
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 #******************************************
-#[10] RRR10 ----
+#[11] RRR10 ----
 #******************************************
 ##summary data from Registered Replication Report 9 https://osf.io/k27hm/
 ##Direct link to .zip file with data: https://osf.io/fwnc2/
@@ -1142,7 +1792,7 @@ rrr10 <- rrr10 %>%
                      "GER", #Loschelder
                      "USA", #McCarthy
                      "NLD", #Meijer
-                     "TUR", #özdogru
+                     "TUR", #?zdogru
                      "GER", #Suchotzki
                      "FRA", #Sutan
                      "NLD", #Vanpaemel
@@ -1153,161 +1803,9 @@ rrr10 <- rrr10 %>%
          ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
 
 
-#HERE! TO do: add descriptive information and organize data using same standard as above----
-#******************************************
-#[12] ML2 ----
-#******************************************
-##summary data from Many Labs 2 https://osf.io/8cd4r/
-##Direct link to file with summary data: https://osf.io/j7mhf/
-##The relevant data file was identified in the meta-analysis script ("ML2_meta_analyses_simple.R") on line 32: https://osf.io/4akjw/
-
-#library(dplyr)
-
-#Load data
-ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
-
-#Clean and format data
-ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
-ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 
 #******************************************
-#Here - progress ----
-#Summary of efforts 2019-10-08
-
-#Using the file indicated above does not work when computing rma using stat.cond1.mean and stat.cond1.sd as one would expect
-#this lead to incorrect results
-#However, the file meta_analysis_wide.xlsx was produced by the ML2_meta_analyses_simple.R script and the non-moderator values
-#therein correspond to the (corrected) tau values in Table 3 https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit
-#In the script the variables ESCI.r and ESCI.var.r are used for the meta-analyses
-#Yet in Table 3 ML2 authors claim to report ES and tau as cohen's d values
-#Next step is thus to re-run the meta-analyses using these variables and see if this results in the correct output
-#In which case it is perhaps only that hte variables have very misleading names...
-#We can then compare different stat.cond.mean computations of cohen's d and see which ones are actually correct...
-
-#Other things I've tried today
-#1) Look through the different aggregated data-files available on OSF -> on the Data_Figure_NOweird.csv seems complete
-#2) talked to Robbie and tried to re-run the full analyses -> get errors due to the get.analyses_1.r file which I cannot solve
-#Error in gzfile(file, "rb") : cannot open the connection
-
-
-#******************************************
-
-#ML2_meta_analyses_simple.R
-##nrow(d)>0) & !grepl("Graham|Inbar|Schwarz",an)
-##runs meta-analysis per effect (as indicated by analysis.name variable)
-#does not include any effects with zero rows or the Graham|Inbar|Schwarz effects
-#length(unique(ml2$analysis.name)) gives 28 effects -> double-check in paper that this was how many they had
-#The variable ESCI.r is used as effect size and ESCI.var.r as its variance for the meta-analyses
-#did they convert everything to correlations for the analysis? 
-#No, they convert everything to cohen's d for the heterogeneity analysis (Table 3), or Cohen's Q for the Inbar and Schwarz effects
-
-#Should 1) extract all SMD effects, and then the data for each effect. As long as I have the raw info metafor can do the SMD conversion
-
-##SMD effects
-ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd))
-length(unique(ml2_smd$analysis.name)) #23 effects i.e., the remaining 5 effects are OR (checked 2019-10-08)
-
-# [1] "Structure & Goal Pursuit (Kay et al., 2014)"      #SMD
-# [2] "Moral Foundations (Graham et al., 2009)"          #r
-# [3] "Priming Consumerism (Bauer et al., 2012)"         #SMD
-# [4] "Correspondence Bias (Miyamoto & Kitayama, 2002)"  #SMD
-# [5] "Disgust & Homophobia (Inbar et al., 2009)"        #r
-# [6] "Incidental Anchors (Critcher & Gilovich, 2008)"   #q (difference between r)
-# [7] "Social Value Orientation (Van Lange et al., 1997)" #r
-# [8] "SMS & Well-Being (Anderson et al., 2012)"         #SMD
-# [9] "False Consensus 1 (Ross et al., 1977)"            #%,, two groups, compare what % they answer, maybe SMD?
-# [10] "False Consensus 2 (Ross et al., 1977)"            #% same as above, maybe SMD
-# [11] "Position & Power (Giessner & Schubert, 2007)"     #SMD
-# [12] "Intuitive Reasoning (Norenzayan et al., 2002)"    #SMD 
-# [13] "Less is Better (Hsee, 1998)"                      #SMD
-# [14] "Moral Typecasting (Gray & Wegner, 2009)"          #SMD
-# [15] "Moral Cleansing (Zhong & Liljenquist, 2006)"      #SMD
-# [16] "Assimilation & Contrast (Schwarz et al., 1991)"   #q (difference between r)
-# [17] "Choosing or Rejecting (Shafir, 1993)"             #Sum of prob (%) different from 100%, strange one
-# [18] "Intentional Side-Effects (Knobe, 2003)"           #SMD
-# [19] "Direction & Similarity (Tversky & Gati, 1978)"    #SMD
-# [20] "Direction & SES (Huang et al., 2014)"             #SMD
-# [21] "Incidental Disfluency (Alter et al., 2007)"       #SMD
-# [22] "Tempting Fate (Risen & Gilovich, 2008)"           #SMD
-# [23] "Priming Warmth (Zaval et al., 2014)"              #SMD
-
-ml2_smd <- ml2_smd %>% filter(! analysis.name %in% c("Graham.1", "Inbar.1a", "Critcher.1", "vanLange.1", "Shafir.1", "Schwarz.1a"))
-
-a <- ml2_smd %>% 
-  split(.$analysis.name) %>% 
-  lapply(., function(x) rma(yi = x$ESCI.r, vi = x$ESCI.var.r, method = "REML"))
-
-a2 <- a %>% lapply(., function(x) data.frame(ES = x$b, tau2 = x$tau2)) %>% 
-  bind_rows(., .id = "analysis.name")
-
-a2 <- rbind(a2, data.frame(analysis.name = rep(NA, 8), ES = rep(NA, 8), tau2 = rep(NA, 8))) 
-
-wide <- readxl::read_excel("../data/source/Ml2/meta_analysis_wide.xlsx") %>% 
-  filter(`.id` == "nomod_uni") %>% 
-  select(analysis.name, tau2) %>% 
-  arrange(analysis.name)
-
-a2 %>% bind_cols(wide) %>% mutate(tau2 = sqrt(tau2))
-
-#**********************
-##Here - progress 2019-10-09----: 
-#I have been able to reproduce the taus from Table 3, these correspond to using
-#the correlations and their variance (ESCI.r and ESCI.var.r)
-#However, they seem to indeed be correlations and the effect sizes are not reproduced
-#Instead using the ESCI.d and ESCI.var.d the tau values are completely off 
-#However, the effect sizes are very close, but consistently off by something like .035 SD (rounding?)
-#Or more in some cases (Knobe.1). So not clear how these effect sizes were computed.
-#Maybe I include the original study in my meta-analyses but ML2 doesn't when they report 'global' effect size?
-#-> Doesn't seem to be in the data (which makes sense since taus were correct)
-#Or maybe they just take the average effect size across replications rather than meta-analyze them?
-#-> no, = 1.95 for Knobe.1 then, still too high (should be 1.75)
-
-#I can't seem to resolve this, I've emailed the corresponding author and we'll see if it is worth the effort
-#*************************************************************************
-
-rrr10 <- rrr10 %>% 
-  slice(-c(1, 21)) %>% #drop original effect and meta-analytic summmary from data
-  rename(Site = authors, #rename variables to consistent names
-         outcome_t1 = mean1, #mean treatment group
-         ntreatment = n1,
-         outcome_c1 = mean2,#mean control group
-         ncontrol = n2,
-         effect_size = means, #Mean difference
-         outcome_c2 = se) %>%  #standard error of the difference 
-  mutate(rp = "RRR10", #Add some descriptive information
-         effect = "Moral reminder", 
-         in_lab = 1, # All participants in large group of 50 people
-         B_or_W = "Between", 
-         design = "control vs. treatment", 
-         or_stat_test = "ANOVA", #No particular test, just looked at the effect and CI
-         effect_type = "Raw mean difference",
-         outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
-         Ntotal = ntreatment + ncontrol,
-         outcome_t2 = NA, #only have sE of the effect (difference of means) and no SDs, so nothing for this variable
-         country = c("HUN", #country for each lab from https://osf.io/uskr8/, Aczel
-                     "CAN", #Birt
-                     "USA", #Evans
-                     "PRT", #Ferreira-Santos
-                     "GBR", #Iraizoz
-                     "AUS", #Holzmeister
-                     "ISR", #Rozmann
-                     "SWE", #Koppel
-                     "FRA", #Laine
-                     "GER", #Loschelder
-                     "USA", #McCarthy
-                     "NLD", #Meijer
-                     "TUR", #özdogru
-                     "GER", #Suchotzki
-                     "FRA", #Sutan
-                     "NLD", #Vanpaemel
-                     "NLD", #Veschuere
-                     "USA", #Wick
-                     "USA")) %>% #Wiggins
-  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
-
-#******************************************
-#[10] Collate and save data ----
+#[12] Collate and save data ----
 #******************************************
 
 effects <- rbind(ml1, ml2, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8, rrr9, rrr10)
