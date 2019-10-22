@@ -156,7 +156,7 @@ for(i in seq_along(tnames)){
                        "USA", "USA", "CAN", rep("USA", 8), "POL", "POL", rep("USA", 3), "NLD", "USA",
                        "ITA", rep("USA", 6))) %>% 
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 teffects <- do.call("rbind", teffects) #bind into one dataframe
@@ -221,7 +221,7 @@ chieffects[[i]] <- chieffects[[i]] %>%
                      "USA", "USA", "CAN", rep("USA", 8), "POL", "POL", rep("USA", 3), "NLD", "USA",
                      "ITA", rep("USA", 6))) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 chieffects <- do.call("rbind", chieffects) #combine into one dataframe
@@ -258,7 +258,7 @@ math_art <- math_art %>%
                      "USA", "USA", "CAN", rep("USA", 7), "POL", "POL", rep("USA", 3), "NLD", "USA", #rep USA 7 instead of 8 because of exclusion of qccuny2
                      "ITA", rep("USA", 6))) %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 #******************************************
 #**[1.4] Math explicit/implicit attitude correlation----
@@ -293,7 +293,7 @@ math_cor <- math_cor %>%
                      "USA", "USA", "CAN", rep("USA", 7), "POL", "POL", rep("USA", 3), "NLD", "USA", #rep USA 7 instead of 8 because of exclusion of qccuny2
                      "ITA", rep("USA", 6))) %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 #******************************************
@@ -418,7 +418,7 @@ ml2_smd <- ml2_smd %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 #*****************************************
 #**[2.2] Chi-squre effects (odds ratios)----
@@ -492,7 +492,7 @@ ml2_or <- ml2_or %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 ##NB! Should maybe change the order of outcome_c1 and outcome_t1 in the final select everywhere, right now it makes it confusing for these effects what's what
 #with the Odds ratios
@@ -567,7 +567,7 @@ ml2_r <- ml2_r %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 #*****************************************
@@ -640,7 +640,7 @@ ml2_q <- ml2_q %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 #*****************************************
 #**[2.4] Actions are Choices (Savani et al., 2010)----
@@ -714,7 +714,7 @@ ml2_savani <- ml2_savani %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
@@ -782,7 +782,7 @@ ml2_shafir <- ml2_shafir %>%
                           `Costa Rica` = "CRI",
                           Spain = "ESP")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 #******************************************
@@ -846,7 +846,7 @@ ml3_stroop <- ml3_stroop %>%
          ncontrol = NA,
          country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
@@ -925,7 +925,7 @@ for(i in seq_along(ml3t_names)){
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 ml3t <- do.call("rbind", ml3t) #bind into dataframe
@@ -970,7 +970,7 @@ for(i in seq_along(nonp_names)){
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 nonp <- do.call("rbind", nonp) #bind together in one dataframe
@@ -1013,7 +1013,7 @@ for(i in seq_along(internames)){
            country = if("mTurk" %in% Site) {c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")} #if dataframe includes mturk sample add one country label for that sample
                      else{c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA")}) %>%
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 inter <- do.call("rbind", inter) #bind together in one dataframe
@@ -1047,7 +1047,7 @@ cons_cor <- cons_cor %>%
          ncontrol = NA,
          country = c("USA","USA", "CAN", rep("USA", 14), "CAN", "USA", "USA", "USA")) %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment, outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 #******************************************
@@ -1118,7 +1118,7 @@ for(i in seq_along(files)){
                             Australia = "AUS",
                             Netherlands = "NLD")) %>% 
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 rrr1_2 <- do.call("rbind", rrr1_2)
@@ -1172,7 +1172,7 @@ rrr3[[i]] <- rrr3[[i]] %>%
          effect_size = outcome_t1 - outcome_c1,
          country = c(rep("USA", 3), "CAN", "USA", "CAN", rep("USA", 6))) %>% #Country information taken from Table 1 of paper http://journals.sagepub.com/doi/pdf/10.1177/1745691615605826
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 rrr3 <- do.call("rbind", rrr3) #combine into one dataframe
@@ -1214,7 +1214,7 @@ rrr4 <- rrr4 %>%
          country = c("CAN", rep("USA", 4), "CAN", "AUS", "USA", "USA", "NZL", "USA","NLD", #Add country indicators, country info taken from Table 1 in paper
                      "NLD", "DEU", "DEU", "FRA", "NLD", "DEU", "NLD", "BEL", "CHE", "DEU", "IDN")) %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 #******************************************
@@ -1328,7 +1328,7 @@ for(dv in seq_along(rrr5_names)){ #for each DV
            Ntotal = ncontrol + ntreatment,
            effect_size = outcome_t1 - outcome_c1) %>% 
     select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-           ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+           ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 }
 
 rrr5 <- do.call(rbind, rrr5) #combine into one dataframe
@@ -1347,7 +1347,7 @@ setwd(wd_path) #Reset working directory
 #Extract data
 rrr6 <- read.csv("../data/source/RRR6/resultsFacialFeedbackReplication.csv", stringsAsFactors = FALSE)
 f <- "http://journals.sagepub.com/doi/pdf/10.1177/1745691616674458" #For extracting Table 1 from paper to get info on country for each lab
-country <- extract_tables(f, pages = 5, method = "data.frame") #Note that if we do not care about group sample sizes, this table contain all other information
+country <- extract_tables(f, pages = 5, output = "data.frame") #Note that if we do not care about group sample sizes, this table contain all other information
 
 #Clean and format data
 country <- as.data.frame(country) %>%
@@ -1385,7 +1385,7 @@ rrr6 <- rrr6 %>%
          effect_type = "Raw mean difference",
          outcomes1_2 = "mean _ SD") %>% #Describes the content of outcome1 and outcome2 variables
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #order variables the same order as elsewhere
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
@@ -1458,7 +1458,7 @@ rrr7 <- rrr7 %>%
          effect_size = outcome_t1 - outcome_c1) %>% ##%Note that because Table 2 of the article contains rounded values these effect sizes are not exactly the same as those reported in Figure 1 in the paper
   left_join(., labs, by = "Site") %>% #add country information for each lab
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
@@ -1531,11 +1531,10 @@ rrr8 <- rrr8 %>%
                           Singapore = "SGP",
                           Spain = "ESP"))  %>% 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
-#NB! NEW from here
 
 #******************************************
 #[10] RRR9 ----
@@ -1590,7 +1589,7 @@ rrr9 <- rrr9 %>%
                      "USA"), #Wiggins
          Site = tolower(Site)) %>% #Make site-names lower-case 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 #******************************************
 #[11] RRR10 ----
@@ -1646,7 +1645,7 @@ rrr10 <- rrr10 %>%
                      "USA", #Wick
                      "USA")) %>% #Wiggins
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ncontrol, ntreatment,outcomes1_2, outcome_c1, outcome_t1, outcome_c2, outcome_t2) #select only variables of interest
+         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
 
 
