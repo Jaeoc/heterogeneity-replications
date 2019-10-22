@@ -310,6 +310,14 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 ##Direct link to file with summary data: https://osf.io/j7mhf/
 ##The relevant data file was identified in the meta-analysis script ("ML2_meta_analyses_simple.R") on line 32: https://osf.io/4akjw/
 
+#Additonal comments: The 'Global effect sizes' reported in ML2 are _not_ meta-analytic effect sizes (rather
+#                    disaggregated effect sizes). For tau-values computed in Table 3 of ML2, the effect sizes
+#                    converted to correlations are used. In general, ML2 first computed relevant test statistics
+#                    for each effect, then fed these to the R-package MBESS to compute non-centrality parameters (ncp)
+#                    and ncp confidence intervals. These were then passed to the R-package compute.es to compute
+#                    all different types of effect sizes. These converted effect sizes are the ones reported in the 
+#                    dataset as e.g., ESCI.r. [personal communication 2019-10-10, Fred Hasselman]. 
+
 #library(dplyr)
 
 #Load data
@@ -318,148 +326,8 @@ ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors =
 #Clean and format data
 ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
-
-#******************************************
-#Here - progress ----
-#Summary of efforts 2019-10-08
-
-#Using the file indicated above does not work when computing rma using stat.cond1.mean and stat.cond1.sd as one would expect
-#this lead to incorrect results
-#However, the file meta_analysis_wide.xlsx was produced by the ML2_meta_analyses_simple.R script and the non-moderator values
-#therein correspond to the (corrected) tau values in Table 3 https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit
-#In the script the variables ESCI.r and ESCI.var.r are used for the meta-analyses
-#Yet in Table 3 ML2 authors claim to report ES and tau as cohen's d values
-#Next step is thus to re-run the meta-analyses using these variables and see if this results in the correct output
-#In which case it is perhaps only that hte variables have very misleading names...
-#We can then compare different stat.cond.mean computations of cohen's d and see which ones are actually correct...
-
-#Other things I've tried today
-#1) Look through the different aggregated data-files available on OSF -> on the Data_Figure_NOweird.csv seems complete
-#2) talked to Robbie and tried to re-run the full analyses -> get errors due to the get.analyses_1.r file which I cannot solve
-#Error in gzfile(file, "rb") : cannot open the connection
-
-
 #******************************************
 
-#ML2_meta_analyses_simple.R
-##nrow(d)>0) & !grepl("Graham|Inbar|Schwarz",an)
-##runs meta-analysis per effect (as indicated by analysis.name variable)
-#does not include any effects with zero rows or the Graham|Inbar|Schwarz effects
-#length(unique(ml2$analysis.name)) gives 28 effects -> double-check in paper that this was how many they had
-#The variable ESCI.r is used as effect size and ESCI.var.r as its variance for the meta-analyses
-#did they convert everything to correlations for the analysis? 
-#No, they convert everything to cohen's d for the heterogeneity analysis (Table 3), or Cohen's Q for the Inbar and Schwarz effects
-
-#Should 1) extract all SMD effects, and then the data for each effect. As long as I have the raw info metafor can do the SMD conversion
-
-##SMD effects
-ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd))
-length(unique(ml2_smd$analysis.name)) #23 effects i.e., the remaining 5 effects are OR (checked 2019-10-08)
-
-# [1] "Structure & Goal Pursuit (Kay et al., 2014)"      #SMD
-# [2] "Moral Foundations (Graham et al., 2009)"          #r
-# [3] "Priming Consumerism (Bauer et al., 2012)"         #SMD
-# [4] "Correspondence Bias (Miyamoto & Kitayama, 2002)"  #SMD
-# [5] "Disgust & Homophobia (Inbar et al., 2009)"        #q difference between r
-# [6] "Incidental Anchors (Critcher & Gilovich, 2008)"   #SMD
-# [7] "Social Value Orientation (Van Lange et al., 1997)" #r
-# [8] "SMS & Well-Being (Anderson et al., 2012)"         #SMD
-# [9] "False Consensus 1 (Ross et al., 1977)"            #%,, two groups, compare what % they answer, maybe SMD?
-# [10] "False Consensus 2 (Ross et al., 1977)"            #% same as above, maybe SMD
-# [11] "Position & Power (Giessner & Schubert, 2007)"     #SMD
-# [12] "Intuitive Reasoning (Norenzayan et al., 2002)"    #SMD 
-# [13] "Less is Better (Hsee, 1998)"                      #SMD
-# [14] "Moral Typecasting (Gray & Wegner, 2009)"          #SMD
-# [15] "Moral Cleansing (Zhong & Liljenquist, 2006)"      #SMD
-# [16] "Assimilation & Contrast (Schwarz et al., 1991)"   #q (difference between r)
-# [17] "Choosing or Rejecting (Shafir, 1993)"             #Sum of prob (%) different from 100%, strange one
-# [18] "Intentional Side-Effects (Knobe, 2003)"           #SMD
-# [19] "Direction & Similarity (Tversky & Gati, 1978)"    #SMD
-# [20] "Direction & SES (Huang et al., 2014)"             #SMD
-# [21] "Incidental Disfluency (Alter et al., 2007)"       #SMD
-# [22] "Tempting Fate (Risen & Gilovich, 2008)"           #SMD
-# [23] "Priming Warmth (Zaval et al., 2014)"              #SMD
-
-ml2_smd <- ml2_smd %>% filter(! analysis.name %in% c("Graham.1", "Inbar.1a", "vanLange.1", "Shafir.1", "Schwarz.1a"))
-
-a <- ml2_smd %>% 
-  split(.$analysis.name) %>% 
-  lapply(., function(x) rma(yi = x$ESCI.r, vi = x$ESCI.var.r, method = "REML"))
-
-a2 <- a %>% lapply(., function(x) data.frame(ES = x$b, tau2 = x$tau2)) %>% 
-  bind_rows(., .id = "analysis.name")
-
-a2 <- rbind(a2, data.frame(analysis.name = rep(NA, 7), ES = rep(NA, 7), tau2 = rep(NA, 7))) 
-
-wide <- readxl::read_excel("../data/source/Ml2/meta_analysis_wide.xlsx") %>% 
-  filter(`.id` == "nomod_uni") %>% 
-  select(analysis.name, tau2) %>% 
-  arrange(analysis.name)
-
-a2 %>% bind_cols(wide) %>% mutate(tau2 = tau2)
-
-#**********************
-##Here - progress 2019-10-09----: 
-#I have been able to reproduce the taus from Table 3, these correspond to using
-#the correlations and their variance (ESCI.r and ESCI.var.r)
-#However, they seem to indeed be correlations and the effect sizes are not reproduced
-#Instead using the ESCI.d and ESCI.var.d the tau values are completely off 
-#However, the effect sizes are very close, but consistently off by something like .035 SD (rounding?)
-#Or more in some cases (Knobe.1). So not clear how these effect sizes were computed.
-#Maybe I include the original study in my meta-analyses but ML2 doesn't when they report 'global' effect size?
-#-> Doesn't seem to be in the data (which makes sense since taus were correct)
-#Or maybe they just take the average effect size across replications rather than meta-analyze them?
-#-> no, = 1.95 for Knobe.1 then, still too high (should be 1.75)
-
-#I can't seem to resolve this, I've emailed the corresponding author and we'll see if it is worth the effort
-#*************************************************************************
-#Attempt after Fred Hasselman's email 10-10-2019
-
-huang <- ml2_smd %>% filter(analysis.name == "Huang.1")
-head(huang[, grepl("test\\.", names(huang))])
-head(huang[, grepl("ESCI\\.", names(huang))])
-
-OR <- ml2 %>% filter(is.na(stat.cond1.sd))
-head(OR[, grepl("stat\\.", names(OR))])
-head(OR[, grepl("test\\.", names(OR))])
-
-strangers <- ml2_smd %>% filter(analysis.name %in% c("Graham.1", "Inbar.1a", "vanLange.1", "Shafir.1", "Schwarz.1a"))
-#Gramham = correlation, (which can be computed from means and SD in the two groups)
-#inbar = Difference between correlations, q, 4 means and SDs
-#vanLange = correlation (which can be computed from means and SD in the two groups)
-#shafir = wtf? Ok, think similar to an OR, we have 4 categories with results
-#Schwarz.1a = difference between correlations, q, 4 means and SDs
-
-#Double-check which those excluded in simple.met
-31+36+50+41 = 158
-41 + 50 + 36 + 31 = 158
-0.4251243
-67/158 = 0.42405
-77/158
-81
-36/77 #.4675%
-31/81 #38.27
-#Can't seem to figure out shafir, email and ask
-5.562500 - 5.568627
-
-#Need to double-check the strangers taus
-strangers %>% filter(analysis.name == "Schwarz.1a") %>% 
-  rma(yi = .$ESCI.r, vi = .$ESCI.var.r, method = "REML")
-#Graham and vanLange1 are fine
-#shafir as well
-#Inbar and Schwarz (the cohen's q effects) don't run as all the others, can't find how to meta-analyze this
-
-#Emailed Frank about cohen's q and Shafir 2019-10-11
-
-
-##What information do I need to extract?
-#1) for table 3 I wish to do the analysis the same way they did -> use the correlations to run meta-analysis
-#However, these correlations are based on converted t-test values and for our secondary analysis we want 
-#untransformed values. Such that 
-#2) I need to download the mean and standard deviation of each effect as well.
-#If I save the effect size variable as the correlation I can get all of this
-
-#*****************************************
 #**[2.1] t-test effects----
 #*****************************************
 #Effects extracted in this section
