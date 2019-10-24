@@ -739,7 +739,6 @@
 "ML2","Correspondence Bias","zhejiang","CHN",NA,"86","Between","control vs. treatment","t-test","r","0.6449",44,42,"mean _ SD",4.54545454545455,0.0158562367864693,4.17887569977439,1.84608608321456
 "ML2","Incidental Anchors","aus","ARE","lab","85","Between","control vs. treatment","t-test","r","-0.02867",50,35,"mean _ SD",54.72,55.8571428571429,19.9642946588275,19.4212480018556
 "ML2","Incidental Anchors","badaniaon","POL","online","34","Between","control vs. treatment","t-test","r","0.21425",18,16,"mean _ SD",52.5,41.5,28.8632679247191,21.8174242292714
-"ML2","Incidental Anchors","bc","USA","lab","78","Between","control vs. treatment","t-test","r","0",39,39,"mean _ SD",52.0512820512821,52.0512820512821,18.6504532440321,18.6504532440321
 "ML2","Incidental Anchors","bilgi","TUR","online","147","Between","control vs. treatment","t-test","r","-0.03174",71,76,"mean _ SD",39.4225352112676,40.7368421052632,18.9191225799499,22.4578826078522
 "ML2","Incidental Anchors","brasilia","BRA","lab","95","Between","control vs. treatment","t-test","r","0.03404",47,48,"mean _ SD",52.8085106382979,51.2291666666667,22.5982283817659,24.2243411814183
 "ML2","Incidental Anchors","cas","CHN","lab","49","Between","control vs. treatment","t-test","r","0.17208",25,24,"mean _ SD",55.02,45.8833333333333,25.5140810795399,27.8776155593581
@@ -762,13 +761,11 @@
 "ML2","Incidental Anchors","navarra","ESP","online","51","Between","control vs. treatment","t-test","r","0.2447",25,26,"mean _ SD",49.28,38.0153846153846,22.7953211573486,22.7330190218139
 "ML2","Incidental Anchors","ntnu","TWN","lab","71","Between","control vs. treatment","t-test","r","0.01425",32,39,"mean _ SD",46.84375,46.1358974358974,22.9165518081188,26.7107162328795
 "ML2","Incidental Anchors","occid","USA","lab","66","Between","control vs. treatment","t-test","r","0.1074",33,33,"mean _ SD",51.2727272727273,47.6060606060606,17.4951291922794,16.9686096107257
-"ML2","Incidental Anchors","plu","USA","lab","96","Between","control vs. treatment","t-test","r","0",48,48,"mean _ SD",57.7916666666667,57.7916666666667,16.7076977205289,16.7076977205289
 "ML2","Incidental Anchors","potsdam","DEU","online","91","Between","control vs. treatment","t-test","r","0.01711",48,43,"mean _ SD",40.4166666666667,39.7674418604651,19.7018557645562,18.5290469640332
 "ML2","Incidental Anchors","pscio","URY","lab","79","Between","control vs. treatment","t-test","r","0.00599",39,40,"mean _ SD",62.3333333333333,62.1,18.680602567388,20.7126865619935
 "ML2","Incidental Anchors","psuabington","USA","lab","81","Between","control vs. treatment","t-test","r","0.22399",42,39,"mean _ SD",58.452380952381,47.6923076923077,19.2673138874287,27.1546776489544
 "ML2","Incidental Anchors","psumain","USA","lab","78","Between","control vs. treatment","t-test","r","0.1837",41,37,"mean _ SD",49.7317073170732,41.8378378378378,21.8540893086899,20.8146763306747
 "ML2","Incidental Anchors","purkyne","CZE","lab","137","Between","control vs. treatment","t-test","r","0.09561",68,69,"mean _ SD",39.9264705882353,35.9463768115942,20.0762101558786,21.6266079287295
-"ML2","Incidental Anchors","sandiegosu","USA","lab","186","Between","control vs. treatment","t-test","r","0",93,93,"mean _ SD",56.0107526881721,56.0107526881721,20.808910415689,20.808910415689
 "ML2","Incidental Anchors","santiagoon","CHL","online","57","Between","control vs. treatment","t-test","r","0.05527",29,28,"mean _ SD",61.6206896551724,59.4285714285714,18.1981431413511,22.0007214888909
 "ML2","Incidental Anchors","swps","POL","lab","93","Between","control vs. treatment","t-test","r","-0.21006",45,48,"mean _ SD",43.6,53.3333333333333,22.5180735491213,23.2262995956696
 "ML2","Incidental Anchors","tamu","USA","lab","97","Between","control vs. treatment","t-test","r","0.21864",48,49,"mean _ SD",60.0208333333333,50,21.6809452405753,23.4556318752377
@@ -776,24 +773,17 @@
 "ML2","Incidental Anchors","tilburgcaf","NLD",NA,"78","Between","control vs. treatment","t-test","r","0.19624",39,39,"mean _ SD",43.8717948717949,37.5384615384615,16.0413601719848,16.0178291351365
 "ML2","Incidental Anchors","tilburgcomm","NLD","online","103","Between","control vs. treatment","t-test","r","0.14737",52,51,"mean _ SD",42.2884615384615,36.6274509803922,20.6808963078618,17.5259359628109
 "ML2","Incidental Anchors","toronto","CAN","lab","341","Between","control vs. treatment","t-test","r","0.04576",181,160,"mean _ SD",54.5092817679558,52.525,20.7934411142111,22.6476844304863
-"ML2","Incidental Anchors","tufts","USA","lab","92","Between","control vs. treatment","t-test","r","0",46,46,"mean _ SD",54.5,54.5,19.2038769233946,19.2038769233946
 "ML2","Incidental Anchors","ubc","CAN","lab","82","Between","control vs. treatment","t-test","r","0.08015",38,44,"mean _ SD",51.421052631579,48.1818181818182,20.2693105510121,20.3986692763338
 "ML2","Incidental Anchors","ucron","CRI","online","95","Between","control vs. treatment","t-test","r","-0.02009",47,48,"mean _ SD",56.7446808510638,57.7291666666667,22.9493469501729,26.4041740602015
 "ML2","Incidental Anchors","udd","CHL","lab","92","Between","control vs. treatment","t-test","r","-0.0668",51,41,"mean _ SD",59.4509803921569,62.4390243902439,22.8983088681153,21.8266451619206
-"ML2","Incidental Anchors","ufl","USA","lab","100","Between","control vs. treatment","t-test","r","0",50,50,"mean _ SD",48.88,48.88,21.635798000121,21.635798000121
-"ML2","Incidental Anchors","uiuc","USA","lab","194","Between","control vs. treatment","t-test","r","0",97,97,"mean _ SD",53.0515463917526,53.0515463917526,20.8098389860525,20.8098389860525
 "ML2","Incidental Anchors","umich","USA","lab","87","Between","control vs. treatment","t-test","r","-0.02344",49,38,"mean _ SD",49.0204081632653,50,21.2156485052095,20.6279789003555
 "ML2","Incidental Anchors","unam","MEX","online","140","Between","control vs. treatment","t-test","r","0.05929",79,61,"mean _ SD",57.4683544303798,55,20.1149487994899,21.5630857408365
 "ML2","Incidental Anchors","unibelgrade","SRB","lab","79","Between","control vs. treatment","t-test","r","-0.09554",41,38,"mean _ SD",46.8048780487805,50.921052631579,21.8531685485139,21.5398832827616
 "ML2","Incidental Anchors","uniporto","PRT","online","36","Between","control vs. treatment","t-test","r","-0.07136",21,15,"mean _ SD",31.5714285714286,35,23.5511601170121,25.3546276418555
-"ML2","Incidental Anchors","uva","USA","lab","78","Between","control vs. treatment","t-test","r","0",39,39,"mean _ SD",50.5641025641026,50.5641025641026,18.4230903056533,18.4230903056533
 "ML2","Incidental Anchors","vuamsterdam","NLD","lab","94","Between","control vs. treatment","t-test","r","0.19267",42,52,"mean _ SD",45.0238095238095,38.2884615384615,15.7627038896902,18.3392181697291
 "ML2","Incidental Anchors","vuw","NZL","online","99","Between","control vs. treatment","t-test","r","-0.05139",44,55,"mean _ SD",56.4545454545455,58.2727272727273,20.183408504471,15.518751555188
-"ML2","Incidental Anchors","washlee","USA","lab","98","Between","control vs. treatment","t-test","r","0",49,49,"mean _ SD",55.0816326530612,55.0816326530612,21.2640509768383,21.2640509768383
-"ML2","Incidental Anchors","wilfredlaur","CAN","lab","96","Between","control vs. treatment","t-test","r","0",48,48,"mean _ SD",50.8125,50.8125,19.1773983215393,19.1773983215393
 "ML2","Incidental Anchors","williampat","USA","lab","119","Between","control vs. treatment","t-test","r","-0.15348",50,69,"mean _ SD",50.248,56.8985507246377,23.7242168533784,19.3938626795545
 "ML2","Incidental Anchors","winchester","GBR","lab","136","Between","control vs. treatment","t-test","r","-0.09295",71,65,"mean _ SD",48.5352112676056,51.9538461538462,19.0456826648197,17.7292402978374
-"ML2","Incidental Anchors","wpi","USA","lab","76","Between","control vs. treatment","t-test","r","0",38,38,"mean _ SD",50.6842105263158,50.6842105263158,22.8036332609614,22.8036332609614
 "ML2","Incidental Anchors","wroclaw","POL","lab","90","Between","control vs. treatment","t-test","r","-0.03207",39,51,"mean _ SD",48.6153846153846,50.1372549019608,23.9314980557065,23.6440433156794
 "ML2","Incidental Anchors","zhejiang","CHN",NA,"62","Between","control vs. treatment","t-test","r","0.21538",31,31,"mean _ SD",48.0806451612903,36.1521935483871,29.2250169016756,25.636053957164
 "ML2","SMS & Well-Being","aus","ARE","lab","84","Between","control vs. treatment","t-test","r","0.04748",39,45,"mean _ SD",0.0356058328419149,-0.0308583884629931,0.809437841670206,0.602013723099648

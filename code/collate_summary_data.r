@@ -312,7 +312,11 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 
 #Additonal comments: The 'Global effect sizes' reported in ML2 are _not_ meta-analytic effect sizes (rather
 #                    disaggregated effect sizes). For tau-values computed in Table 3 of ML2, the effect sizes
-#                    converted to correlations are used. In general, ML2 first computed relevant test statistics
+#                    converted to correlations are used. However, note that at the time of writing (2019-10-24) the
+#                    tau-values in ML2 Table 3 are not correct, and an corrigendum will likely be issued. Correct 
+#                    results can currently be found at the following link keeping track of analysis errors:
+#                    https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit
+#                    In general, ML2 first computed relevant test statistics
 #                    for each effect, then fed these to the R-package MBESS to compute non-centrality parameters (ncp)
 #                    and ncp confidence intervals. These were then passed to the R-package compute.es to compute
 #                    all different types of effect sizes. These converted effect sizes are the ones reported in the 
@@ -352,6 +356,9 @@ ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 3
 # [18] "Priming Warmth (Zaval et al., 2014)"   
 #**************
 
+
+
+
 ##SMD effects
 ml2_smd <- ml2 %>% filter(!is.na(stat.cond1.sd)) #drop all effects withouth standard deviation (= 4 odds ratio effects, 1 regression effect)
 ml2_smd <- ml2_smd %>% #Drop remaining non-standard SMD effects
@@ -360,6 +367,20 @@ ml2_smd <- ml2_smd %>% #Drop remaining non-standard SMD effects
                                "vanLange.1", #correlation r
                                "Shafir.1", #strange effect 
                                "Schwarz.1a")) #difference between correlations q
+
+
+#EDIT 2019-10-24
+#Apparently the effect sizes for those labs in the Critcher study who did the study using pencil/paper are incorrect
+#(Personal communication Rick Klein: 24-10-2019)
+#The effect sizes in these cases have accidentially been copied between two columns resulting in the effect size -> 0
+#Although Rick Klein stated that the original effect size was quite small for these studies about 0.1 SD
+#To ensure the quality of our analysis we exclude these studies, although we will lose data for 10/59 labs
+#This also means the results for Critchet will not be exactly those reported by ML2 table 3 even once it's been corrected
+#(see ML2 erratum https://docs.google.com/document/d/1b7MTOAiB7NPWlYBnwkhNTsj9i-upDMODgQ9t_djjSz8/edit [2019-10-24]
+
+#NB! Now re-save ML2 data, also check everything so that r-values are always saved, except for cohen's q effects
+critcher_pencil <- ml2_smd %>% filter(analysis.name == "Critcher.1" & grepl("Yes", source.Pencil))
+ml2_smd <- anti_join(ml2_smd, critcher_pencil) #return all rows in ml2_smd without matching values in critcher_pencil
 
 
 ml2_smd <- ml2_smd %>% 
@@ -494,8 +515,6 @@ ml2_or <- ml2_or %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2) #select only variables of interest
 
-##NB! Should maybe change the order of outcome_c1 and outcome_t1 in the final select everywhere, right now it makes it confusing for these effects what's what
-#with the Odds ratios
 
 #*****************************************
 #**[2.3] Correlations----
@@ -505,7 +524,6 @@ ml2_or <- ml2_or %>%
 # [2] "Social Value Orientation (Van Lange et al., 1997)" 
 #**************
 
-#NB! Check with Marcel about this converting to non-central statistic and then to correlation in this case and what it means
 
 ml2_r <- ml2 %>%  filter(analysis.name %in% c("Graham.1", "vanLange.1")) 
 
@@ -725,7 +743,7 @@ ml2_savani <- ml2_savani %>%
 #******************************************
 ml2_shafir <- ml2 %>% filter(analysis.name == "Shafir.1") #strange effect, summed percentage different from 100%
 
-#could not make sense of this one so saved as its correlation data
+#could not make sense of this one, simply saved data to run meta-analyses
 ml2_shafir <- ml2_shafir %>% 
   rename(effect = study.description, #rename variables to consistent names
          Site = study.source, 
