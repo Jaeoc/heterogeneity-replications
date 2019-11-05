@@ -57,6 +57,31 @@ simulate_I2 <- function(effect, reps, tau, effect_size){ #this function applies 
       }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
     }
     
+  }else if(effect$type == "q"){ #If difference between correlations (cohen's q)
+    n_c <- effect$ncontrol #observed control group sizes
+    n_t <- effect$ntreatment #observed treatment group sizes
+    
+    for(t in seq_along(tau)){ #loop over each tau-value
+      
+      output[[t]] <- map_dfr(1:reps, possibly(function(x){ #For each tau-value repeat below "reps" times and bind into dataframe
+        
+        rho <- switch(effect_size, #Draw true difference in correlation rho for each k at the given value of tau and with specified effect size
+                      zero = rnorm(n = K, mean = 0, sd = tau[t]),
+                      small = rnorm(n = K, mean = 0.1, sd = tau[t]),
+                      medium = rnorm(n = K, mean = 0.3, sd = tau[t]),
+                      large = rnorm(n = K, mean = 0.5, sd = tau[t]))
+        
+        var_fr <- 1/(n_t - 3) + 1/(n_c -3) #variances of observed difference in correlations q for each K
+        fr <- rnorm(n = K, mean = rho, sd = sqrt(var_fr)) #draw observed difference in correlations (fisher's z) for each k
+        
+        fit <- rma(yi = fr, vi = var_fr, method = "REML") #meta-analysis of difference in fisher's z, each study weighted by its N
+        
+        data.frame(I2 = fit$I2, Qp = fit$QEp, ci.lb = confint(fit)$random[3, 2], 
+                   tau = tau[t], tau_index = t)
+        
+      }, otherwise = NULL)) #If rma does not converge, drop that iteration ('possibly' function)
+    }
+    
   }else if(effect$type == "d"){ #That is, for SMD and odds ratios
     
     n_c <- effect$ncontrol #observed control group sizes
@@ -148,7 +173,7 @@ set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 1e3, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 36 hours on my (fairly slow) machine
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 36 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "../data/tau_simulation_results.RDS") #save ocassionally and at finish
 })
