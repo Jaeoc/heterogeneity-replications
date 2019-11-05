@@ -482,7 +482,7 @@ ml2_or <- ml2_or %>%
            effect == "Affect & Risk" ~ "count moviestar (low, certain) _ count money (low, certain)", #I use the parentheses to clarify here because there is no clear treatment/control division
            effect == "Trolley Dilemma 1" ~ "count yes (side effect, greater good) _ count no (side effect, greater good)",
            effect == "Framing" ~ "count yes (cheap, costly) _ count no (cheap, costly)",
-           effect == "Trolley Dilemma  2" ~  "count yes (side effect, greater good) _ count no (side effect, greater good)"),
+           effect == "Trolley Dilemma 2" ~  "count yes (side effect, greater good) _ count no (side effect, greater good)"),
          country = recode(country, #Recode country names to official three letter acronyms for consistency
                           Hungary = "HUN", #
                           'United Arab Emirates' = "ARE", #

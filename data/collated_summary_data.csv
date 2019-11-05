@@ -1766,66 +1766,66 @@
 "ML2","Framing","vuw","NZL","online",100,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04026,55,45,"count yes (cheap, costly) _ count no (cheap, costly)",15,11,40,34,0.01603
 "ML2","Framing","westernkentucky","USA","lab",161,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.34709,84,77,"count yes (cheap, costly) _ count no (cheap, costly)",51,22,33,55,0.00587
 "ML2","Framing","yale","USA","online",282,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.30024,137,145,"count yes (cheap, costly) _ count no (cheap, costly)",51,23,86,122,0.00475
-"ML2","Trolley Dilemma 2","amity","IND","lab",147,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.05119,72,75,NA,36,41,36,34,0.00825
-"ML2","Trolley Dilemma 2","amityon","IND","online",44,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.20103,22,22,NA,11,15,11,7,0.02628
-"ML2","Trolley Dilemma 2","armstrong","USA","lab",80,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.25842,39,41,NA,28,20,11,21,0.01385
-"ML2","Trolley Dilemma 2","aus2","ARE","lab",177,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.14716,82,95,NA,42,36,40,59,0.00666
-"ML2","Trolley Dilemma 2","badaniaon","POL","online",42,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.049,20,22,NA,10,10,10,12,0.02892
-"ML2","Trolley Dilemma 2","bogota","COL","lab",102,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13293,53,49,NA,40,32,13,17,0.01383
-"ML2","Trolley Dilemma 2","brookcuny","USA","online",175,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16518,97,78,NA,64,40,33,38,0.0068
-"ML2","Trolley Dilemma 2","carleton","CAN","online",121,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16451,58,63,NA,38,32,20,31,0.00979
-"ML2","Trolley Dilemma 2","cas","CHN","lab",48,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10109,24,24,NA,9,7,15,17,0.02796
-"ML2","Trolley Dilemma 2","csunorthonline","USA","online",88,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11407,47,41,NA,30,22,17,19,0.0139
-"ML2","Trolley Dilemma 2","fmkbelgrade","SRB","lab",103,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10244,44,59,NA,22,24,22,35,0.01186
-"ML2","Trolley Dilemma 2","georgefox","USA","online",135,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16853,78,57,NA,55,32,23,25,0.00926
-"ML2","Trolley Dilemma 2","grazvienna","USA","online",101,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04393,47,54,NA,21,22,26,32,0.0123
-"ML2","Trolley Dilemma 2","hawaiion","USA","online",121,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06258,66,55,NA,42,32,24,23,0.01053
-"ML2","Trolley Dilemma 2","help","MYS","lab",90,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.33881,43,47,NA,33,22,10,25,0.01137
-"ML2","Trolley Dilemma 2","isb","IND","lab",183,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04222,90,93,NA,63,62,27,31,0.00766
-"ML2","Trolley Dilemma 2","jmu","USA","online",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.1698,41,45,NA,31,28,10,17,0.01579
-"ML2","Trolley Dilemma 2","jos","NGA","lab",94,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.01882,39,55,NA,35,49,4,6,0.03535
-"ML2","Trolley Dilemma 2","kenyon","USA","lab",106,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.19107,49,57,NA,34,30,15,27,0.01131
-"ML2","Trolley Dilemma 2","krakowon","POL","online",99,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05094,48,51,NA,21,20,27,31,0.01259
-"ML2","Trolley Dilemma 2","kwazulu","ZAF","lab",76,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.25953,39,37,NA,28,18,11,19,0.01448
-"ML2","Trolley Dilemma 2","louvain","BEL","lab",100,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06909,51,49,NA,24,20,27,29,0.01222
-"ML2","Trolley Dilemma 2","loyola","USA","lab",292,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.26753,144,148,NA,100,67,44,81,0.00365
-"ML2","Trolley Dilemma 2","lse","GBR","lab",110,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09101,44,66,NA,23,29,21,37,0.01131
-"ML2","Trolley Dilemma 2","mcdanielonline","USA","online",158,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.03655,77,81,NA,49,49,28,32,0.00816
-"ML2","Trolley Dilemma 2","metu","TUR","online",126,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.15667,66,60,NA,37,25,29,35,0.00917
-"ML2","Trolley Dilemma 2","moralsense","USA","online",830,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.1901,416,414,NA,298,230,118,184,0.00147
-"ML2","Trolley Dilemma 2","mturk","USA","online",340,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.18503,157,183,NA,104,91,53,92,0.00345
-"ML2","Trolley Dilemma 2","mturk_india","IND","online",361,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05661,164,197,NA,114,128,50,69,0.00384
-"ML2","Trolley Dilemma 2","munich","DEU","lab",84,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11105,43,41,NA,20,15,23,26,0.01454
-"ML2","Trolley Dilemma 2","munichon","DEU","lab",213,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09227,120,93,NA,63,41,57,52,0.00571
-"ML2","Trolley Dilemma 2","northumbria","GBR","lab",79,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10852,42,37,NA,20,14,22,23,0.01543
-"ML2","Trolley Dilemma 2","osnabruck","DEU","lab",84,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.02018,51,33,NA,21,13,30,20,0.01578
-"ML2","Trolley Dilemma 2","ouhk","HKG","lab",68,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06726,31,37,NA,17,18,14,19,0.01787
-"ML2","Trolley Dilemma 2","padua","ITA","lab",77,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.12544,37,40,NA,20,17,17,23,0.0153
-"ML2","Trolley Dilemma 2","pascal","FRA","online",168,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.0266,85,83,NA,43,44,42,39,0.00724
-"ML2","Trolley Dilemma 2","psualtoona","USA","lab",175,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10831,82,93,NA,56,55,26,38,0.00739
-"ML2","Trolley Dilemma 2","puc","CHL","online",80,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.18046,43,37,NA,29,19,14,18,0.01473
-"ML2","Trolley Dilemma 2","queensland2","AUS","lab",137,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.30556,70,67,NA,48,27,22,40,0.00727
-"ML2","Trolley Dilemma 2","radboud","NLD",NA,30,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.07226,15,15,NA,8,9,7,6,0.04082
-"ML2","Trolley Dilemma 2","ritonline","USA","online",85,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.2053,38,47,NA,27,25,11,22,0.01425
-"ML2","Trolley Dilemma 2","rotterdam","NLD","lab",77,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.30878,37,40,NA,27,18,10,22,0.01339
-"ML2","Trolley Dilemma 2","salford","GBR","lab",103,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05362,51,52,NA,28,26,23,26,0.01176
-"ML2","Trolley Dilemma 2","seznam","CZE","lab",83,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04911,45,38,NA,28,22,17,16,0.01528
-"ML2","Trolley Dilemma 2","seznamon","CZE","online",116,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11263,64,52,NA,42,29,22,23,0.01077
-"ML2","Trolley Dilemma 2","simmons","USA","lab",95,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.22614,45,50,NA,33,27,12,23,0.0126
-"ML2","Trolley Dilemma 2","swps","POL","lab",88,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.09841,45,43,NA,20,23,25,20,0.01354
-"ML2","Trolley Dilemma 2","tamu","USA","lab",85,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0,40,45,NA,24,27,16,18,0.01495
-"ML2","Trolley Dilemma 2","tamucc","USA","lab",89,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13787,49,40,NA,35,24,14,16,0.01465
-"ML2","Trolley Dilemma 2","tanzania","TZA","lab",65,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09033,33,32,NA,24,21,9,11,0.0216
-"ML2","Trolley Dilemma 2","tilburg","NLD","lab",94,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.17879,56,38,NA,37,19,19,19,0.01275
-"ML2","Trolley Dilemma 2","tilburgcaf","NLD",NA,81,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.11768,31,50,NA,14,28,17,22,0.01541
-"ML2","Trolley Dilemma 2","ulatina","CRI","lab",206,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16962,109,97,NA,82,60,27,37,0.00647
-"ML2","Trolley Dilemma 2","umich","USA","lab",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.00678,47,39,NA,28,23,19,16,0.01476
-"ML2","Trolley Dilemma 2","uned","ESP","online",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.15221,45,41,NA,33,25,12,16,0.01531
-"ML2","Trolley Dilemma 2","unswonline","AUS","online",97,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.0127,48,49,NA,27,27,21,22,0.0127
-"ML2","Trolley Dilemma 2","vcu","USA","lab",96,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06415,43,53,NA,26,29,17,24,0.01302
-"ML2","Trolley Dilemma 2","vuw","NZL","online",100,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.29984,53,47,NA,39,22,14,25,0.01046
-"ML2","Trolley Dilemma 2","westernkentucky","USA","lab",162,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.22171,83,79,NA,64,47,19,32,0.00789
-"ML2","Trolley Dilemma 2","yale","USA","online",283,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13776,149,134,NA,104,78,45,56,0.00449
+"ML2","Trolley Dilemma 2","amity","IND","lab",147,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.05119,72,75,"count yes (side effect, greater good) _ count no (side effect, greater good)",36,41,36,34,0.00825
+"ML2","Trolley Dilemma 2","amityon","IND","online",44,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.20103,22,22,"count yes (side effect, greater good) _ count no (side effect, greater good)",11,15,11,7,0.02628
+"ML2","Trolley Dilemma 2","armstrong","USA","lab",80,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.25842,39,41,"count yes (side effect, greater good) _ count no (side effect, greater good)",28,20,11,21,0.01385
+"ML2","Trolley Dilemma 2","aus2","ARE","lab",177,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.14716,82,95,"count yes (side effect, greater good) _ count no (side effect, greater good)",42,36,40,59,0.00666
+"ML2","Trolley Dilemma 2","badaniaon","POL","online",42,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.049,20,22,"count yes (side effect, greater good) _ count no (side effect, greater good)",10,10,10,12,0.02892
+"ML2","Trolley Dilemma 2","bogota","COL","lab",102,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13293,53,49,"count yes (side effect, greater good) _ count no (side effect, greater good)",40,32,13,17,0.01383
+"ML2","Trolley Dilemma 2","brookcuny","USA","online",175,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16518,97,78,"count yes (side effect, greater good) _ count no (side effect, greater good)",64,40,33,38,0.0068
+"ML2","Trolley Dilemma 2","carleton","CAN","online",121,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16451,58,63,"count yes (side effect, greater good) _ count no (side effect, greater good)",38,32,20,31,0.00979
+"ML2","Trolley Dilemma 2","cas","CHN","lab",48,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10109,24,24,"count yes (side effect, greater good) _ count no (side effect, greater good)",9,7,15,17,0.02796
+"ML2","Trolley Dilemma 2","csunorthonline","USA","online",88,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11407,47,41,"count yes (side effect, greater good) _ count no (side effect, greater good)",30,22,17,19,0.0139
+"ML2","Trolley Dilemma 2","fmkbelgrade","SRB","lab",103,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10244,44,59,"count yes (side effect, greater good) _ count no (side effect, greater good)",22,24,22,35,0.01186
+"ML2","Trolley Dilemma 2","georgefox","USA","online",135,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16853,78,57,"count yes (side effect, greater good) _ count no (side effect, greater good)",55,32,23,25,0.00926
+"ML2","Trolley Dilemma 2","grazvienna","USA","online",101,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04393,47,54,"count yes (side effect, greater good) _ count no (side effect, greater good)",21,22,26,32,0.0123
+"ML2","Trolley Dilemma 2","hawaiion","USA","online",121,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06258,66,55,"count yes (side effect, greater good) _ count no (side effect, greater good)",42,32,24,23,0.01053
+"ML2","Trolley Dilemma 2","help","MYS","lab",90,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.33881,43,47,"count yes (side effect, greater good) _ count no (side effect, greater good)",33,22,10,25,0.01137
+"ML2","Trolley Dilemma 2","isb","IND","lab",183,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04222,90,93,"count yes (side effect, greater good) _ count no (side effect, greater good)",63,62,27,31,0.00766
+"ML2","Trolley Dilemma 2","jmu","USA","online",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.1698,41,45,"count yes (side effect, greater good) _ count no (side effect, greater good)",31,28,10,17,0.01579
+"ML2","Trolley Dilemma 2","jos","NGA","lab",94,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.01882,39,55,"count yes (side effect, greater good) _ count no (side effect, greater good)",35,49,4,6,0.03535
+"ML2","Trolley Dilemma 2","kenyon","USA","lab",106,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.19107,49,57,"count yes (side effect, greater good) _ count no (side effect, greater good)",34,30,15,27,0.01131
+"ML2","Trolley Dilemma 2","krakowon","POL","online",99,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05094,48,51,"count yes (side effect, greater good) _ count no (side effect, greater good)",21,20,27,31,0.01259
+"ML2","Trolley Dilemma 2","kwazulu","ZAF","lab",76,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.25953,39,37,"count yes (side effect, greater good) _ count no (side effect, greater good)",28,18,11,19,0.01448
+"ML2","Trolley Dilemma 2","louvain","BEL","lab",100,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06909,51,49,"count yes (side effect, greater good) _ count no (side effect, greater good)",24,20,27,29,0.01222
+"ML2","Trolley Dilemma 2","loyola","USA","lab",292,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.26753,144,148,"count yes (side effect, greater good) _ count no (side effect, greater good)",100,67,44,81,0.00365
+"ML2","Trolley Dilemma 2","lse","GBR","lab",110,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09101,44,66,"count yes (side effect, greater good) _ count no (side effect, greater good)",23,29,21,37,0.01131
+"ML2","Trolley Dilemma 2","mcdanielonline","USA","online",158,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.03655,77,81,"count yes (side effect, greater good) _ count no (side effect, greater good)",49,49,28,32,0.00816
+"ML2","Trolley Dilemma 2","metu","TUR","online",126,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.15667,66,60,"count yes (side effect, greater good) _ count no (side effect, greater good)",37,25,29,35,0.00917
+"ML2","Trolley Dilemma 2","moralsense","USA","online",830,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.1901,416,414,"count yes (side effect, greater good) _ count no (side effect, greater good)",298,230,118,184,0.00147
+"ML2","Trolley Dilemma 2","mturk","USA","online",340,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.18503,157,183,"count yes (side effect, greater good) _ count no (side effect, greater good)",104,91,53,92,0.00345
+"ML2","Trolley Dilemma 2","mturk_india","IND","online",361,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05661,164,197,"count yes (side effect, greater good) _ count no (side effect, greater good)",114,128,50,69,0.00384
+"ML2","Trolley Dilemma 2","munich","DEU","lab",84,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11105,43,41,"count yes (side effect, greater good) _ count no (side effect, greater good)",20,15,23,26,0.01454
+"ML2","Trolley Dilemma 2","munichon","DEU","lab",213,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09227,120,93,"count yes (side effect, greater good) _ count no (side effect, greater good)",63,41,57,52,0.00571
+"ML2","Trolley Dilemma 2","northumbria","GBR","lab",79,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10852,42,37,"count yes (side effect, greater good) _ count no (side effect, greater good)",20,14,22,23,0.01543
+"ML2","Trolley Dilemma 2","osnabruck","DEU","lab",84,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.02018,51,33,"count yes (side effect, greater good) _ count no (side effect, greater good)",21,13,30,20,0.01578
+"ML2","Trolley Dilemma 2","ouhk","HKG","lab",68,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06726,31,37,"count yes (side effect, greater good) _ count no (side effect, greater good)",17,18,14,19,0.01787
+"ML2","Trolley Dilemma 2","padua","ITA","lab",77,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.12544,37,40,"count yes (side effect, greater good) _ count no (side effect, greater good)",20,17,17,23,0.0153
+"ML2","Trolley Dilemma 2","pascal","FRA","online",168,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.0266,85,83,"count yes (side effect, greater good) _ count no (side effect, greater good)",43,44,42,39,0.00724
+"ML2","Trolley Dilemma 2","psualtoona","USA","lab",175,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.10831,82,93,"count yes (side effect, greater good) _ count no (side effect, greater good)",56,55,26,38,0.00739
+"ML2","Trolley Dilemma 2","puc","CHL","online",80,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.18046,43,37,"count yes (side effect, greater good) _ count no (side effect, greater good)",29,19,14,18,0.01473
+"ML2","Trolley Dilemma 2","queensland2","AUS","lab",137,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.30556,70,67,"count yes (side effect, greater good) _ count no (side effect, greater good)",48,27,22,40,0.00727
+"ML2","Trolley Dilemma 2","radboud","NLD",NA,30,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.07226,15,15,"count yes (side effect, greater good) _ count no (side effect, greater good)",8,9,7,6,0.04082
+"ML2","Trolley Dilemma 2","ritonline","USA","online",85,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.2053,38,47,"count yes (side effect, greater good) _ count no (side effect, greater good)",27,25,11,22,0.01425
+"ML2","Trolley Dilemma 2","rotterdam","NLD","lab",77,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.30878,37,40,"count yes (side effect, greater good) _ count no (side effect, greater good)",27,18,10,22,0.01339
+"ML2","Trolley Dilemma 2","salford","GBR","lab",103,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.05362,51,52,"count yes (side effect, greater good) _ count no (side effect, greater good)",28,26,23,26,0.01176
+"ML2","Trolley Dilemma 2","seznam","CZE","lab",83,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.04911,45,38,"count yes (side effect, greater good) _ count no (side effect, greater good)",28,22,17,16,0.01528
+"ML2","Trolley Dilemma 2","seznamon","CZE","online",116,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.11263,64,52,"count yes (side effect, greater good) _ count no (side effect, greater good)",42,29,22,23,0.01077
+"ML2","Trolley Dilemma 2","simmons","USA","lab",95,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.22614,45,50,"count yes (side effect, greater good) _ count no (side effect, greater good)",33,27,12,23,0.0126
+"ML2","Trolley Dilemma 2","swps","POL","lab",88,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.09841,45,43,"count yes (side effect, greater good) _ count no (side effect, greater good)",20,23,25,20,0.01354
+"ML2","Trolley Dilemma 2","tamu","USA","lab",85,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0,40,45,"count yes (side effect, greater good) _ count no (side effect, greater good)",24,27,16,18,0.01495
+"ML2","Trolley Dilemma 2","tamucc","USA","lab",89,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13787,49,40,"count yes (side effect, greater good) _ count no (side effect, greater good)",35,24,14,16,0.01465
+"ML2","Trolley Dilemma 2","tanzania","TZA","lab",65,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.09033,33,32,"count yes (side effect, greater good) _ count no (side effect, greater good)",24,21,9,11,0.0216
+"ML2","Trolley Dilemma 2","tilburg","NLD","lab",94,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.17879,56,38,"count yes (side effect, greater good) _ count no (side effect, greater good)",37,19,19,19,0.01275
+"ML2","Trolley Dilemma 2","tilburgcaf","NLD",NA,81,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",-0.11768,31,50,"count yes (side effect, greater good) _ count no (side effect, greater good)",14,28,17,22,0.01541
+"ML2","Trolley Dilemma 2","ulatina","CRI","lab",206,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.16962,109,97,"count yes (side effect, greater good) _ count no (side effect, greater good)",82,60,27,37,0.00647
+"ML2","Trolley Dilemma 2","umich","USA","lab",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.00678,47,39,"count yes (side effect, greater good) _ count no (side effect, greater good)",28,23,19,16,0.01476
+"ML2","Trolley Dilemma 2","uned","ESP","online",86,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.15221,45,41,"count yes (side effect, greater good) _ count no (side effect, greater good)",33,25,12,16,0.01531
+"ML2","Trolley Dilemma 2","unswonline","AUS","online",97,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.0127,48,49,"count yes (side effect, greater good) _ count no (side effect, greater good)",27,27,21,22,0.0127
+"ML2","Trolley Dilemma 2","vcu","USA","lab",96,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.06415,43,53,"count yes (side effect, greater good) _ count no (side effect, greater good)",26,29,17,24,0.01302
+"ML2","Trolley Dilemma 2","vuw","NZL","online",100,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.29984,53,47,"count yes (side effect, greater good) _ count no (side effect, greater good)",39,22,14,25,0.01046
+"ML2","Trolley Dilemma 2","westernkentucky","USA","lab",162,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.22171,83,79,"count yes (side effect, greater good) _ count no (side effect, greater good)",64,47,19,32,0.00789
+"ML2","Trolley Dilemma 2","yale","USA","online",283,"Between","Choice of outcome 1 vs. 2 between groups","Chisquare","r",0.13776,149,134,"count yes (side effect, greater good) _ count no (side effect, greater good)",104,78,45,56,0.00449
 "ML2","Moral Foundations","aus","ARE","lab",89,"Within","moral foundations with political leaning","Fisher's r-to-z 1-cor","r",-0.14498,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00541
 "ML2","Moral Foundations","badaniaon","POL","online",38,"Within","moral foundations with political leaning","Fisher's r-to-z 1-cor","r",0.3056,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01096
 "ML2","Moral Foundations","bc","USA","lab",74,"Within","moral foundations with political leaning","Fisher's r-to-z 1-cor","r",0.28102,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00577
