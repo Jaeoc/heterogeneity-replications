@@ -19,3 +19,4 @@ outcome_c1 - control group outcome 1
 outcome_t1 - treatment group outcome 1
 outcome_c2 - control group outcome 2
 outcome_t2 - treatment group outcome 2
+ml2_ncp_variance - ml2 computed r-variance by transforming first to non-central statistics
