@@ -353,11 +353,10 @@ ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 3
 # [11] "Moral Typecasting (Gray & Wegner, 2009)"        
 # [12] "Moral Cleansing (Zhong & Liljenquist, 2006)"    
 # [13] "Intentional Side-Effects (Knobe, 2003)"         
-# [14] "Direction & Similarity (Tversky & Gati, 1978)"  
-# [15] "Direction & SES (Huang et al., 2014)"           
-# [16] "Incidental Disfluency (Alter et al., 2007)"     
-# [17] "Tempting Fate (Risen & Gilovich, 2008)"         
-# [18] "Priming Warmth (Zaval et al., 2014)"   
+# [14] "Direction & SES (Huang et al., 2014)"           
+# [15] "Incidental Disfluency (Alter et al., 2007)"     
+# [16] "Tempting Fate (Risen & Gilovich, 2008)"         
+# [17] "Priming Warmth (Zaval et al., 2014)"   
 #**************
 
 
@@ -370,6 +369,7 @@ ml2_smd <- ml2_smd %>% #Drop remaining non-standard SMD effects
                                "Inbar.1a", #difference between correlations q
                                "vanLange.1", #correlation r
                                "Shafir.1", #strange effect 
+                               "Gati.2", #Within subjects difference between conditions (similarity scores)
                                "Schwarz.1a")) #difference between correlations q
 
 
@@ -669,22 +669,32 @@ ml2_q <- ml2_q %>%
          ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2, ml2_ncp_variance) #select only variables of interest
 
 #*****************************************
-#**[2.4] Actions are Choices (Savani et al., 2010)----
+#**[2.4] Other effects ----
 #*****************************************
 #Effects extracted in this section
-# [1] "Actions are Choices (Savani et al., 2010)" 
+# [1] "Choosing or Rejecting (Shafir, 1993)"         
+# [2] "Direction & Similarity (Tversky & Gati, 1978)"
+# [3] "Actions are Choices (Savani et al., 2010)" 
 #**************
 
-ml2_savani <- ml2 %>% filter(analysis.name == "Savani.3a")
+ml2_other <- ml2 %>% filter(analysis.name %in% c("Savani.3a", "Shafir.1", "Gati.2"))
+
+#[1] "Choosing or Rejecting (Shafir, 1993)"
+#not clear to me what type of effect, but not SMD, r, or OR, so only r and var r necessary
+
+# [2] "Direction & Similarity (Tversky & Gati, 1978)"  
+#Within subjects t-test,
+
+# [3] "Actions are Choices (Savani et al., 2010)"
 #"The effect of interest was the odds of an action being construed as a choice, 
 #depending on the participant's condition, controlling for the reported importance of the action."
 #An Hierarchical logistic regression analysis was used.
-
-#NB! This effect is presumably an Odds ratio as well, but the sum of stat.cond1.count etc do not correspond to stat.N
+#This effect is presumably an Odds ratio as well, but the sum of stat.cond1.count etc do not correspond to stat.N
 #sum of all counts would be very large for each lab (minimum around 460 ss) which seems unrealistic
 #What I can do so far is to recompute the tau from Table 3, this is simply using the r and var r
 
-ml2_savani <- ml2_savani %>% 
+
+ml2_other <- ml2_other %>% 
   rename(effect = study.description, #rename variables to consistent names
          Site = study.source, 
          in_lab = online, #
@@ -693,10 +703,15 @@ ml2_savani <- ml2_savani %>%
          Ntotal = stat.N,
          country = source.Country) %>%  
   mutate(rp = "ML2", #Add some descriptive information
-         B_or_W = "Between", 
+         B_or_W = case_when(analysis.name  %in% c("Savani.3a", "Shafir.1") ~ "Between",
+                            analysis.name == "Gati.2" ~ "Within"),
          effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
-         design = "Hierarchical logistic regression",
-         or_stat_test = "z-test", 
+         design = case_when(analysis.name == "Savani.3a" ~"Hierarchical logistic regression",
+                            analysis.name == "Shafir.1" ~ "Sum of % choosing option A across two groups",
+                            analysis.name == "Gati.2" ~ "Within subjects t-test"),
+         or_stat_test = case_when(analysis.name == "Savani.3a" ~"z-test",
+                                  analysis.name == "Shafir.1" ~ "1 sided proportion z-test",
+                                  analysis.name == "Gati.2" ~ "Within subjects t-test"), 
          effect_type = "r",
          outcomes1_2 = "NA _ NA",
          outcome_t1 = NA, 
@@ -743,81 +758,13 @@ ml2_savani <- ml2_savani %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2, ml2_ncp_variance) #select only variables of interest
 
-
-
-#*****************************************
-#**[2.5] Choosing or Rejecting (Shafir, 1993) ----
-#*****************************************
-# [1] "Choosing or Rejecting (Shafir, 1993)"
-#******************************************
-ml2_shafir <- ml2 %>% filter(analysis.name == "Shafir.1") #strange effect, summed percentage different from 100%
-
-#could not make sense of this one, simply saved data to run meta-analyses
-ml2_shafir <- ml2_shafir %>% 
-  rename(effect = study.description, #rename variables to consistent names
-         Site = study.source, 
-         in_lab = online, #
-         effect_size = ESCI.r, #NB! ML2 computed effect sizes by first computing non-central test statics and then transformed into correlations uisng compute.es package (I believe, although seems strange, check with Marcel)
-         ml2_ncp_variance = ESCI.var.r,
-         Ntotal = stat.N,
-         country = source.Country) %>%  
-  mutate(rp = "ML2", #Add some descriptive information
-         B_or_W = "Between", 
-         effect = trimws(gsub("\\(.*", "", .$effect)), #shorten effect names a litle
-         design = "Sum of % choosing option A across two groups",
-         or_stat_test = "1 sided proportion z-test", 
-         effect_type = "r",
-         outcomes1_2 = "NA _ NA",
-         outcome_t1 = NA, 
-         outcome_c1 = NA,
-         outcome_t2 = NA,
-         outcome_c2 = NA,
-         ntreatment = NA,
-         ncontrol = NA,
-         country = recode(country, #Recode country names to official three letter acronyms for consistency
-                          Hungary = "HUN", #
-                          'United Arab Emirates' = "ARE", #
-                          `Hong Kong, China` = "HKG",
-                          India = "IND",
-                          Italy = "ITA",
-                          Japan = "JPN",
-                          Malaysia = "MYS",
-                          Mexico = "MEX",
-                          Nigeria = "NGA",
-                          Portugal = "PRT",
-                          Serbia = "SRB", 
-                          `South Africa` = "ZAF",
-                          Taiwan = "TWN",
-                          Tanzania = "TZA",
-                          Uruguay = "URY",
-                          Poland = "POL", #
-                          Canada = "CAN", #
-                          `The Netherlands` = "NLD",
-                          Belgium = "BEL", #
-                          Sweden = "SWE", #
-                          France = "FRA", #
-                          UK = "GBR",
-                          Australia = "AUS", #
-                          Brazil = "BRA",
-                          Chile = "CHL",
-                          China = "CHN",
-                          Turkey = "TUR",
-                          'Czech Republic' = "CZE",
-                          'New Zealand' = "NZL", #
-                          Germany = "DEU", #
-                          Switzerland = "CHE", #
-                          Colombia = "COL", #
-                          `Costa Rica` = "CRI",
-                          Spain = "ESP")) %>% 
-  select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
-         ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2, ml2_ncp_variance) #select only variables of interest
 
 
 #******************************************
 #**[2.6] ML2 combined----
 #******************************************
 
-ml2 <- rbind(ml2_smd, ml2_or,ml2_r, ml2_q, ml2_savani, ml2_shafir)
+ml2 <- rbind(ml2_smd, ml2_or, ml2_r, ml2_q, ml2_other)
 
 
 #******************************************

@@ -1306,55 +1306,6 @@
 "ML2","Intentional Side-Effects","vuw","NZL","online",100,"Between","control vs. treatment","t-test","r",0.79122,52,48,"mean _ SD",1.96153846153846,5.58333333333333,1.39974141115406,1.42669583054967,0.00141
 "ML2","Intentional Side-Effects","westernkentucky","USA","lab",159,"Between","control vs. treatment","t-test","r",0.62517,65,94,"mean _ SD",2.2,5.07446808510638,1.64126475621699,1.8621259771789,0.00235
 "ML2","Intentional Side-Effects","yale","USA","online",282,"Between","control vs. treatment","t-test","r",0.7151,130,152,"mean _ SD",1.94615384615385,5.16447368421053,1.46964921439001,1.65758972446958,0.00085
-"ML2","Direction & Similarity","amity","IND","lab",59,"Between","control vs. treatment","t-test","r",-0.04493,59,NA,"mean _ SD",-0.129121725731895,0,1.43551796427813,NA,0.01686
-"ML2","Direction & Similarity","armstrong","USA","lab",38,"Between","control vs. treatment","t-test","r",0.15981,38,NA,"mean _ SD",0.693062200956938,0,2.14054996201275,NA,0.02467
-"ML2","Direction & Similarity","aus2","ARE","lab",84,"Between","control vs. treatment","t-test","r",-0.00179,84,NA,"mean _ SD",-0.00692640692640697,0,1.93573161710331,NA,0.0119
-"ML2","Direction & Similarity","bogota","COL","lab",42,"Between","control vs. treatment","t-test","r",0.13098,42,NA,"mean _ SD",0.392207792207792,0,1.48426073150344,NA,0.0228
-"ML2","Direction & Similarity","brookcuny","USA","online",76,"Between","control vs. treatment","t-test","r",0.06,76,NA,"mean _ SD",0.211124401913876,0,1.75621154914909,NA,0.01304
-"ML2","Direction & Similarity","carleton","CAN","online",53,"Between","control vs. treatment","t-test","r",-0.01445,53,NA,"mean _ SD",-0.0646655231560891,0,2.23751225575448,NA,0.01886
-"ML2","Direction & Similarity","csunorthonline","USA","online",35,"Between","control vs. treatment","t-test","r",0.07443,35,NA,"mean _ SD",0.307272727272727,0,2.05858152616168,NA,0.02818
-"ML2","Direction & Similarity","fmkbelgrade","SRB","lab",47,"Between","control vs. treatment","t-test","r",-0.12643,47,NA,"mean _ SD",-0.579690522243714,0,2.27409224841811,NA,0.02044
-"ML2","Direction & Similarity","georgefox","USA","online",48,"Between","control vs. treatment","t-test","r",-0.00726,48,NA,"mean _ SD",-0.0265151515151515,0,1.82577123307117,NA,0.02083
-"ML2","Direction & Similarity","grazvienna","USA","online",46,"Between","control vs. treatment","t-test","r",-0.07116,46,NA,"mean _ SD",-0.36897233201581,0,2.58610014534471,NA,0.02147
-"ML2","Direction & Similarity","hawaiion","USA","online",54,"Between","control vs. treatment","t-test","r",0.0381,54,NA,"mean _ SD",0.146464646464647,0,1.92066382524411,NA,0.01845
-"ML2","Direction & Similarity","help","MYS","lab",39,"Between","control vs. treatment","t-test","r",0.11735,39,NA,"mean _ SD",0.545454545454546,0,2.30791798564142,NA,0.02477
-"ML2","Direction & Similarity","isb","IND","lab",68,"Between","control vs. treatment","t-test","r",-0.00594,68,NA,"mean _ SD",-0.0240641711229946,0,2.025366314472,NA,0.0147
-"ML2","Direction & Similarity","jmu","USA","online",40,"Between","control vs. treatment","t-test","r",-0.03027,40,NA,"mean _ SD",-0.141136363636364,0,2.33044381449898,NA,0.02494
-"ML2","Direction & Similarity","kenyon","USA","lab",54,"Between","control vs. treatment","t-test","r",0.00778,54,NA,"mean _ SD",0.0281144781144781,0,1.80635283155354,NA,0.01852
-"ML2","Direction & Similarity","krakowon","POL","online",55,"Between","control vs. treatment","t-test","r",0.03085,55,NA,"mean _ SD",0.143636363636364,0,2.32710594941136,NA,0.01814
-"ML2","Direction & Similarity","kwazulu","ZAF","lab",30,"Between","control vs. treatment","t-test","r",0.06304,30,NA,"mean _ SD",0.264242424242424,0,2.09181653108824,NA,0.033
-"ML2","Direction & Similarity","louvain","BEL","lab",42,"Between","control vs. treatment","t-test","r",0.03194,42,NA,"mean _ SD",0.14978354978355,0,2.34353746752687,NA,0.02375
-"ML2","Direction & Similarity","loyola","USA","lab",150,"Between","control vs. treatment","t-test","r",0.01955,150,NA,"mean _ SD",0.0873939393939394,0,2.23503032886178,NA,0.00666
-"ML2","Direction & Similarity","lse","GBR","lab",48,"Between","control vs. treatment","t-test","r",0.03508,48,NA,"mean _ SD",0.130681818181818,0,1.8616521257321,NA,0.02077
-"ML2","Direction & Similarity","mcdanielonline","USA","online",69,"Between","control vs. treatment","t-test","r",0.0451,69,NA,"mean _ SD",0.179446640316206,0,1.98752896725017,NA,0.01442
-"ML2","Direction & Similarity","metu","TUR","online",46,"Between","control vs. treatment","t-test","r",-0.01523,46,NA,"mean _ SD",-0.0559288537549407,0,1.83620458096185,NA,0.02173
-"ML2","Direction & Similarity","moralsense","USA","online",388,"Between","control vs. treatment","t-test","r",-0.01315,388,NA,"mean _ SD",-0.0520852858481725,0,1.98072893589354,NA,0.00258
-"ML2","Direction & Similarity","mturk","USA","online",144,"Between","control vs. treatment","t-test","r",0.00092,144,NA,"mean _ SD",0.00391414141414145,0,2.1241150141097,NA,0.00694
-"ML2","Direction & Similarity","mturk_india","IND","online",145,"Between","control vs. treatment","t-test","r",0.05549,145,NA,"mean _ SD",0.194420062695925,0,1.74900574740666,NA,0.00684
-"ML2","Direction & Similarity","munichon","IND","online",122,"Between","control vs. treatment","t-test","r",0.03911,122,NA,"mean _ SD",0.142995529061103,0,1.82670804634246,NA,0.00817
-"ML2","Direction & Similarity","northumbria","GBR","lab",34,"Between","control vs. treatment","t-test","r",0.03729,34,NA,"mean _ SD",0.267379679144385,0,3.58311433362221,NA,0.02931
-"ML2","Direction & Similarity","osnabruck","DEU","lab",47,"Between","control vs. treatment","t-test","r",0.12256,47,NA,"mean _ SD",0.547775628626693,0,2.21787196378345,NA,0.02049
-"ML2","Direction & Similarity","pascal","FRA","online",83,"Between","control vs. treatment","t-test","r",-0.04136,83,NA,"mean _ SD",-0.180503833515882,0,2.17997803615485,NA,0.012
-"ML2","Direction & Similarity","psualtoona","USA","lab",85,"Between","control vs. treatment","t-test","r",0.02237,85,NA,"mean _ SD",0.102566844919786,0,2.29149549792498,NA,0.01175
-"ML2","Direction & Similarity","puc","CHL","online",38,"Between","control vs. treatment","t-test","r",-0.03294,38,NA,"mean _ SD",-0.134688995215311,0,2.04308829035269,NA,0.02624
-"ML2","Direction & Similarity","queensland2","AUS","lab",61,"Between","control vs. treatment","t-test","r",-0.16209,61,NA,"mean _ SD",-0.663040238450075,0,2.0182533899761,NA,0.01534
-"ML2","Direction & Similarity","ritonline","USA","online",45,"Between","control vs. treatment","t-test","r",-0.04771,45,NA,"mean _ SD",-0.194343434343434,0,2.03422841207427,NA,0.0221
-"ML2","Direction & Similarity","salford","GBR","lab",42,"Between","control vs. treatment","t-test","r",0.07829,42,NA,"mean _ SD",0.323809523809524,0,2.06158161023569,NA,0.02345
-"ML2","Direction & Similarity","seznam","CZE","lab",39,"Between","control vs. treatment","t-test","r",0.0015,39,NA,"mean _ SD",0.00559440559440572,0,1.8614348244966,NA,0.02564
-"ML2","Direction & Similarity","seznamon","CZE","online",54,"Between","control vs. treatment","t-test","r",-0.03229,54,NA,"mean _ SD",-0.114646464646465,0,1.7740839393905,NA,0.01847
-"ML2","Direction & Similarity","simmons","USA","lab",40,"Between","control vs. treatment","t-test","r",-0.05258,40,NA,"mean _ SD",-0.204545454545455,0,1.94232914538349,NA,0.02483
-"ML2","Direction & Similarity","swps","POL","lab",43,"Between","control vs. treatment","t-test","r",-0.0185,43,NA,"mean _ SD",-0.10676532769556,0,2.88519207434733,NA,0.02324
-"ML2","Direction & Similarity","tamucc","USA","lab",38,"Between","control vs. treatment","t-test","r",0.08975,38,NA,"mean _ SD",0.359808612440191,0,1.99648633903129,NA,0.02579
-"ML2","Direction & Similarity","tilburg","NLD","lab",50,"Between","control vs. treatment","t-test","r",-0.05577,50,NA,"mean _ SD",-0.237818181818182,0,2.12900470222468,NA,0.01984
-"ML2","Direction & Similarity","tilburgcaf","NLD",NA,40,"Between","control vs. treatment","t-test","r",0.01617,40,NA,"mean _ SD",0.0845454545454545,0,2.61439784184422,NA,0.02498
-"ML2","Direction & Similarity","ulatina","CRI","lab",90,"Between","control vs. treatment","t-test","r",0.03921,90,NA,"mean _ SD",0.187171717171717,0,2.38468661125563,NA,0.01107
-"ML2","Direction & Similarity","umich","USA","lab",33,"Between","control vs. treatment","t-test","r",0.06904,33,NA,"mean _ SD",0.295867768595041,0,2.13752155625529,NA,0.02994
-"ML2","Direction & Similarity","uned","ESP","online",37,"Between","control vs. treatment","t-test","r",-0.13426,37,NA,"mean _ SD",-0.714742014742015,0,2.63767761695389,NA,0.02583
-"ML2","Direction & Similarity","unswonline","AUS","online",47,"Between","control vs. treatment","t-test","r",-0.02116,47,NA,"mean _ SD",-0.0932301740812378,0,2.20258844564479,NA,0.02125
-"ML2","Direction & Similarity","vcu","USA","lab",37,"Between","control vs. treatment","t-test","r",-0.01447,37,NA,"mean _ SD",-0.0665847665847666,0,2.30075650717295,NA,0.02701
-"ML2","Direction & Similarity","vuw","NZL","online",41,"Between","control vs. treatment","t-test","r",0.00232,41,NA,"mean _ SD",0.00975609756097558,0,2.10088272498689,NA,0.02439
-"ML2","Direction & Similarity","westernkentucky","USA","lab",83,"Between","control vs. treatment","t-test","r",-0.03139,83,NA,"mean _ SD",-0.118729463307777,0,1.89053613785235,NA,0.01202
-"ML2","Direction & Similarity","yale","USA","online",127,"Between","control vs. treatment","t-test","r",0.01659,127,NA,"mean _ SD",0.056335003579098,0,1.6972696238391,NA,0.00787
 "ML2","Direction & SES","aus","ARE","lab",90,"Between","control vs. treatment","t-test","r",0.39448,51,39,"mean _ SD",31.9019607843137,-34.8461538461538,75.4708566009319,81.02843505492,0.00801
 "ML2","Direction & SES","bc","USA","lab",73,"Between","control vs. treatment","t-test","r",0.2499,39,34,"mean _ SD",5.25641025641026,-41.7941176470588,86.6762633532381,98.1963954815119,0.01221
 "ML2","Direction & SES","bilgi","TUR","online",121,"Between","control vs. treatment","t-test","r",0.03515,56,65,"mean _ SD",-29.853392464774,-36.4352304311899,82.8747394231856,102.744435579963,0.00831
@@ -2058,6 +2009,96 @@
 "ML2","Assimilation & Contrast","vuw","NZL","online",97,"Between","Question1 with question2 vs. question2 with question1","Cohen's q","q",0.491648898881882,45,52,"t1 = sampling_var(q) _ NA",0.0442176870748299,NA,NA,NA,NA
 "ML2","Assimilation & Contrast","westernkentucky","USA","lab",160,"Between","Question1 with question2 vs. question2 with question1","Cohen's q","q",-0.274705229837274,71,89,"t1 = sampling_var(q) _ NA",0.0263337893296854,NA,NA,NA,NA
 "ML2","Assimilation & Contrast","yale","USA","online",270,"Between","Question1 with question2 vs. question2 with question1","Cohen's q","q",0.048196516502886,140,130,"t1 = sampling_var(q) _ NA",0.0151732858210242,NA,NA,NA,NA
+"ML2","Choosing or Rejecting","amity","IND","lab",158,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.14916,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00598
+"ML2","Choosing or Rejecting","aus2","ARE","lab",178,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.02264,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00561
+"ML2","Choosing or Rejecting","bogota","COL","lab",102,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.09805,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00957
+"ML2","Choosing or Rejecting","brookcuny","USA","online",182,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.11004,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00533
+"ML2","Choosing or Rejecting","carleton","CAN","online",121,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08905,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0081
+"ML2","Choosing or Rejecting","csunorthonline","USA","online",88,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.13726,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01084
+"ML2","Choosing or Rejecting","georgefox","USA","online",138,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.01389,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00724
+"ML2","Choosing or Rejecting","grazvienna","USA","online",102,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0098
+"ML2","Choosing or Rejecting","hawaiion","USA","online",123,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.00742,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00813
+"ML2","Choosing or Rejecting","help","MYS","lab",90,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08897,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01089
+"ML2","Choosing or Rejecting","isb","IND","lab",186,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01979,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00537
+"ML2","Choosing or Rejecting","jmu","USA","online",86,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.07155,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01148
+"ML2","Choosing or Rejecting","kenyon","USA","lab",106,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.12906,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00905
+"ML2","Choosing or Rejecting","krakowon","POL","online",99,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.04578,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01005
+"ML2","Choosing or Rejecting","loyola","USA","lab",293,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08657,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00335
+"ML2","Choosing or Rejecting","lse","GBR","lab",112,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01895,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00892
+"ML2","Choosing or Rejecting","mcdanielonline","USA","online",159,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.13204,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00602
+"ML2","Choosing or Rejecting","metu","TUR","online",126,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.0107,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00793
+"ML2","Choosing or Rejecting","moralsense","USA","online",831,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00868,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0012
+"ML2","Choosing or Rejecting","mturk","USA","online",339,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.04245,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00294
+"ML2","Choosing or Rejecting","mturk_india","IND","online",362,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.10504,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00269
+"ML2","Choosing or Rejecting","munichon","IND","online",210,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01968,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00476
+"ML2","Choosing or Rejecting","northumbria","GBR","lab",79,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.16376,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01183
+"ML2","Choosing or Rejecting","ouhk","HKG","lab",68,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.08387,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01445
+"ML2","Choosing or Rejecting","pascal","FRA","online",172,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.28827,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00468
+"ML2","Choosing or Rejecting","psualtoona","USA","lab",177,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.19491,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00513
+"ML2","Choosing or Rejecting","puc","CHL","online",81,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.05521,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01225
+"ML2","Choosing or Rejecting","queensland2","AUS","lab",139,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.17721,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00664
+"ML2","Choosing or Rejecting","salford","GBR","lab",101,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.07146,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00978
+"ML2","Choosing or Rejecting","seznam","CZE","lab",82,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.09201,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01194
+"ML2","Choosing or Rejecting","seznamon","CZE","online",117,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.06499,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00846
+"ML2","Choosing or Rejecting","simmons","USA","lab",96,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.07178,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01028
+"ML2","Choosing or Rejecting","tamu","USA","lab",85,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.0089,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01176
+"ML2","Choosing or Rejecting","tilburgcaf","NLD",NA,81,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.15885,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01158
+"ML2","Choosing or Rejecting","ulatina","CRI","lab",211,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.21233,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00422
+"ML2","Choosing or Rejecting","umich","USA","lab",86,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.0279,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01161
+"ML2","Choosing or Rejecting","unswonline","AUS","online",97,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.11144,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00999
+"ML2","Choosing or Rejecting","vcu","USA","lab",96,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.04002,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01038
+"ML2","Choosing or Rejecting","vuw","NZL","online",100,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00646,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01
+"ML2","Choosing or Rejecting","westernkentucky","USA","lab",162,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.04105,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00615
+"ML2","Choosing or Rejecting","yale","USA","online",283,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00385,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00353
+"ML2","Direction & Similarity","amity","IND","lab",59,"Within","Within subjects t-test","Within subjects t-test","r",-0.04493,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01686
+"ML2","Direction & Similarity","armstrong","USA","lab",38,"Within","Within subjects t-test","Within subjects t-test","r",0.15981,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02467
+"ML2","Direction & Similarity","aus2","ARE","lab",84,"Within","Within subjects t-test","Within subjects t-test","r",-0.00179,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0119
+"ML2","Direction & Similarity","bogota","COL","lab",42,"Within","Within subjects t-test","Within subjects t-test","r",0.13098,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0228
+"ML2","Direction & Similarity","brookcuny","USA","online",76,"Within","Within subjects t-test","Within subjects t-test","r",0.06,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01304
+"ML2","Direction & Similarity","carleton","CAN","online",53,"Within","Within subjects t-test","Within subjects t-test","r",-0.01445,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01886
+"ML2","Direction & Similarity","csunorthonline","USA","online",35,"Within","Within subjects t-test","Within subjects t-test","r",0.07443,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02818
+"ML2","Direction & Similarity","fmkbelgrade","SRB","lab",47,"Within","Within subjects t-test","Within subjects t-test","r",-0.12643,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02044
+"ML2","Direction & Similarity","georgefox","USA","online",48,"Within","Within subjects t-test","Within subjects t-test","r",-0.00726,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02083
+"ML2","Direction & Similarity","grazvienna","USA","online",46,"Within","Within subjects t-test","Within subjects t-test","r",-0.07116,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02147
+"ML2","Direction & Similarity","hawaiion","USA","online",54,"Within","Within subjects t-test","Within subjects t-test","r",0.0381,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01845
+"ML2","Direction & Similarity","help","MYS","lab",39,"Within","Within subjects t-test","Within subjects t-test","r",0.11735,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02477
+"ML2","Direction & Similarity","isb","IND","lab",68,"Within","Within subjects t-test","Within subjects t-test","r",-0.00594,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0147
+"ML2","Direction & Similarity","jmu","USA","online",40,"Within","Within subjects t-test","Within subjects t-test","r",-0.03027,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02494
+"ML2","Direction & Similarity","kenyon","USA","lab",54,"Within","Within subjects t-test","Within subjects t-test","r",0.00778,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01852
+"ML2","Direction & Similarity","krakowon","POL","online",55,"Within","Within subjects t-test","Within subjects t-test","r",0.03085,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01814
+"ML2","Direction & Similarity","kwazulu","ZAF","lab",30,"Within","Within subjects t-test","Within subjects t-test","r",0.06304,NA,NA,"NA _ NA",NA,NA,NA,NA,0.033
+"ML2","Direction & Similarity","louvain","BEL","lab",42,"Within","Within subjects t-test","Within subjects t-test","r",0.03194,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02375
+"ML2","Direction & Similarity","loyola","USA","lab",150,"Within","Within subjects t-test","Within subjects t-test","r",0.01955,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00666
+"ML2","Direction & Similarity","lse","GBR","lab",48,"Within","Within subjects t-test","Within subjects t-test","r",0.03508,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02077
+"ML2","Direction & Similarity","mcdanielonline","USA","online",69,"Within","Within subjects t-test","Within subjects t-test","r",0.0451,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01442
+"ML2","Direction & Similarity","metu","TUR","online",46,"Within","Within subjects t-test","Within subjects t-test","r",-0.01523,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02173
+"ML2","Direction & Similarity","moralsense","USA","online",388,"Within","Within subjects t-test","Within subjects t-test","r",-0.01315,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00258
+"ML2","Direction & Similarity","mturk","USA","online",144,"Within","Within subjects t-test","Within subjects t-test","r",0.00092,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00694
+"ML2","Direction & Similarity","mturk_india","IND","online",145,"Within","Within subjects t-test","Within subjects t-test","r",0.05549,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00684
+"ML2","Direction & Similarity","munichon","IND","online",122,"Within","Within subjects t-test","Within subjects t-test","r",0.03911,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00817
+"ML2","Direction & Similarity","northumbria","GBR","lab",34,"Within","Within subjects t-test","Within subjects t-test","r",0.03729,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02931
+"ML2","Direction & Similarity","osnabruck","DEU","lab",47,"Within","Within subjects t-test","Within subjects t-test","r",0.12256,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02049
+"ML2","Direction & Similarity","pascal","FRA","online",83,"Within","Within subjects t-test","Within subjects t-test","r",-0.04136,NA,NA,"NA _ NA",NA,NA,NA,NA,0.012
+"ML2","Direction & Similarity","psualtoona","USA","lab",85,"Within","Within subjects t-test","Within subjects t-test","r",0.02237,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01175
+"ML2","Direction & Similarity","puc","CHL","online",38,"Within","Within subjects t-test","Within subjects t-test","r",-0.03294,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02624
+"ML2","Direction & Similarity","queensland2","AUS","lab",61,"Within","Within subjects t-test","Within subjects t-test","r",-0.16209,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01534
+"ML2","Direction & Similarity","ritonline","USA","online",45,"Within","Within subjects t-test","Within subjects t-test","r",-0.04771,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0221
+"ML2","Direction & Similarity","salford","GBR","lab",42,"Within","Within subjects t-test","Within subjects t-test","r",0.07829,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02345
+"ML2","Direction & Similarity","seznam","CZE","lab",39,"Within","Within subjects t-test","Within subjects t-test","r",0.0015,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02564
+"ML2","Direction & Similarity","seznamon","CZE","online",54,"Within","Within subjects t-test","Within subjects t-test","r",-0.03229,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01847
+"ML2","Direction & Similarity","simmons","USA","lab",40,"Within","Within subjects t-test","Within subjects t-test","r",-0.05258,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02483
+"ML2","Direction & Similarity","swps","POL","lab",43,"Within","Within subjects t-test","Within subjects t-test","r",-0.0185,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02324
+"ML2","Direction & Similarity","tamucc","USA","lab",38,"Within","Within subjects t-test","Within subjects t-test","r",0.08975,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02579
+"ML2","Direction & Similarity","tilburg","NLD","lab",50,"Within","Within subjects t-test","Within subjects t-test","r",-0.05577,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01984
+"ML2","Direction & Similarity","tilburgcaf","NLD",NA,40,"Within","Within subjects t-test","Within subjects t-test","r",0.01617,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02498
+"ML2","Direction & Similarity","ulatina","CRI","lab",90,"Within","Within subjects t-test","Within subjects t-test","r",0.03921,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01107
+"ML2","Direction & Similarity","umich","USA","lab",33,"Within","Within subjects t-test","Within subjects t-test","r",0.06904,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02994
+"ML2","Direction & Similarity","uned","ESP","online",37,"Within","Within subjects t-test","Within subjects t-test","r",-0.13426,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02583
+"ML2","Direction & Similarity","unswonline","AUS","online",47,"Within","Within subjects t-test","Within subjects t-test","r",-0.02116,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02125
+"ML2","Direction & Similarity","vcu","USA","lab",37,"Within","Within subjects t-test","Within subjects t-test","r",-0.01447,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02701
+"ML2","Direction & Similarity","vuw","NZL","online",41,"Within","Within subjects t-test","Within subjects t-test","r",0.00232,NA,NA,"NA _ NA",NA,NA,NA,NA,0.02439
+"ML2","Direction & Similarity","westernkentucky","USA","lab",83,"Within","Within subjects t-test","Within subjects t-test","r",-0.03139,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01202
+"ML2","Direction & Similarity","yale","USA","online",127,"Within","Within subjects t-test","Within subjects t-test","r",0.01659,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00787
 "ML2","Actions are Choices","amity","IND","lab",133,"Between","Hierarchical logistic regression","z-test","r",-0.01426,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00122
 "ML2","Actions are Choices","amityon","IND","online",37,"Between","Hierarchical logistic regression","z-test","r",-0.00656,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00485
 "ML2","Actions are Choices","armstrong","USA","lab",58,"Between","Hierarchical logistic regression","z-test","r",-0.05352,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00407
@@ -2115,47 +2156,6 @@
 "ML2","Actions are Choices","vuw","NZL","online",81,"Between","Hierarchical logistic regression","z-test","r",-0.21626,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00252
 "ML2","Actions are Choices","westernkentucky","USA","lab",138,"Between","Hierarchical logistic regression","z-test","r",-0.22917,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00174
 "ML2","Actions are Choices","yale","USA","online",229,"Between","Hierarchical logistic regression","z-test","r",-0.01438,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00108
-"ML2","Choosing or Rejecting","amity","IND","lab",158,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.14916,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00598
-"ML2","Choosing or Rejecting","aus2","ARE","lab",178,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.02264,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00561
-"ML2","Choosing or Rejecting","bogota","COL","lab",102,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.09805,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00957
-"ML2","Choosing or Rejecting","brookcuny","USA","online",182,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.11004,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00533
-"ML2","Choosing or Rejecting","carleton","CAN","online",121,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08905,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0081
-"ML2","Choosing or Rejecting","csunorthonline","USA","online",88,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.13726,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01084
-"ML2","Choosing or Rejecting","georgefox","USA","online",138,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.01389,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00724
-"ML2","Choosing or Rejecting","grazvienna","USA","online",102,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0098
-"ML2","Choosing or Rejecting","hawaiion","USA","online",123,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.00742,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00813
-"ML2","Choosing or Rejecting","help","MYS","lab",90,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08897,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01089
-"ML2","Choosing or Rejecting","isb","IND","lab",186,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01979,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00537
-"ML2","Choosing or Rejecting","jmu","USA","online",86,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.07155,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01148
-"ML2","Choosing or Rejecting","kenyon","USA","lab",106,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.12906,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00905
-"ML2","Choosing or Rejecting","krakowon","POL","online",99,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.04578,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01005
-"ML2","Choosing or Rejecting","loyola","USA","lab",293,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.08657,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00335
-"ML2","Choosing or Rejecting","lse","GBR","lab",112,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01895,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00892
-"ML2","Choosing or Rejecting","mcdanielonline","USA","online",159,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.13204,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00602
-"ML2","Choosing or Rejecting","metu","TUR","online",126,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.0107,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00793
-"ML2","Choosing or Rejecting","moralsense","USA","online",831,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00868,NA,NA,"NA _ NA",NA,NA,NA,NA,0.0012
-"ML2","Choosing or Rejecting","mturk","USA","online",339,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.04245,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00294
-"ML2","Choosing or Rejecting","mturk_india","IND","online",362,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.10504,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00269
-"ML2","Choosing or Rejecting","munichon","IND","online",210,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.01968,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00476
-"ML2","Choosing or Rejecting","northumbria","GBR","lab",79,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.16376,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01183
-"ML2","Choosing or Rejecting","ouhk","HKG","lab",68,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.08387,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01445
-"ML2","Choosing or Rejecting","pascal","FRA","online",172,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.28827,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00468
-"ML2","Choosing or Rejecting","psualtoona","USA","lab",177,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.19491,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00513
-"ML2","Choosing or Rejecting","puc","CHL","online",81,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.05521,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01225
-"ML2","Choosing or Rejecting","queensland2","AUS","lab",139,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.17721,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00664
-"ML2","Choosing or Rejecting","salford","GBR","lab",101,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.07146,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00978
-"ML2","Choosing or Rejecting","seznam","CZE","lab",82,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.09201,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01194
-"ML2","Choosing or Rejecting","seznamon","CZE","online",117,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.06499,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00846
-"ML2","Choosing or Rejecting","simmons","USA","lab",96,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.07178,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01028
-"ML2","Choosing or Rejecting","tamu","USA","lab",85,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.0089,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01176
-"ML2","Choosing or Rejecting","tilburgcaf","NLD",NA,81,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.15885,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01158
-"ML2","Choosing or Rejecting","ulatina","CRI","lab",211,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.21233,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00422
-"ML2","Choosing or Rejecting","umich","USA","lab",86,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.0279,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01161
-"ML2","Choosing or Rejecting","unswonline","AUS","online",97,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.11144,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00999
-"ML2","Choosing or Rejecting","vcu","USA","lab",96,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.04002,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01038
-"ML2","Choosing or Rejecting","vuw","NZL","online",100,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00646,NA,NA,"NA _ NA",NA,NA,NA,NA,0.01
-"ML2","Choosing or Rejecting","westernkentucky","USA","lab",162,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",0.04105,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00615
-"ML2","Choosing or Rejecting","yale","USA","online",283,"Between","Sum of % choosing option A across two groups","1 sided proportion z-test","r",-0.00385,NA,NA,"NA _ NA",NA,NA,NA,NA,0.00353
 "ML3","Stroop effect","AshlandUniversity","USA","1",84,"Within","Repeated measurements","one sample t-test of std. mean diff","r",0.455402382,NA,NA,"NA _ NA",NA,NA,NA,NA,NA
 "ML3","Stroop effect","BradleyUniversity","USA","1",119,"Within","Repeated measurements","one sample t-test of std. mean diff","r",0.411475205,NA,NA,"NA _ NA",NA,NA,NA,NA,NA
 "ML3","Stroop effect","CarletonUniversity","CAN","1",44,"Within","Repeated measurements","one sample t-test of std. mean diff","r",0.485026929,NA,NA,"NA _ NA",NA,NA,NA,NA,NA
