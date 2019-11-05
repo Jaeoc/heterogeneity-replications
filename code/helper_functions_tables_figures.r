@@ -32,7 +32,14 @@ est_heterogen_smd_raw <- function(x){
       fit <- rma(measure = "MD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x)
     }
     
-  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
+  } else if(any(x[, "rp"] == "ML2")){  
+    if(any(x[, "effect_type"] == "r")){
+      fit <- rma(yi = effect_size, vi = ml2_ncp_variance,  data = x)
+    }else{ #for ML2 cohen's q
+      fit <- rma(yi = effect_size, vi = outcome_t1,  data = x) 
+    }
+    
+  }else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
     
     fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x) 
     
