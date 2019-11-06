@@ -333,8 +333,8 @@ ml1 <- rbind(teffects, chieffects, math_art, math_cor)
 ml2 <- read.csv("../data/source/Ml2/Data_Figure_NOweird.csv", stringsAsFactors = FALSE)
 
 #Initial clean and format data
-ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- "lab" #from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
-ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- "online" #from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+ml2$online[ml2$source.Setting%in%c("In a classroom","In a lab")] <- 1 #adapted from line 35 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
+ml2$online[ml2$source.Setting%in%c("Online (at home)")] <- 0 #adapted from line 36 in ML2_meta_analyses_simple.R https://osf.io/4akjw/
 #******************************************
 
 #**[2.1] t-test effects----
