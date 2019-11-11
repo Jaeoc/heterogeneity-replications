@@ -6,5 +6,7 @@
 /code/tables_cache
 /code/troubleshooting_tau2_cache
 /code/troubleshooting_tau2_files
+/data/tau_simulation_results.RDS
+/data/supplementB_tau_simulation_results.RDS
 
 .Rhistory
