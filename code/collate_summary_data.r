@@ -1526,7 +1526,7 @@ rrr8 <- rrr8 %>%
 #******************************************
 #[10] RRR9 ----
 #******************************************
-##summary data from Registered Replication Report 10 https://osf.io/k27hm/
+##summary data from Registered Replication Report 9 https://osf.io/vxz7q/
 ##Direct link to .zip file with raw data: https://osf.io/qegfd/
 ##To extract summary data we ran the RRR9 code in the file above on their raw data
 
@@ -1582,7 +1582,7 @@ rrr9 <- rrr9 %>%
 #******************************************
 #[11] RRR10 ----
 #******************************************
-##summary data from Registered Replication Report 9 https://osf.io/k27hm/
+##summary data from Registered Replication Report 10 https://osf.io/vxz7q/
 ##Direct link to .zip file with data: https://osf.io/fwnc2/
 ##Summary data located at Meta-Analysis_2018-07-09.zip\Meta-Analysis\Results_perMAA\Main\Tables\10 commandments effect_table_data.csv
 #Additional comments:  standard error of difference, no SD per group
