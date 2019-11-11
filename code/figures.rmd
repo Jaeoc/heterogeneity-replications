@@ -45,7 +45,8 @@ effect_type <- distinct(select(dat, effect, effect_type)) %>%
   mutate(effect_type = ifelse(effect %in% OR2d | effect_type == "Risk difference" | 
                                 effect_type == "Raw mean difference", "MD", effect_type),
          effect_type = recode(effect_type, "d" = 'SMD',
-                              "r" = "Fisher's z"))
+                              "r" = "Fisher's z",
+                              "q" = "Cohen's q"))
 
 
 
@@ -67,7 +68,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
                      minor_breaks = NULL) +
   coord_cartesian(ylim = c(0, 100)) +
   scale_color_brewer(name = "Effect type", palette = "Dark2", 
-                     breaks = c("Fisher's z", "MD", "SMD")) +
+                     breaks = c("Fisher's z", "Cohen's q", "MD", "SMD")) +
   theme(legend.position = c(0.8, 0.4),
         legend.background = element_rect(linetype = "solid", color = "black")) +
   guides(color = guide_legend(override.aes = list(size = 1.4)))
@@ -134,7 +135,7 @@ I2_plot
 
 ```
 
-Figure 2. Simulated $I^2$  densities across 37 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed $I^2$ estimates for the 37 effects. Each simulated density consists of approximately 370,000 estimates. 
+Figure 2. Simulated $I^2$  densities across 67 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed $I^2$ estimates for the 67 effects. Each simulated density consists of approximately 670,000 estimates. 
 
 
 ##Figure 3, correlations per effect type
@@ -310,11 +311,11 @@ H2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = H2)) +
 
 #combined----
 combo <- cowplot::plot_grid(tau2_facet, I2_facet, H2_facet, labels = "AUTO")
-#ggsave("../figures/effect-het.png", dpi = 600, height =  7, width = 7)
+# ggsave("../figures/effect-het.png", dpi = 600, height =  7, width = 7)
 combo
 ```
 
-Figure 3. The correlation between effect size and A) tau2, B) I2 and C) H2 respectively  40 effects that were measured as mean or standardized mean differences and 8 effects measured as odds ratios from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized. Square brackets contain 95% bootstrapped percentile confidence intervals.
+Figure 3. The correlation between effect size and A) tau2, B) I2 and C) H2 respectively 40 effects that were measured as mean or standardized mean differences and 8 effects measured as odds ratios from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized. Square brackets contain 95% bootstrapped percentile confidence intervals.
 
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}

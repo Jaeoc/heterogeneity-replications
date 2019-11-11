@@ -27,8 +27,8 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-##Table 1
-###Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
+## Table 1
+### Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
 ```{r effect-size-heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
@@ -45,8 +45,8 @@ rooted_relabilities %>% knitr::kable(booktabs = T, col.names = c("", "$\\rho_{xy
 ```
 *Note:* Values in cells are observed effect sizes arising from the true effect size $\rho_{xy}$ and measurement reliabilites $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ when sample size is infinite. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
-##Table 2
-###Pre-registered multi-lab replication projects
+## Table 2
+### Pre-registered multi-lab replication projects
 ```{r data-summary-table}
 #library(dplyr)
 #library(kableExtra)
@@ -140,7 +140,7 @@ summary.table %>% knitr::kable(booktabs = TRUE,
                                digits = 0,
                                linesep = "\\addlinespace",
                                longtable = TRUE) %>% 
-  kable_styling(c("hold_position", "repeat_header"), font_size = 7) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"), font_size = 7) %>%
   column_spec(2, width = "7em") %>% #specify width of paper column 
   column_spec(7, width = "16em") %>% 
   column_spec(8, width = "30em") %>% 
@@ -148,8 +148,8 @@ summary.table %>% knitr::kable(booktabs = TRUE,
 ```
 Note: For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
 
-##Table 3
-###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
+## Table 3
+### Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
 #library(dplyr)
@@ -210,22 +210,20 @@ het <- het %>%
          tau = ifelse(effect == "Conscientiousness and persistence", paste0(tau, "\\textsuperscript{a}"), tau)) %>% 
   mutate_at(vars(zero, small, medium, large), ~ifelse(effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales', 'Verbal overshadowing 1', 'Verbal overshadowing 2'), paste0(., "\\textsuperscript{b}"), .)) #add b superscript
 
+het$effect <- gsub("&", "\\\\&", het$effect)
 ```
 
 ```{r heterogeneity-table, cache = FALSE}
 #library(kableExtra)
 
-het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\hat\\tau$", "$\\hat\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
+het %>% knitr::kable(align = "c", longtable = TRUE, booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\hat\\tau$", "$\\hat\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
   add_header_above(c(" " = 9, "Level of heterogeneity" = 4)) %>% 
   add_header_above(c(" " = 9, "Type I Error Rate & Statistical Power" = 4)) %>% 
-  kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
+  kable_styling(latex_options = c("scale_down", "repeat_header"), font_size = 7) %>% #comment out if outputting html file
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
            general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, $\\\\hat\\\\tau$ = between studies standard deviation, CI = confidence intervals. Statistical power was simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large
 heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06" ,
-           alphabet = c("Value rounded to zero", "These effects were simulated as standardized mean differences")) %>% 
-  landscape()
-
-
+           alphabet = c("Value rounded to zero", "These effects were simulated as standardized mean differences")) %>% landscape()
 ```
 
