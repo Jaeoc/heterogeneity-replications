@@ -34,16 +34,31 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
 rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
+ma <- c("I: $\\mu = 0$", "II: $\\mu = .3$", "III: $\\mu = .5$")
+
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
-rooted_relabilities <- data.frame(rel, rooted_relabilities)
+devs <- apply(rooted_relabilities, 2, sd)
+table1 <- data.frame(ma, t(rooted_relabilities), devs)
 
-rooted_relabilities %>% knitr::kable(booktabs = T, col.names = c("", "$\\rho_{xy}$ = 0", "$\\rho_{xy}$ = .3", "$\\rho_{xy}$ = .5"), escape = FALSE, digits = 2) %>% 
+
+table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8", "SD(ES)"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
-  row_spec(3, hline_after = T)
+  add_header_above(c(" " = 1, "Study 1"= 1, "Study 2" = 1, "Study 3" = 1)) %>% 
+  add_header_above(c(" " = 1, "Observed effect sizes" = 3))
 
+#alternative inversed table 1
+# table1b <- t(table1)[2:5,]
+# studies <- c("Study 1: $\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "Study 2: $\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "Study 3: $\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8", "SD(ES)")
+# table1b <- cbind(studies, table1b)
+# rownames(table1b) <- NULL
+# 
+# table1b %>% knitr::kable(booktabs = T, col.names = c("Study and Measurement Error", "I: $\\mu = 0$", "II: $\\mu = .3$", "III: $\\mu = .5$"), escape = FALSE, digits = 2) %>% 
+#   add_header_above(c(" " = 1, "Meta-Analysis" = 3)) %>% 
+#   add_header_above(c(" " = 1, "Observed effect sizes" = 3)) %>% 
+#   row_spec(3, hline_after = TRUE)
 ```
-*Note:* Values in cells are observed effect sizes arising from the true effect size $\rho_{xy}$ and measurement reliabilites $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ when sample size is infinite. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
+*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\rho_{xy}$  when sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 ## Table 2
 ### Pre-registered multi-lab replication projects
