@@ -521,6 +521,8 @@ ml2_or <- ml2_or %>%
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2, ml2_ncp_variance) #select only variables of interest
 
+#One lab ("cas") does not have any stat.cond4 values for the trolley dilemma, so we drop this study
+ml2_or <- ml2_or %>% filter(!(effect == "Trolley Dilemma 1" & Site == "cas"))
 
 #*****************************************
 #**[2.3] Correlations----
