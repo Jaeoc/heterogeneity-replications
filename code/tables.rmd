@@ -107,7 +107,7 @@ description <- c("Two correlational effects: 'Gender math attitude' compared imp
             "Facial feedback hypothesis; Independent two-group experiment. Participants either induced to 'smile' or 'pouth' by holding a pen in their mouth differently and simultaneously rated funniness of cartoons. ", #RRR6
             "Intuitive cooperation; Independent two-group experiment. Economic game with money contribution to a common pool either under time pressure or time delay.",
                  "Professor priming; Independent two-group experiment. Participants primed with either a 'professor' or 'hooligan' stimuli. Outcome was percentage correct trivia answers.", #RRR8
-            "Hostility priming; Independent two-group experiment. Participants descrambled sentences, either 20% or 80% were hostile, then rated ambiguos behavior.", #RRR9
+            "Hostility priming; Independent two-group experiment. Participants descrambled sentences, either 20% or 80% were hostile, then rated ambiguous behavior.", #RRR9
             "Moral reminder; Independent two-group experiment. Participants either recalled the Ten Commandments or books they'd read. Outcome was degree of cheating when reporting results. ") #RRR10 
 
 

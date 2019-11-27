@@ -32,7 +32,7 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-##Figure 1
+## Figure 1
 
 ```{r Plot_tau_against_I2, fig.asp = 0.618}
 dat3 <- readRDS("../data/tau_simulation_results.RDS")
@@ -64,7 +64,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
   theme_bw() +
   scale_x_continuous(name = expression(paste("Between studies standard deviation ", tau)),
                      minor_breaks = NULL) +
-  scale_y_continuous(name = expression(paste(I^2," index", sep = "")),
+  scale_y_continuous(name = expression(paste("Average ", italic(I)^2," index", sep = "")),
                      minor_breaks = NULL) +
   coord_cartesian(ylim = c(0, 100)) +
   scale_color_brewer(name = "Effect type", palette = "Dark2", 
@@ -74,13 +74,13 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
   guides(color = guide_legend(override.aes = list(size = 1.4)))
   
 
-# ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
+ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
 
 ```
 
-Figure 1. Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 37 effects. Tau is not directly comparable across effect size measures. 
+Figure 1. Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 67 effects. Tau is not directly comparable across effect size measures. 
 
-##Figure 2
+## Figure 2
 
 ```{r Density-plot-prep}
 #1) I2 plot----
@@ -320,7 +320,7 @@ combo <- cowplot::plot_grid(tau2_facet, I2_facet, H2_facet, labels = "AUTO")
 combo
 ```
 
-Figure 3. The correlation between absolute effect size and A) tau2, B) I2 and C) H2 respectively for 40 effects that were measured as mean or standardized mean differences and 8 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals.
+Figure 3. The correlation between absolute effect size and A) tau2, B) I2 and C) H2 respectively for 40 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals.
 
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
