@@ -118,7 +118,7 @@ US_online <- dat %>% #Extract the (max when multiple effects) number of US/onlin
   group_by(rp) %>% 
   summarize(US = max(US),
             online = max(online)) %>% 
-  ungroup() %>% select(US, online)
+  ungroup() %>% select(rp, US, online)
 
 sample_settings <- c("26/36 samples were primarily university students, 3 general population and 7 undescribed. 9/36 samples were online, including all the general population ones.", #https://osf.io/g3udn/, ML1
                      "79/125 samples were collected in person (typically in labs), remainder online. Mean age in two rounds of data collection were 22.37 and 23.34 years.", #ML2
@@ -143,13 +143,17 @@ summary.table <- dat %>%
             Effects = n_distinct(effect),
             N = if(Effects == 1){sum(Ntotal)}
                            else{sum(Ntotal) / Effects}) %>% #average across effects
-  mutate(Paper = papers,
-         'Sample and Settings' = sample_settings,
-         'Description of Effects' = description,
-         'K (US)' = paste0(k, " (", US_online$US, ")")) %>% 
-  select(RP = rp, Paper, Countries,'K (US)', everything(), -k) #change order of columns
+  mutate('K (US)' = paste0(k, " (", US_online$US, ")"))
 
 summary.table <- summary.table[c(1:4, 6:13, 5),] #reorder so RRR10 is last instead of after RRR1
+
+summary.table <- summary.table %>% 
+  mutate(Paper = papers, #In these vectors RRR1-10 are sorted in descending order since they were manually created
+         'Sample and Settings' = sample_settings,
+         'Description of Effects' = description) %>% 
+  select(RP = rp, Paper, Countries,'K (US)', everything(), -k) #change order of columns
+
+
 
 summary.table %>% knitr::kable(booktabs = TRUE,
                                digits = 0,
@@ -164,7 +168,7 @@ summary.table %>% knitr::kable(booktabs = TRUE,
 Note: For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
 
 ## Table 3
-### Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
+### Heterogeneity across primary effects and statistical power of thirteen multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
 #library(dplyr)
