@@ -74,7 +74,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
   guides(color = guide_legend(override.aes = list(size = 1.4)))
   
 
-ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
+# ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
 
 ```
 
@@ -135,11 +135,10 @@ I2_plot
 
 ```
 
-Figure 2. Simulated $I^2$  densities across 67 effects for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and a histogram of the observed $I^2$ estimates for the 67 effects. Each simulated density consists of approximately 670,000 estimates. 
+Figure 2. Simulated $I^2$  densities across 67 meta-analyses for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and the distribution of the observed $I^2$ estimates (bars) for the 67 meta-analyses. Each simulated density consists of approximately 670,000 estimates. 
 
 
-## Figure 3, correlations per effect type
-
+## Figure 3: correlations per effect type
 
 ```{r corr_per_effect_type-prep}
 #Each set of input datapoints is meta-analyzed as per the original replication project
@@ -213,10 +212,8 @@ fitter <- function(df){  #function to fit correlations for annotating facet plot
  fit_tau2 <- summary(lm(tau2 ~ eff_size, data = df))
  fit_I2 <- summary(lm(s_I2 ~ eff_size, data = df))
  fit_H2 <- summary(lm(H2 ~ eff_size, data = df))
- b <- c(fit_tau2$coefficients[2, 1], fit_I2$coefficients[2, 1], fit_H2$coefficients[2, 1])
  r <- c(sqrt(fit_tau2$r.squared), sqrt(fit_I2$r.squared), sqrt(fit_H2$r.squared))
- data.frame(b = format(round(b, digits = 2), nsmall = 2), 
-            r = format(round(r, digits = 2), nsmall = 2),
+ data.frame(r = format(round(r, digits = 2), nsmall = 2),
             index = c("tau2", "I2", "H2")) 
 }
 
@@ -263,20 +260,19 @@ fig3_ci <- tau2_per_type %>%
 labels <- tau2_per_type %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
   split(.$effect_type) %>% 
   map_dfr(fitter, .id = "effect_type") %>%
-  mutate(r = ifelse(r == 0.15, -0.15, r), #should be negative, but I took squared root of R^2 to get correlations so needs correction
-         lab = paste0("b = ", b, ", r = ", r, " ", fig3_ci$ci)) #put output into one variable for improved plotting
+  mutate(lab = paste0("r = ", r, " ", fig3_ci$ci)) #put output into one variable for improved plotting
 
 
 ```
 
 
 ```{r corr_per_effect_type-plot, cache = FALSE}
-#tau2plot----
-tau2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = tau2)) + 
+#tau plot----
+tau_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = sqrt(tau2))) + #NB! Taking sqrt of tau2 here
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
   geom_text(data = labels[labels$index == "tau2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.1, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
-  scale_y_continuous(name = expression(paste("Between Studies Variance ", italic(tau)^2))) +
+  scale_y_continuous(name = expression(paste("Between Studies Standard Deviation ", italic(tau)))) +
   scale_x_continuous(name = "Absolute Effect Size") +
   theme_classic() +
   theme(strip.background = element_blank(), #remove box around titles
@@ -315,12 +311,12 @@ H2_facet <- ggplot(tau2_per_type, aes(x = eff_size, y = H2)) +
   facet_wrap(~effect_type, nrow = 2, scales = "free") #use free scales since scales are different
 
 #combined----
-combo <- cowplot::plot_grid(tau2_facet, I2_facet, H2_facet, labels = "AUTO")
+combo <- cowplot::plot_grid(tau_facet, I2_facet, H2_facet, labels = "AUTO")
 # ggsave("../figures/effect-het.png", dpi = 600, height =  7, width = 7)
 combo
 ```
 
-Figure 3. The correlation between absolute effect size and A) tau2, B) I2 and C) H2 respectively for 40 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals.
+Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau}$, B) $I^2$ and C) $H^2$ respectively for 40 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and odds ratios/risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals. Code to reproduce figure: osf.io/zuwpg/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 
 ```{r cor_het_effect_size, results = "hide", cache=TRUE}
