@@ -28,13 +28,13 @@ source("helper_functions_tables_figures.r") #Load functions to prep data for fig
 ```
 
 ## Table 1
-### Effect size $\rho_{xy}$ and its heterogeneity as a function of true effect size and measurement reliability.  
+### Variation in observed effect sizes as a function of true effect size and measurement reliability.  
 ```{r effect-size-heterogeneity-table, cache = TRUE}
 #library(kableExtra)
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
 rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
-ma <- c("I: $\\mu = 0$", "II: $\\mu = .3$", "III: $\\mu = .5$")
+ma <- c("I: $\\mu = 0.0$", "II: $\\mu = 0.3$", "III: $\\mu = 0.5$")
 
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
@@ -45,7 +45,7 @@ table1 <- data.frame(ma, t(rooted_relabilities), devs)
 table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8", "SD(ES)"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
   add_header_above(c(" " = 1, "Study 1"= 1, "Study 2" = 1, "Study 3" = 1)) %>% 
-  add_header_above(c(" " = 1, "Observed effect sizes" = 3))
+  add_header_above(c(" " = 1, "Observed Effect Sizes" = 3))
 
 #alternative inversed table 1
 # table1b <- t(table1)[2:5,]
@@ -58,7 +58,7 @@ table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_
 #   add_header_above(c(" " = 1, "Observed effect sizes" = 3)) %>% 
 #   row_spec(3, hline_after = TRUE)
 ```
-*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\rho_{xy}$  when sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
+*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\mu$ when within study sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite within study sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 ## Table 2
 ### Pre-registered multi-lab replication projects
@@ -241,7 +241,7 @@ het %>% knitr::kable(align = "c", longtable = TRUE, booktabs = TRUE, escape = FA
   kable_styling(latex_options = c("scale_down", "repeat_header"), font_size = 7) %>% #comment out if outputting html file
   column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
   footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, $\\\\hat\\\\tau$ = between studies standard deviation, CI = confidence intervals. Statistical power was simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large
+           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. All ML2 meta-analyses with effect type 'r' except 'Moral foundations' and 'Social Value Orientation' were transformed to correlations from a variety of effect sizes. RP = Replication Project, K = no. primary studies, $\\\\hat\\\\tau$ = between studies standard deviation, CI = confidence intervals. Statistical power was simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large
 heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06" ,
            alphabet = c("Value rounded to zero", "These effects were simulated as standardized mean differences")) %>% landscape()
 ```
