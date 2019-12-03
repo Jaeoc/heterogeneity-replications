@@ -1,7 +1,7 @@
 ---
 title: "Tables and Figures - Supplement A and B"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: pdf_document
+output: html_document
 ---
 
 
@@ -29,26 +29,26 @@ library(kableExtra) #create fancy pdf tables
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
-source("helper_functions_tables_figures.r") #Load functions to prep data for figures
+source("03_helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-##Supplement A
+## Supplement A
 
 ```{r a-plot-prep, cache = TRUE}
-res <- dat %>% 
+res <- dat %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(est_heterogen_smd_raw, .id = "effect") #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
 
-het <- dat %>% 
-  select(rp, Site, effect, effect_type) %>% 
-  group_by(rp, effect) %>% 
+het <- dat %>%
+  select(rp, Site, effect, effect_type) %>%
+  group_by(rp, effect) %>%
   summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>% 
-  left_join(res) %>% 
-  mutate(effect_type = recode(effect_type, 
+            k = n_distinct(Site)) %>%
+  left_join(res) %>%
+  mutate(effect_type = recode(effect_type,
                               d = "SMD.",
                               'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>% 
+                              'Risk difference' = "RD")) %>%
   ungroup()
 
 a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.")
@@ -67,78 +67,54 @@ a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("SMD
 #Transform effect sizes to biserial correlations (pearson's correlations left as is)
 #estimate tau2 for correlations
 #'transform_MA' and 'summarizer' are sourced functions
-res2 <- dat %>% 
+res2 <- dat %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales')) %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map(transform_MA) %>% #
   map_dfr(summarizer, .id = "effect")
 
 
 
-#Add rp and k to the data-frame 
-het <- dat %>% 
-  select(rp, Site, effect, effect_type) %>% 
-  group_by(rp, effect) %>% 
+#Add rp and k to the data-frame
+het <- dat %>%
+  select(rp, Site, effect, effect_type) %>%
+  group_by(rp, effect) %>%
   summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>% 
-  left_join(res2) %>% 
-  mutate(effect_type = recode(effect_type, 
+            k = n_distinct(Site)) %>%
+  left_join(res2) %>%
+  mutate(effect_type = recode(effect_type,
                               d = "SMD.",
                               'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>% 
+                              'Risk difference' = "RD")) %>%
   ungroup()
 
-d <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.") %>% 
-  mutate(sigma2 = tau2/(I2/100) - tau2) #add 'typical within study variance' per project 
+d <- het %>% filter(effect_type == "SMD.") %>%
+  mutate(sigma2 = tau2/(I2/100) - tau2) #add 'typical within study variance' per project
 
 ```
 
 
 ```{r c-plot-1, cache = FALSE}
-c_plot_1 <- ggplot(d, aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("Biserial r (transformed SMD)")
-
-
+c_plot <- ggplot(d, aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("Point Biserial r (transformed SMD)")
 
 ```
 
-```{r untruncated-biserial, cache = TRUE}
-res3 <- dat %>%
-  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & outcomes1_2 == "mean _ SD") %>% 
-  split(.$effect) %>% 
-  map(~transform_SD(.$outcome_t1, .$outcome_c1, .$outcome_t2, .$outcome_c2, .$ntreatment, .$ncontrol)) %>% 
-  map(~untruncated_d_to_r(.$d, .$n1, .$n2)) %>% 
-  map_dfr(summarizer, .id = "effect")
-```
-
-
-```{r c-plot, cache = FALSE}
-c_plot <- c_plot_1 + geom_point(data = res3, shape = 4, aes(x = I2, y = sqrt(tau2))) +
-  scale_x_continuous(name = expression(paste(italic(I)^2, " Index (biserial)"))) +
-  scale_y_continuous(name = "Tau (biserial)")
-
-
-
-
-```
 
 ```{r tau-vs-tau}
-b <- select(a, effect, tau2) %>% 
-  left_join(select(d, effect, tau2), by = "effect") %>% #add truncated transformation tau2
-  left_join(select(res3, effect, tau2), by = "effect") #add untruncated transformation tau2
+b <- select(a, effect, tau2) %>%
+  left_join(select(d, effect, tau2), by = "effect") #add truncated transformation tau2
 ```
 
 
 ```{r b-plot-1}
-b_plot_1 <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) + 
-  geom_point() 
-
-```
-
-```{r b-plot}
-b_plot <- b_plot_1 + geom_point(data = b, shape = 4, aes(x = sqrt(tau2.x), y = sqrt(tau2))) +
-  ggtitle("SMD vs. biserial") +
+b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
+  geom_point() +
+  ggtitle("SMD vs. Point biserial") +
   scale_x_continuous(name = "Tau (SMD)") +
-  scale_y_continuous(name = "Tau (biserial)")
+  scale_y_continuous(name = "Tau (Point biserial)")
+
 ```
+
 
 
 
@@ -149,7 +125,8 @@ cowplot::plot_grid(a_plot, b_plot, c_plot, ncol = 1, labels = "AUTO")
 # ggsave("../figures/Figure-S1.png", dpi = 600, width = 6, height = 7.8)
 ```
 
-_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into biserial correlations for all effects reported as SMDs in ManyLabs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to biserial correlations, either with truncation of correlations over 1 (circles) or without (crosses) when estimating variance. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation, either with truncation or not. 
+_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into biserial correlations for all effects reported as SMDs in ManyLabs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to biserial correlations, either with truncation of correlations over 1 (circles) or without (crosses) when estimating variance. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation, either with truncation or not.
+
 
 
 #Table S1.
@@ -162,18 +139,18 @@ _Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before 
 #fit a random effects model to all empirical data
 #Each set of input datapoints is meta-analyzed as per the original replication project
 #Function 'est_heterogen_smd_raw' is sourced
-res <- dat %>% 
+res <- dat %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
   mutate(tau = sqrt(tau2),
          tau_ci.lb = sqrt(tau2_ci.lb),
-         tau_ci.ub = sqrt(tau2_ci.ub)) %>% 
+         tau_ci.ub = sqrt(tau2_ci.ub)) %>%
   select(-tau2, - tau2_ci.lb, -tau2_ci.ub) #drop redundant variables
 
 #Transform effect sizes to biserial correlations (pearson's correlations left as is)
 #estimate tau2 for correlations
 #'transform_MA' and 'summarizer' are sourced functions
-res2 <- dat %>% 
+res2 <- dat %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map(transform_MA) %>% #
   map_dfr(summarizer, .id = "effect")
@@ -185,16 +162,16 @@ res <- res %>%
          tau_r_ci.ub = sqrt(res2$tau2.ub))
 
 #Add rp and k to the data-frame and prep for table
-het <- dat %>% 
-  select(rp, Site, effect, effect_type) %>% 
-  group_by(rp, effect) %>% 
+het <- dat %>%
+  select(rp, Site, effect, effect_type) %>%
+  group_by(rp, effect) %>%
   summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>% 
-  left_join(res) %>% 
-  mutate(effect_type = recode(effect_type, 
+            k = n_distinct(Site)) %>%
+  left_join(res) %>%
+  mutate(effect_type = recode(effect_type,
                               d = "SMD",
                               'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>% 
+                              'Risk difference' = "RD")) %>%
   ungroup()
 
 #Load simulation results (power/type 1 error for all effects)
@@ -202,17 +179,17 @@ dens <- readRDS("../data/power_simulation_results.RDS")
 names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
 
 #Summary of simulation results, needs to be combined with main part of table
-I2_power <- dens %>% 
-  bind_rows(.id = "effect") %>% 
-  group_by(effect, tau_index) %>% 
+I2_power <- dens %>%
+  bind_rows(.id = "effect") %>%
+  group_by(effect, tau_index) %>%
   summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
-  ungroup() %>% 
+  ungroup() %>%
   tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')
 
 #Combine dataframes to create full table
-het <-  het %>% 
-  left_join(I2_power) %>% 
+het <-  het %>%
+  left_join(I2_power) %>%
   arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by I2 and upper CI bound
   mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 1), nsmall = 1)), ", ", trimws(format(round(s_ci.ub, 1), nsmall = 1)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
          s_I2 = format(round(s_I2, 1), nsmall = 1),
@@ -228,23 +205,27 @@ het <-  het %>%
 ```{r heterogeneity-table, cache = FALSE}
 #library(kableExtra)
 
-het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
-  add_header_above(c(" " = 12, "Level of heterogeneity" = 4)) %>% 
-  add_header_above(c(" " = 12, "Type I Error Rate & Statistical Power" = 4)) %>% 
+het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>%
+  add_header_above(c(" " = 12, "Level of heterogeneity" = 4)) %>%
+  add_header_above(c(" " = 12, "Type I Error Rate & Statistical Power" = 4)) %>%
   kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
-  column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
+  column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped
   footnote(threeparttable = TRUE, escape = FALSE,
            general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: https://osf.io/j9zyd/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06",
-           alphabet = "These effects were simulated as standardized mean differences") %>% 
+           alphabet = "These effects were simulated as standardized mean differences") %>%
   landscape()
 
 
 ```
 
-##Supplement B
+## Supplement B
 
 
 ```{r Supplement-B-table}
+#Load simulation results (power/type 1 error for all effects)
+dens <- readRDS("../data/power_simulation_results.RDS")
+names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
+
 
 #Summary of results. These are incorporated into the main table in the paper, see tables.rmd
 zero <- dens %>% 
@@ -278,7 +259,7 @@ Sensitivity analysis assuming a medium true effect size rather than zero true ef
 
 In our main results we simulated data to estimate type I error and power using an average true effect size equal to zero. As explained in the methods section this is unlikely to matter as our interest lies in heterogeneity. However, as a sensitivity analysis, in Supplement B we also estimated type I error and power, but generated with an average 'medium' true effect size as defined by Cohen (1988).
 
-Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table A1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
+Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table SB1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
 
 _Type I error and power to detect four heterogeneity levels under two true effect sizes_
 

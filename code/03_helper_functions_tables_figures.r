@@ -68,7 +68,7 @@ est_heterogen_smd_raw <- function(x){
 
 
 #******************************************
-#Functions to transform all effect sizes to the same unit of measurement and meta-analyze----
+#Functions (for Supplement A) to transform all effect sizes to the same unit of measurement and meta-analyze----
 #******************************************
 
 #Formulas found in: 
@@ -101,15 +101,11 @@ transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean diff
 transform_d_to_r <- function(d, n1, n2){ 
   m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
   h <- m/n1 + m/n2 #p. 164
-  rpb <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5
-  p <- n1 / (n1 + n2)
-  q <- n2 / (n1 + n2)
-  zp <- qnorm(p)
-  fzp <- dnorm(zp)
-  rb <- sqrt(p*q) / fzp * rpb #biserial correlation, Jacobs and Viechtbauer (2017), equation 8
-  rb_trunc <- ifelse(rb > 1, 1, rb) #truncate for > 1 when computing variance to avoid neg. variance. p. 166-167
-  var_rb <- 1/(n1 + n2 -1) * (sqrt(p*q) / fzp - rb_trunc^2)^2 #variance biserial r, approximate formula, eq. 13 
-  data.frame(r = rb, vi = var_rb, n = n1 + n2) #I use the approximate formula (eq 13) above to decrease the risk of coding error
+  r <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5 
+  var_r <- (1-r^2)^2 / (n1 + n2 -1) #Cooper and Hedges (2009), equation 12.27
+  # rz <- 0.5*ln((1+r)/(1-r)) #Fishers z transformation Cooper and Hedges (2009), equation 12.28
+  # var_rz <- 1 / (n1+n2 -3) #Fisher z variance, Cooper and Hedges (2009), equation 12.29
+  data.frame(r = r, vi = var_r, n = n1 + n2) 
 }
 
 #Note that above function gives the same result as
@@ -165,24 +161,6 @@ summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viecht
 #Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
 
 #Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
-
-
-
-##****************
-#Function to compute biserial correlations without truncation 
-#identical to function on line 86 but with the truncation removed when computing the variance
-untruncated_d_to_r <- function(d, n1, n2){ 
-  m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
-  h <- m/n1 + m/n2 #p. 164
-  rpb <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5
-  p <- n1 / (n1 + n2)
-  q <- n2 / (n1 + n2)
-  zp <- qnorm(p)
-  fzp <- dnorm(zp)
-  rb <- sqrt(p*q) / fzp * rpb #biserial correlation, Jacobs and Viechtbauer (2017), equation 8
-  var_rb <- 1/(n1 + n2 -1) * (sqrt(p*q) / fzp - rb^2)^2 #variance biserial r, approximate formula, eq. 13 
-  data.frame(r = rb, vi = var_rb, n = n1 + n2) #I use the approximate formula (eq 13) above to decrease the risk of coding error
-}
 
 
 

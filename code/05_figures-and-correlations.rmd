@@ -29,7 +29,7 @@ library(boot) #Bootstrap confidence intervals for correlations
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
-source("helper_functions_tables_figures.r") #Load functions to prep data for figures
+source("03_helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
 ## Figure 1
@@ -324,13 +324,14 @@ Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau
 #This section gives the correlations reported in the section 'Heterogeneity and effect sizes' in the main manuscript 
 
 #1. Standardized mean differences----
-SMDs <- tau2_per_type %>% filter(effect_type == "Standardized Mean Difference")
+SMDs <- tau2_per_type %>% filter(effect_type == "Standardized Mean Difference") %>% 
+  mutate(tau = sqrt(tau2))
 
-cor.test(SMDs$tau2, SMDs$eff_size) #pearson tau2
+cor.test(SMDs$tau, SMDs$eff_size) #pearson tau2
 cor.test(SMDs$s_I2, SMDs$eff_size) #pearson I2
 cor.test(SMDs$H2, SMDs$eff_size) #pearson H2
 
-cor.test(SMDs$tau2, SMDs$eff_size, method = "spearman") #spearman
+cor.test(SMDs$tau, SMDs$eff_size, method = "spearman") #spearman
 cor.test(SMDs$s_I2, SMDs$eff_size, method = "spearman") #spearman
 cor.test(SMDs$H2, SMDs$eff_size, method = "spearman") #spearman
 
@@ -339,7 +340,9 @@ cor.test(SMDs$H2, SMDs$eff_size, method = "spearman") #spearman
 dropped_anchoring <- SMDs %>%
   filter(!grepl("Anchoring", effect))
 
+cor.test(dropped_anchoring$tau, dropped_anchoring$eff_size) #pearson
 cor.test(dropped_anchoring$s_I2, dropped_anchoring$eff_size) #pearson
+cor.test(dropped_anchoring$H2, dropped_anchoring$eff_size) #pearson
 
 #bootstrap confidence intervals
 #code by Amir Abdol
@@ -352,11 +355,12 @@ pear <- function(formula, data, indices){ #pearson
      return(fit$estimate)
 }
 
-bootfit <- boot(data=SMDs, statistic=pear, R=1000, formula= ~ eff_size + s_I2)
-I2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
+#bootfit <- boot(data=SMDs, statistic=pear, R=1000, formula= ~ eff_size + s_I2) #see Fig 3
+#I2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
 
 
 #Excluding anchoring effects
+set.seed(234)
 bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ eff_size + s_I2)
 
 I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
@@ -364,20 +368,19 @@ I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and a
 #1.2 Tau2 confidence intervals----
 pear <- function(formula, data, indices){
      d <- data[indices,]
-     fit <- cor.test(formula = ~ tau2 + eff_size, data=d)
+     fit <- cor.test(formula = ~ tau + eff_size, data=d)
      return(fit$estimate)
 }
 
-bootfit <- boot(data=tau2_per_type, statistic=pear, R=1000, formula= ~ eff_size + tau2)
-
-tau2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
+# bootfit <- boot(data=tau2_per_type, statistic=pear, R=1000, formula= ~ eff_size + tau2) #see Fig 3
+# tau2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 #Excluding anchoring effects
 cor.test(dropped_anchoring$tau2, dropped_anchoring$eff_size)
 
-bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ eff_size + tau2)
-
-tau2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
+set.seed(423)
+bootfit <- boot(data=dropped_anchoring, statistic=pear, R=1000, formula= ~ eff_size + tau)
+tau_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
 
 
 #1.3 H2 confidence intervals----
@@ -387,8 +390,8 @@ pear <- function(formula, data, indices){
      return(fit$estimate)
 }
 
+set.seed(342)
 bootfit <- boot(data=tau2_per_type, statistic=pear, R=1000, formula= ~ eff_size + H2)
-
 H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
 
 
@@ -401,30 +404,27 @@ spear <- function(formula, data, indices){ #spearman
      return(fit$estimate)
 }
 
+set.seed(241)
 options(warn=-1)
 bootfit <- boot(data=tau2_per_type, statistic=spear, R=1000, formula= ~ eff_size + s_I2)
 options(warn=0)
 
 I2_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
 
-#Second for tau2
+#Second for tau
 spear <- function(formula, data, indices){ #spearman
      d <- data[indices,]
-     fit <- cor.test(formula = ~ tau2 + eff_size, data=d, method = "spearman")
+     fit <- cor.test(formula = ~ tau + eff_size, data=d, method = "spearman")
      return(fit$estimate)
 }
 
+set.seed(5233)
+tau2_per_type <- tau2_per_type %>% mutate(tau = sqrt(tau2))
 options(warn=-1)
-bootfit <- boot(data=tau2_per_type, statistic=spear, R=1000, formula= ~ eff_size + tau2)
+bootfit <- boot(data=tau2_per_type, statistic=spear, R=1000, formula= ~ eff_size + tau)
 options(warn=0)
 
-tau2_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
-
-#2. Fisher's z----
-fish <- tau2_per_type %>% filter(effect_type == "Fisher's z" )
-cor.test(fish$tau2, fish$eff_size) #pearson tau2
-cor.test(fish$s_I2, fish$eff_size) #pearson I2
-cor.test(fish$H2, fish$eff_size)
+tau_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```
 

@@ -24,7 +24,7 @@ library(kableExtra) #For creating good-looking pdf tables
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
-source("helper_functions_tables_figures.r") #Load functions to prep data for figures
+source("03_helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
 ## Table 1
@@ -169,7 +169,7 @@ Note: For studies with several effects the number of participants is the average
 
 ## Table 3
 ### Heterogeneity across primary effects and statistical power of thirteen multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
-```{r prep-heterogeneity-table, cache = TRUE}
+```{r prep-heterogeneity-table, cache = TRUE, results = 'hide'}
 #library(metafor)
 #library(dplyr)
 #library(purrr)
@@ -198,6 +198,28 @@ het <- dat %>%
                               'Raw mean difference' = "MD",
                               'Risk difference' = "RD")) %>% 
   ungroup()
+
+#****************
+#Results for "Heterogeneity Estimates and Confidence Intervals" section in paper
+
+sum(het$s_I2 >= 62.5) #what number of I2 estimates would be rounded to "large" (75% I2) heterogeneity
+sum(het$s_I2 >= 37.5 & het$s_I2 < 62.5) #what number of I2 estimates would be rounded to "medium" (50% I2) heterogeneity
+sum(het$s_I2 >= 12.5 & het$s_I2 < 37.5) #what number of I2 estimates would be rounded to "small" (25% I2) heterogeneity
+sum(het$s_I2 < 12.5) #what number of I2 estimates would be rounded to zero (0% I2) heterogeneity
+
+
+quantile(het$tau[het$effect_type == "r"]) #quantiles of tau for correlation tau scale
+quantile(het$tau[het$effect_type == "SMD"]) ##quantiles of tau for SMD tau scale
+
+sum(het$s_ci.lb == 0) #number of meta-analysis with lower I2 CI containing zero
+sum(het$s_ci.lb == 0 & het$tau_ci.lb == 0) #All above also have lower tau CI containing zero
+
+sum(het$s_I2 == 0) #number of meta-analyses with I2 estimates of zero
+sum(het$s_I2 == 0 & het$tau == 0) #all these also have tau estimates of zero
+
+#****************
+
+#continue prepping table 3
 
 #Load simulation results (power/type 1 error for all effects)
 dens <- readRDS("../data/power_simulation_results.RDS")
