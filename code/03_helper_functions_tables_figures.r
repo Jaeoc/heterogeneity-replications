@@ -66,7 +66,116 @@ est_heterogen_smd_raw <- function(x){
              H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
 }
 
+#******************************************
+#Function for Figure 3 and Supplement C----
+#******************************************
 
+MD_fit <- function(x){ #standardize mean differences in the meta-analysis
+  fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x)
+  hetero <- confint(fit)$random[c(1, 3), ] 
+  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
+             s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
+             tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3],
+             H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
+}
+
+
+log_or_fit <- function(x){ #NB! if a cell is 0, 1/2 will be added to it. Fit log odds meta-analysis
+  fit <- rma(measure = "OR", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, n1i = ntreatment, n2i = ncontrol,  data = x)
+  hetero <- confint(fit)$random[c(1, 3), ] 
+  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
+             s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
+             tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3],
+             H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
+}
+
+#labels for figure 3----
+fitter <- function(df){  #function to fit correlations for annotating facet plots
+  fit_tau <- summary(lm(tau ~ eff_size, data = df))
+  fit_I2 <- summary(lm(s_I2 ~ eff_size, data = df))
+  fit_H2 <- summary(lm(H2 ~ eff_size, data = df))
+  r <- c(sqrt(fit_tau$r.squared), sqrt(fit_I2$r.squared), sqrt(fit_H2$r.squared))
+  data.frame(r = format(round(r, digits = 2), nsmall = 2),
+             index = c("tau", "I2", "H2")) 
+}
+
+
+#functions to estimate bootstrapped (pearson's) confidence intervals to add to plot correlations
+pear_tau <- function(formula, data, indices){ #pearson
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ tau + eff_size, data=d)
+  return(fit$estimate)
+}
+pear_I2 <- function(formula, data, indices){ #pearson
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ s_I2 + eff_size, data=d)
+  return(fit$estimate)
+}
+pear_H2 <- function(formula, data, indices){ #pearson
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ H2 + eff_size, data=d)
+  return(fit$estimate)
+}
+
+bootfitter <- function(x){ #function that computes the bootstrapped confidence intervals using above functions to annotate plots
+  bootfit <- boot(data=x, statistic=pear_tau, R=1000, formula= ~ eff_size + tau)
+  tau_ci_pears <- boot.ci(bootfit, type="perc")
+  bootfit <- boot(data=x, statistic=pear_I2, R=1000, formula= ~ eff_size + s_I2)
+  I2_ci_pears <- boot.ci(bootfit, type="perc")
+  bootfit <- boot(data=x, statistic=pear_H2, R=1000, formula= ~ eff_size + H2)
+  H2_ci_pears <- boot.ci(bootfit, type="perc")
+  
+  ci.lb <- c(tau_ci_pears$percent[4], I2_ci_pears$percent[4], H2_ci_pears$percent[4])
+  ci.ub <- c(tau_ci_pears$percent[5], I2_ci_pears$percent[5], H2_ci_pears$percent[5])
+  
+  ci <- paste0("[", format(round(ci.lb, 2), nsmall = 2), ", ",
+               format(round(ci.ub, 2), nsmall = 2), "]")#percentile 
+  data.frame(ci, index = c("tau", "I2", "H2"))
+}
+
+
+# spearman bootstrap CIs----
+#Functions to compute confidence intervals for the spearman correlations reported
+
+#First for I2
+spear_I2 <- function(formula, data, indices){ #spearman
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ s_I2 + eff_size, data=d, method = "spearman")
+  return(fit$estimate)
+}
+
+#Second for tau
+spear_tau <- function(formula, data, indices){ #spearman
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ tau + eff_size, data=d, method = "spearman")
+  return(fit$estimate)
+}
+
+#Supplement C labels----
+pear_sigma <- function(formula, data, indices){ #pearson
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ sigma + eff_size, data=d)
+  return(fit$estimate)
+}
+
+fitter_sigma <- function(df){  #function to fit correlations for annotating facet plots
+  fit_sigma <- summary(lm(sigma ~ eff_size, data = df))
+  r <- sqrt(fit_sigma$r.squared)
+  data.frame(r = format(round(r, digits = 2), nsmall = 2),
+             index = "sigma") 
+}
+
+bootfitter_sigma <- function(x){ #function that computes the bootstrapped confidence intervals using above functions to annotate plots
+  bootfit <- boot(data=x, statistic=pear_sigma, R=1000, formula= ~ eff_size + sigma)
+  sigma_ci_pears <- boot.ci(bootfit, type="perc")
+  
+  ci.lb <- sigma_ci_pears$percent[4]
+  ci.ub <- sigma_ci_pears$percent[5]
+  
+  ci <- paste0("[", format(round(ci.lb, 2), nsmall = 2), ", ",
+               format(round(ci.ub, 2), nsmall = 2), "]")#percentile 
+  data.frame(ci, index = "sigma")
+}
 #******************************************
 #Functions (for Supplement A) to transform all effect sizes to the same unit of measurement and meta-analyze----
 #******************************************
@@ -158,9 +267,22 @@ summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viecht
              I2 = fitr$I2, I2.lb = ci[2, 2], I2.ub = ci[2, 3], H2trunc = fitr$H2, H2 = fitr$QE / (fitr$k - 1)) 
 }
 
-#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. See Higgins & Thompson, 2002 and ?print.rma.uni.
+#Default method of metafor for calculating H2 is truncated at one. Alternative method for calculating H2 provides information also on
+#excessive homogeneity, i.e, less variability than expected by chance (that is, does not have a lower limit of 1). 
+#This method approximates H2 as if we were using the Dersimonian and Laird estimate of tau2, although we use REML. 
+#See Higgins & Thompson, 2002 and ?print.rma.uni.
 
 #Higgins, J., & Thompson, S. G. (2002). Quantifying heterogeneity in a meta-analysis. Statistics in medicine, 21(11), 1539-1558.
 
 
 
+#******************************************
+#Function for Supplement C ----
+#******************************************
+#For computing the correlation between average sampling variance and average effect size
+
+compute_precision <- function(SD1, SD2, n1, n2){
+  var_pooled <- ((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2) #Borenstein, M. (2009), p. 226. 
+  sampling_var <- var_pooled / (n1 + n2)
+  1 / sampling_var #precision
+}

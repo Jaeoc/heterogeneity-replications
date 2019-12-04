@@ -18,6 +18,9 @@ if(!require(metafor)){install.packages("metafor")}
 if(!require(dplyr)){install.packages("dplyr")}
 if(!require(purrr)){install.packages("purrr")}
 if(!require(kableExtra)){install.packages("kablExxtra")}
+if(!require(ggplot2)){install.packages("ggplot2")}
+if(!require(cowplot)){install.packages("cowplot")}
+if(!require(boot)){install.packages("boot")}
 
 library(readr) #To load data
 library(dplyr) #For data transformation
@@ -26,6 +29,7 @@ library(metafor) #To run meta-analyses
 library(ggplot2) #plotting figures
 library(cowplot) #combine plots
 library(kableExtra) #create fancy pdf tables
+library(boot) #Bootstrap confidence intervals for correlations
 
 dat <- read_csv("../data/collated_summary_data.csv")
 
@@ -269,3 +273,87 @@ knitr::kable(comparison, digits = 2)
 
 **Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). Code to reproduce table: https://osf.io/j9zyd/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
+## Supplement C
+
+```{r, preprocessing}
+
+SMDs_raw <- dat %>% filter(outcomes1_2 == "mean _ SD") %>% 
+  mutate(wi = compute_precision(SD1 = outcome_t2, SD2 = outcome_c2, n1 = ntreatment, n2 = ncontrol)) #compute_precision function is sourced
+
+average_within <- SMDs_raw %>% #these values we now wish to correlate with meta-analytic results
+  group_by(effect) %>% 
+  summarize(s2 = sum(wi) * (n()-1) / (sum(wi)^2 - sum(wi^2))) %>% #Average within study variance; equation 9. Higgins and Thompson (2003). n() = k [number of studies in a meta-analysis]
+  ungroup()
+
+
+#Raw mean differences to SMD
+MD_standardized <- dat %>% 
+  filter(outcomes1_2 == "mean _ SD") %>% #Note, drops Mean _ SE studies (two) since no method in metafor to convert into standardized mean differences
+  split(.$effect) %>% 
+  map_dfr(MD_fit, .id = "effect") #MD_fit function is sourced
+
+tau_per_type <- MD_standardized %>% 
+  left_join(average_within) %>%
+  mutate(sigma = sqrt(s2),
+         eff_size = abs(eff_size),
+         tau = sqrt(tau2)) #needed for bootfitter function below to work but not used
+
+#Add labels
+#lables
+set.seed(499) #for the bootstrapping
+all_effects_ci <- tau_per_type %>% 
+  bootfitter_sigma(.) #bootfitter is a sourced function
+
+labels_all <- tau_per_type %>% #
+  fitter_sigma(.) %>% #fitter is a sourced function
+  mutate(lab = paste0("r = ", r, " ", all_effects_ci$ci)) #put output into one variable for improved plotting
+
+
+#As above but dropping the 4 largest effect sizes (Anchoring effects)----
+without_anchoring <- tau_per_type %>% 
+  filter(!grepl("Anchoring", effect))
+
+#lables
+set.seed(500) #for the bootstrapping
+restricted_effects_ci <- without_anchoring %>% 
+  bootfitter_sigma(.) #bootfitter is a sourced function
+
+labels_restricted <- without_anchoring %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
+  fitter_sigma(.) %>% #fitter is a sourced function
+  mutate(lab = paste0("r = ", r, " ", restricted_effects_ci$ci)) #put output into one variable for improved plotting
+
+
+```
+
+```{r}
+
+within_plot_full <- ggplot(tau_per_type, aes(x = eff_size, y = sigma)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_text(data = labels_all[labels_all$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  scale_y_continuous(name = expression(paste("Within Studies Standard Deviation"))) +
+  scale_x_continuous(name = "Absolute Effect Size") +
+  theme_classic() +
+  theme(strip.background = element_blank(), #remove box around titles
+        strip.text = element_text(size = 12),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid"))
+
+
+without_anchoring_plot <- ggplot(without_anchoring, aes(x = eff_size, y = sigma)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_text(data = labels_restricted[labels_restricted$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  scale_y_continuous(name = expression(paste("Within Studies Standard Deviation"))) +
+  scale_x_continuous(name = "Absolute Effect Size") +
+  theme_classic() +
+  theme(strip.background = element_blank(), #remove box around titles
+        strip.text = element_text(size = 12),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid"))
+
+cowplot::plot_grid(within_plot_full, without_anchoring_plot, nrow = 2, labels = "AUTO")
+ggsave("../figures/figure-S2.png", dpi = 600, height =  7, width = 7)
+```
+
+Figure S2. The Pearson correlation (_r_) between average absolute effect size and average within studies standard deviation for 40 effects that were measured as mean or standardized mean differences. Panel A shows results for all 40 effect sizes and panel B with the four largest (Anchoring 1 - 4) excluded. Effects reported as mean differences were standardized. Square brackets contain 95% bootstrapped percentile confidence intervals. 
