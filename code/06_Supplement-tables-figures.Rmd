@@ -1,11 +1,11 @@
 ---
-title: "Tables and Figures - Supplement A and B"
+title: "Tables and Figures - Supplement A, B and C"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: pdf_document
 ---
 
 
-This document contains the code to reproduce tables and figures from Supplement A and Supplement B for the project "Heterogeneity in direct replications in psychology and its association with effect size". 
+This document contains the tables and figures from Supplement A, B and C for the project "Heterogeneity in direct replications in psychology and its association with effect size". 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
@@ -36,7 +36,7 @@ dat <- read_csv("../data/collated_summary_data.csv")
 source("03_helper_functions_tables_figures.r") #Load functions to prep data for figures
 ```
 
-## Supplement A
+# Supplement A
 
 ```{r a-plot-prep, cache = TRUE}
 res <- dat %>%
@@ -132,97 +132,7 @@ cowplot::plot_grid(a_plot, b_plot, c_plot, ncol = 1, labels = "AUTO")
 _Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into biserial correlations for all effects reported as SMDs in ManyLabs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to biserial correlations, either with truncation of correlations over 1 (circles) or without (crosses) when estimating variance. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation, either with truncation or not.
 
 
-
-#Table S1A.
-###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
-```{r prep-heterogeneity-table, cache = TRUE}
-#library(metafor)
-#library(dplyr)
-#library(purrr)
-
-#fit a random effects model to all empirical data
-#Each set of input datapoints is meta-analyzed as per the original replication project
-#Function 'est_heterogen_smd_raw' is sourced
-res <- dat %>%
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
-  mutate(tau = sqrt(tau2),
-         tau_ci.lb = sqrt(tau2_ci.lb),
-         tau_ci.ub = sqrt(tau2_ci.ub)) %>%
-  select(-tau2, - tau2_ci.lb, -tau2_ci.ub) #drop redundant variables
-
-#Transform effect sizes to biserial correlations (pearson's correlations left as is)
-#estimate tau2 for correlations
-#'transform_MA' and 'summarizer' are sourced functions
-res2 <- dat %>%
-  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
-  map(transform_MA) %>% #
-  map_dfr(summarizer, .id = "effect")
-
-res <- res %>%
-  mutate(r = res2$r,
-         tau_r = sqrt(res2$tau2), #For table 3, report tau and transformed effect sizes (biserial correlations)
-         tau_r_ci.lb = sqrt(res2$tau2.lb),
-         tau_r_ci.ub = sqrt(res2$tau2.ub))
-
-#Add rp and k to the data-frame and prep for table
-het <- dat %>%
-  select(rp, Site, effect, effect_type) %>%
-  group_by(rp, effect) %>%
-  summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>%
-  left_join(res) %>%
-  mutate(effect_type = recode(effect_type,
-                              d = "SMD",
-                              'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>%
-  ungroup()
-
-#Load simulation results (power/type 1 error for all effects)
-dens <- readRDS("../data/power_simulation_results.RDS")
-names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
-
-#Summary of simulation results, needs to be combined with main part of table
-I2_power <- dens %>%
-  bind_rows(.id = "effect") %>%
-  group_by(effect, tau_index) %>%
-  summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
-  ungroup() %>%
-  tidyr::spread(key = tau_index, value = power) %>% #prep for table
-  rename(zero = '1', small = '2', medium = '3', large = '4')
-
-#Combine dataframes to create full table
-het <-  het %>%
-  left_join(I2_power) %>%
-  arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by I2 and upper CI bound
-  mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 1), nsmall = 1)), ", ", trimws(format(round(s_ci.ub, 1), nsmall = 1)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
-         s_I2 = format(round(s_I2, 1), nsmall = 1),
-         tau_ci = paste0("[", trimws(format(round(tau_ci.lb, 3), nsmall = 3)), ", ", trimws(format(round(tau_ci.ub, 3), nsmall = 3)), "]"),
-         tau = format(round(tau, 3), nsmall = 3),
-         tau_r = format(round(tau_r, 3), nsmall = 3),
-         tau_r_ci = paste0("[", trimws(format(round(tau_r_ci.lb, 3), nsmall = 3)), ", ", trimws(format(round(tau_r_ci.ub, 3), nsmall = 3)), "]")) %>% #rounded here instead of in table function because should have 4 digits
-  select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, tau, tau_ci, r, tau_r, tau_r_ci, zero, small, medium, large)
-
-```
-
-
-```{r heterogeneity-table, cache = FALSE}
-#library(kableExtra)
-
-het %>% knitr::kable(align = "c", booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\tau$", "$\\tau$ 95\\% CI", "r*" , "r* $\\tau$", "r* $\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>%
-  add_header_above(c(" " = 12, "Level of heterogeneity" = 4)) %>%
-  add_header_above(c(" " = 12, "Type I Error Rate & Statistical Power" = 4)) %>%
-  kable_styling("scale_down", font_size = 7) %>% #comment out if outputting html file
-  column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped
-  footnote(threeparttable = TRUE, escape = FALSE,
-           general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. RP = Replication Project, K = no. primary studies, CI = confidence intervals, r* = effect sizes as correlations and biserial correlations. $I^2$ and its confidence intervals are for original effect size specifications whereas $\tau$ and its confidence intervals are for transformed r* effect sizes. Statistical power and type I error rates were simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: https://osf.io/j9zyd/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06",
-           alphabet = "These effects were simulated as standardized mean differences") %>%
-  landscape()
-
-
-```
-
-## Supplement B
+# Supplement B
 
 
 ```{r Supplement-B-table}
@@ -265,15 +175,19 @@ In our main results we simulated data to estimate type I error and power using a
 
 Estimated type I error and power for zero/small/medium/large heterogeneity when simulated with a true effect size of zero vs. medium are shown for each effect in Table SB1. In both cases type I error is approximately nominal, as compared to the expected 5% error rate. With a true effect size of zero, average power was `r 100*round(mean(zero$Small), digits = 2)`%/`r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`% for small/medium/large heterogeneity, respectively. The corresponding power with a true medium effect size was also `r 100*round(mean(zero$Small), digits = 2)`%/ `r 100*round(mean(zero$Medium), digits = 2)`%/`r 100*round(mean(zero$Large), digits = 2)`%, respectively. To conclude, changing true effect size in our simulations from zero to medium had little to no impact on estimated type I error and power.
 
+## Table S1B
+
 _Type I error and power to detect four heterogeneity levels under two true effect sizes_
 
 ```{r}
-knitr::kable(comparison, digits = 2)
+knitr::kable(comparison, digits = 2, longtable = TRUE, booktabs = TRUE) %>% 
+  add_header_above(c(" " = 1, "True effect size zero" = 4, "True effect size medium" = 4)) %>% 
+  add_header_above(c(" " = 1, "Type I error rate and power for different heterogeneity levels" = 8))
 ```
 
 **Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). Code to reproduce table: https://osf.io/j9zyd/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
-## Supplement C
+# Supplement C
 
 ```{r, preprocessing}
 
@@ -316,7 +230,7 @@ corr_data_no_anchoring <- without_anchoring %>%
 
 ```
 
-Table S1C. The Pearson correlations from 40 meta-analyses estimated with the random effects model and restricted maximum likelihood. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+## Table S1C. 
 
 ```{r, corr-table}
 
@@ -326,7 +240,10 @@ cors[upper.tri(cors)] <- "" #make upper triangle empty in correlation matrix
 knitr::kable(cors, booktabs = TRUE, escape = FALSE)
 ```
 
-Table S2C. The Pearson correlations from 36 meta-analyses estimated with the random effects model and restricted maximum likelihood. The sample of effects is identical to Table S1C but with 4 Anchoring effects excluded. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+**Note:** The Pearson correlations from 40 meta-analyses estimated with the random effects model and restricted maximum likelihood. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+
+
+## Table S2C. 
 
 ```{r, no-anchoring-corr}
 cors_anch <- round(cor(corr_data_no_anchoring), digits = 2)
@@ -336,3 +253,4 @@ knitr::kable(cors_anch, booktabs = TRUE, escape = FALSE)
 
 ```
 
+**Note:** The Pearson correlations from 36 meta-analyses estimated with the random effects model and restricted maximum likelihood. The sample of effects is identical to Table S1C but with 4 Anchoring effects excluded. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
