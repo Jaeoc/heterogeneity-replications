@@ -151,31 +151,7 @@ spear_tau <- function(formula, data, indices){ #spearman
   return(fit$estimate)
 }
 
-#Supplement C labels----
-pear_sigma <- function(formula, data, indices){ #pearson
-  d <- data[indices,]
-  fit <- cor.test(formula = ~ sigma + eff_size, data=d)
-  return(fit$estimate)
-}
 
-fitter_sigma <- function(df){  #function to fit correlations for annotating facet plots
-  fit_sigma <- summary(lm(sigma ~ eff_size, data = df))
-  r <- sqrt(fit_sigma$r.squared)
-  data.frame(r = format(round(r, digits = 2), nsmall = 2),
-             index = "sigma") 
-}
-
-bootfitter_sigma <- function(x){ #function that computes the bootstrapped confidence intervals using above functions to annotate plots
-  bootfit <- boot(data=x, statistic=pear_sigma, R=1000, formula= ~ eff_size + sigma)
-  sigma_ci_pears <- boot.ci(bootfit, type="perc")
-  
-  ci.lb <- sigma_ci_pears$percent[4]
-  ci.ub <- sigma_ci_pears$percent[5]
-  
-  ci <- paste0("[", format(round(ci.lb, 2), nsmall = 2), ", ",
-               format(round(ci.ub, 2), nsmall = 2), "]")#percentile 
-  data.frame(ci, index = "sigma")
-}
 #******************************************
 #Functions (for Supplement A) to transform all effect sizes to the same unit of measurement and meta-analyze----
 #******************************************

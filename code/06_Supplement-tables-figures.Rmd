@@ -133,7 +133,7 @@ _Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before 
 
 
 
-#Table S1.
+#Table S1A.
 ###Heterogeneity across primary effects and statistical power of ten multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
 ```{r prep-heterogeneity-table, cache = TRUE}
 #library(metafor)
@@ -282,7 +282,7 @@ SMDs_raw <- dat %>% filter(outcomes1_2 == "mean _ SD") %>%
 
 average_within <- SMDs_raw %>% #these values we now wish to correlate with meta-analytic results
   group_by(effect) %>% 
-  summarize(s2 = sum(wi) * (n()-1) / (sum(wi)^2 - sum(wi^2))) %>% #Average within study variance; equation 9. Higgins and Thompson (2003). n() = k [number of studies in a meta-analysis]
+  summarize(s2 = sum(wi) * (n()-1) / (sum(wi)^2 - sum(wi^2))) %>% #Average within study variance; equation 9. Higgins and Thompson (2002). n() = k [number of studies in a meta-analysis]
   ungroup()
 
 
@@ -298,62 +298,41 @@ tau_per_type <- MD_standardized %>%
          eff_size = abs(eff_size),
          tau = sqrt(tau2)) #needed for bootfitter function below to work but not used
 
-#Add labels
-#lables
-set.seed(499) #for the bootstrapping
-all_effects_ci <- tau_per_type %>% 
-  bootfitter_sigma(.) #bootfitter is a sourced function
-
-labels_all <- tau_per_type %>% #
-  fitter_sigma(.) %>% #fitter is a sourced function
-  mutate(lab = paste0("r = ", r, " ", all_effects_ci$ci)) #put output into one variable for improved plotting
-
 
 #As above but dropping the 4 largest effect sizes (Anchoring effects)----
 without_anchoring <- tau_per_type %>% 
   filter(!grepl("Anchoring", effect))
 
-#lables
-set.seed(500) #for the bootstrapping
-restricted_effects_ci <- without_anchoring %>% 
-  bootfitter_sigma(.) #bootfitter is a sourced function
 
-labels_restricted <- without_anchoring %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
-  fitter_sigma(.) %>% #fitter is a sourced function
-  mutate(lab = paste0("r = ", r, " ", restricted_effects_ci$ci)) #put output into one variable for improved plotting
+corr_data <- tau_per_type %>%
+  select(s2, eff_size, s_I2, H2) %>% 
+  rename("$\\hat{\\mu}$" = "eff_size", "$I^2$" = "s_I2", "$H^2$" = "H2", "$s^2$" = s2)
+
+
+corr_data_no_anchoring <- without_anchoring %>%
+  select(s2, eff_size, s_I2, H2) %>% 
+  rename("$\\hat{\\mu}$" = "eff_size", "$I^2$" = "s_I2", "$H^2$" = "H2", "$s^2$" = s2)
 
 
 ```
 
-```{r}
+Table S1C. The Pearson correlations from 40 meta-analyses estimated with the random effects model and restricted maximum likelihood. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
 
-within_plot_full <- ggplot(tau_per_type, aes(x = eff_size, y = sigma)) + 
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
-  geom_text(data = labels_all[labels_all$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
-  scale_y_continuous(name = expression(paste("Within Studies Standard Deviation"))) +
-  scale_x_continuous(name = "Absolute Effect Size") +
-  theme_classic() +
-  theme(strip.background = element_blank(), #remove box around titles
-        strip.text = element_text(size = 12),
-        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
-                                    size = 0.5, linetype = "solid"))
+```{r, corr-table}
 
+cors <- round(cor(corr_data), digits = 2)
+cors[upper.tri(cors)] <- "" #make upper triangle empty in correlation matrix
 
-without_anchoring_plot <- ggplot(without_anchoring, aes(x = eff_size, y = sigma)) + 
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
-  geom_text(data = labels_restricted[labels_restricted$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
-  scale_y_continuous(name = expression(paste("Within Studies Standard Deviation"))) +
-  scale_x_continuous(name = "Absolute Effect Size") +
-  theme_classic() +
-  theme(strip.background = element_blank(), #remove box around titles
-        strip.text = element_text(size = 12),
-        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
-                                    size = 0.5, linetype = "solid"))
-
-cowplot::plot_grid(within_plot_full, without_anchoring_plot, nrow = 2, labels = "AUTO")
-ggsave("../figures/figure-S2.png", dpi = 600, height =  7, width = 7)
+knitr::kable(cors, booktabs = TRUE, escape = FALSE)
 ```
 
-Figure S2. The Pearson correlation (_r_) between average absolute effect size and average within studies standard deviation for 40 effects that were measured as mean or standardized mean differences. Panel A shows results for all 40 effect sizes and panel B with the four largest (Anchoring 1 - 4) excluded. Effects reported as mean differences were standardized. Square brackets contain 95% bootstrapped percentile confidence intervals. 
+Table S2C. The Pearson correlations from 36 meta-analyses estimated with the random effects model and restricted maximum likelihood. The sample of effects is identical to Table S1C but with 4 Anchoring effects excluded. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+
+```{r, no-anchoring-corr}
+cors_anch <- round(cor(corr_data_no_anchoring), digits = 2)
+cors_anch[upper.tri(cors_anch)] <- "" #make upper triangle empty in correlation matrix
+
+knitr::kable(cors_anch, booktabs = TRUE, escape = FALSE)
+
+```
+
