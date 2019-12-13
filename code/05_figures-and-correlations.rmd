@@ -259,7 +259,8 @@ Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau
 #This section gives the correlations and values reported in the section 'Heterogeneity and effect sizes' in the main manuscript 
 
 #1. Standardized mean differences----
-SMDs <- tau_per_type %>% filter(effect_type == "Standardized Mean Difference") 
+SMDs <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
+  filter(effect_type == "Standardized Mean Difference") 
 
 cor.test(SMDs$tau, SMDs$eff_size) #pearson tau2
 cor.test(SMDs$s_I2, SMDs$eff_size) #pearson I2
@@ -269,10 +270,6 @@ cor.test(SMDs$tau, SMDs$eff_size, method = "spearman") #spearman
 cor.test(SMDs$s_I2, SMDs$eff_size, method = "spearman") #spearman
 cor.test(SMDs$H2, SMDs$eff_size, method = "spearman") #spearman
 
-##When effect size == 0, what is average heterogeneity?
-mean(SMDs$tau[SMDs$eff_size < 0.05]) #for tau = 0.016
-mean(SMDs$s_I2[SMDs$eff_size < 0.05]) #I2 = 3.05
-mean(SMDs$H2[SMDs$eff_size < 0.05]) #H2 = 0.88
 
 ##Excluding anchoring effects
 dropped_anchoring <- SMDs %>%
@@ -281,6 +278,33 @@ dropped_anchoring <- SMDs %>%
 cor.test(dropped_anchoring$tau, dropped_anchoring$eff_size) #pearson
 cor.test(dropped_anchoring$s_I2, dropped_anchoring$eff_size) #pearson
 cor.test(dropped_anchoring$H2, dropped_anchoring$eff_size) #pearson
+
+#1.05 When ES not sig. diff from zero----
+##When effect size not sig diff from 0 (alpha = .05), what is average heterogeneity?
+nrow(SMDs[SMDs$eff_size_p > 0.05,]) #20/40 SMDs have ES not sig. diff from zero
+sum(SMDs$tau[SMDs$eff_size_p > 0.05] == 0) #13/20 of these have taus == 0
+
+mean(SMDs$tau[SMDs$eff_size_p > 0.05]) #for tau = 0.017
+mean(SMDs$s_I2[SMDs$eff_size_p > 0.05]) #I2 = 3.49
+mean(SMDs$H2[SMDs$eff_size_p > 0.05]) #H2 = 0.89
+
+SMDs_not_sig <- SMDs[SMDs$eff_size_p > 0.05,]$effect
+
+dat %>% filter(effect %in% SMDs_not_sig) %>% #amongst the non-sig SMDS
+  group_by(effect) %>% 
+  summarize(K = n()) %>% #compute number of labs (K) per effect
+  ungroup() %>% 
+  summarize(mean_k = mean(K), #average number of K = 32.8
+            median = quantile(K)['50%']) #median 22.5
+
+#% estimates that should be non-zero under central chi-square distribution. For I2 any effect size where Q <= DF ->  I2 zero
+pchisq(23, 23, lower.tail = FALSE)
+
+#logs
+logOR <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
+  filter(effect_type == "Log Odds Ratio") 
+
+nrow(logOR[logOR$eff_size_p > 0.05,]) #only 1 log odds ratio not signifcant
 
 #bootstrap confidence intervals
 #code contribution by Amir Abdol

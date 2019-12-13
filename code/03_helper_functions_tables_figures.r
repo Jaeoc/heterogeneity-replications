@@ -60,10 +60,10 @@ est_heterogen_smd_raw <- function(x){
   }
   
   hetero <- confint(fit)$random[c(1, 3), ] #Gives us the tau2 and I2 estimates with confidence intervals
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
-             s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
-             tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3],
-             H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
+  data.frame(eff_size = fit$b[[1]], eff_size_p = fit$pval, #effect size (point estimate) + its p-value 
+             s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3], #I2 with Confidenc intervals
+             tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3], #tau2 with confidence intervals
+             H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1)) #General H2  (H2trunc) and DerSimonian-Laird H2
 }
 
 #******************************************
@@ -73,7 +73,7 @@ est_heterogen_smd_raw <- function(x){
 MD_fit <- function(x){ #standardize mean differences in the meta-analysis
   fit <- rma(measure = "SMD", m1i = outcome_t1, m2i = outcome_c1, sd1i = outcome_t2, sd2i = outcome_c2, n1i = ntreatment, n2i = ncontrol, data = x)
   hetero <- confint(fit)$random[c(1, 3), ] 
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
+  data.frame(eff_size = fit$b[[1]], eff_size_p = fit$pval, #effect size (point estimate) 
              s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
              tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3],
              H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
@@ -83,7 +83,7 @@ MD_fit <- function(x){ #standardize mean differences in the meta-analysis
 log_or_fit <- function(x){ #NB! if a cell is 0, 1/2 will be added to it. Fit log odds meta-analysis
   fit <- rma(measure = "OR", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2, n1i = ntreatment, n2i = ncontrol,  data = x)
   hetero <- confint(fit)$random[c(1, 3), ] 
-  data.frame(eff_size = fit$b[[1]], #effect size (point estimate) 
+  data.frame(eff_size = fit$b[[1]], eff_size_p = fit$pval, #effect size (point estimate) 
              s_I2 = hetero[2, 1], s_ci.lb = hetero[2, 2], s_ci.ub = hetero[2, 3],
              tau2 = hetero[1, 1], tau2_ci.lb = hetero[1, 2], tau2_ci.ub = hetero[1, 3],
              H2trunc = fit$H2, H2 = fit$QE / (fit$k - 1))
@@ -188,8 +188,8 @@ transform_d_to_r <- function(d, n1, n2){
   h <- m/n1 + m/n2 #p. 164
   r <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5 
   var_r <- (1-r^2)^2 / (n1 + n2 -1) #Cooper and Hedges (2009), equation 12.27
-  # rz <- 0.5*ln((1+r)/(1-r)) #Fishers z transformation Cooper and Hedges (2009), equation 12.28
-  # var_rz <- 1 / (n1+n2 -3) #Fisher z variance, Cooper and Hedges (2009), equation 12.29
+  # r <- 0.5*ln((1+r)/(1-r)) #Fishers z transformation Cooper and Hedges (2009), equation 12.28
+  # var_r <- 1 / (n1+n2 -3) #Fisher z variance, Cooper and Hedges (2009), equation 12.29
   data.frame(r = r, vi = var_r, n = n1 + n2) 
 }
 
