@@ -61,18 +61,18 @@ a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain 
 
 ```{r, cache = FALSE}
 a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("SMD (untransformed)") +
-  scale_x_continuous(name = expression(paste(italic(I)^2, "Index"))) +
+  scale_x_continuous(name = expression(paste(italic(I)^2, " Index"))) +
   scale_y_continuous(name = "Tau")
 
 ```
 
 
-```{r trunc-biserial, cache = TRUE}
-#Transform effect sizes to biserial correlations (pearson's correlations left as is)
+```{r point-biserial, cache = TRUE}
+#Transform effect sizes to point-biserial correlations (pearson's correlations left as is)
 #estimate tau2 for correlations
 #'transform_MA' and 'summarizer' are sourced functions
 res2 <- dat %>%
-  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales')) %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "d") %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map(transform_MA) %>% #
   map_dfr(summarizer, .id = "effect")
@@ -81,6 +81,7 @@ res2 <- dat %>%
 
 #Add rp and k to the data-frame
 het <- dat %>%
+  filter(effect %in% res2$effect) %>% 
   select(rp, Site, effect, effect_type) %>%
   group_by(rp, effect) %>%
   summarize(effect_type = unique(effect_type),
@@ -99,14 +100,18 @@ d <- het %>% filter(effect_type == "SMD.") %>%
 
 
 ```{r c-plot-1, cache = FALSE}
-c_plot <- ggplot(d, aes(x = I2, y = sqrt(tau2))) + geom_point() + ggtitle("Point Biserial r (transformed SMD)")
+c_plot <- ggplot(d, aes(x = I2, y = sqrt(tau2))) + 
+  geom_point() + 
+  scale_y_continuous(name = "Tau") +
+  scale_x_continuous(name = expression(paste(italic(I)^2, " Index"))) +
+  ggtitle("Point-Biserial r (transformed SMD)")
 
 ```
 
 
 ```{r tau-vs-tau}
 b <- select(a, effect, tau2) %>%
-  left_join(select(d, effect, tau2), by = "effect") #add truncated transformation tau2
+  left_join(select(d, effect, tau2), by = "effect") #add point-biserial transformation tau2 to untransformed
 ```
 
 
@@ -115,7 +120,7 @@ b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
   geom_point() +
   ggtitle("SMD vs. Point biserial") +
   scale_x_continuous(name = "Tau (SMD)") +
-  scale_y_continuous(name = "Tau (Point biserial)")
+  scale_y_continuous(name = "Tau (Point-biserial r)")
 
 ```
 
@@ -129,7 +134,7 @@ cowplot::plot_grid(a_plot, b_plot, c_plot, ncol = 1, labels = "AUTO")
 # ggsave("../figures/Figure-S1.png", dpi = 600, width = 6, height = 7.8)
 ```
 
-_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into biserial correlations for all effects reported as SMDs in ManyLabs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to biserial correlations, either with truncation of correlations over 1 (circles) or without (crosses) when estimating variance. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation, either with truncation or not.
+_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation.
 
 
 # Supplement B
