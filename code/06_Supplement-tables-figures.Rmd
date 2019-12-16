@@ -17,10 +17,12 @@ if(!require(readr)){install.packages("readr")}
 if(!require(metafor)){install.packages("metafor")}
 if(!require(dplyr)){install.packages("dplyr")}
 if(!require(purrr)){install.packages("purrr")}
-if(!require(kableExtra)){install.packages("kablExxtra")}
+if(!require(kableExtra)){install.packages("kablExtra")}
 if(!require(ggplot2)){install.packages("ggplot2")}
 if(!require(cowplot)){install.packages("cowplot")}
+if(!require(ggrepel)){install.packages("ggrepel")}
 if(!require(boot)){install.packages("boot")}
+
 
 library(readr) #To load data
 library(dplyr) #For data transformation
@@ -28,6 +30,7 @@ library(purrr) #For data iteration
 library(metafor) #To run meta-analyses
 library(ggplot2) #plotting figures
 library(cowplot) #combine plots
+library(ggrepel) #easy labels for plots (supplement A identification of points)
 library(kableExtra) #create fancy pdf tables
 library(boot) #Bootstrap confidence intervals for correlations
 
@@ -99,16 +102,6 @@ d <- het %>% filter(effect_type == "SMD.") %>%
 ```
 
 
-```{r c-plot-1, cache = FALSE}
-c_plot <- ggplot(d, aes(x = I2, y = sqrt(tau2))) + 
-  geom_point() + 
-  scale_y_continuous(name = "Tau") +
-  scale_x_continuous(name = expression(paste(italic(I)^2, " Index"))) +
-  ggtitle("Point-Biserial r (transformed SMD)")
-
-```
-
-
 ```{r tau-vs-tau}
 b <- select(a, effect, tau2) %>%
   left_join(select(d, effect, tau2), by = "effect") #add point-biserial transformation tau2 to untransformed
@@ -126,15 +119,29 @@ b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
 
 
 
-
 ```{r, fig.width = 6, fig.asp = 1.3}
-cowplot::plot_grid(a_plot, b_plot, c_plot, ncol = 1, labels = "AUTO")
 
+cowplot::plot_grid(a_plot, b_plot, ncol = 1, labels = "AUTO")
 
 # ggsave("../figures/Figure-S1.png", dpi = 600, width = 6, height = 7.8)
 ```
 
-_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations. Panel C  shows the associations between estimates of $I^2$ on the SMD metric and estimates of $\tau$ after transformation.
+_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations.
+
+```{r text-results, eval = FALSE}
+#Not printed if knitting the document.
+
+#to find out which point is which effect in Panel B. 
+b_plot + ggrepel::geom_label_repel(data = b, aes(label = effect))
+
+#Examine effects of larger effect size on transformation
+transform_d_to_r(c(0, 0.1, 1, 1.1, 2, 2.1), n1 = 100, n2 = 100) #sourced function
+
+#to find out which point is which effect in Panel c. 
+c_plot + ggrepel::geom_label_repel(data = d, aes(label = effect))
+
+```
+
 
 
 # Supplement B
