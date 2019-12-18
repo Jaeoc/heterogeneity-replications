@@ -59,16 +59,20 @@ dat3 <- dat3 %>%
   ungroup()
 
 #combined line plot gives good overview.
-ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type)) +
+ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type, linetype = effect_type)) +
   geom_line(alpha = 0.6) +
   theme_bw() +
   scale_x_continuous(name = expression(paste("Between studies standard deviation ", tau)),
                      minor_breaks = NULL) +
   scale_y_continuous(name = expression(paste("Average ", italic(I)^2," index", sep = "")),
                      minor_breaks = NULL) +
-  coord_cartesian(ylim = c(0, 100)) +
-  scale_color_brewer(name = "Effect type", palette = "Dark2", 
+  scale_linetype_manual(name = "Effect type", 
+                        values = c( "dotdash", "dotted", "solid", "dashed"),
+                        breaks = "Fisher's z", "Cohen's q", "MD", "SMD") + 
+  scale_color_brewer(name = "Effect type", 
+                     palette = "Dark2", 
                      breaks = c("Fisher's z", "Cohen's q", "MD", "SMD")) +
+  coord_cartesian(ylim = c(0, 100)) +
   theme(legend.position = c(0.8, 0.4),
         legend.background = element_rect(linetype = "solid", color = "black")) +
   guides(color = guide_legend(override.aes = list(size = 1.4)))
