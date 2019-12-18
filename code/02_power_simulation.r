@@ -193,7 +193,8 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 
 ##Simulation results
 dat3 <- readRDS("../data/tau_simulation_results.RDS")
-names(dat3) <- names(dat2) #names are lost when looping instead of using lapply
+# dat3 <- readRDS("../supplementB_tau_simulation_results.RDS") #for supplement
+names(dat3) <- names(dat2) #names are lost when looping instead of using lapply so must be re-added
 
 dat3 <- dat3 %>% #create dataframe with identifier
   bind_rows(.id = "effect") %>% 
@@ -244,6 +245,8 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
 #*********************
 #Effect size sensitivity simulation for Supplement B
 
+#Note dat5 from above is needed
+
 # set.seed(50)
 #  res2_a <- vector("list", length(dat2)) #output of below loop
 # 
@@ -257,6 +260,7 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
 
 ##Simulation results
 dens <- readRDS("../data/power_simulation_results.RDS") #very large if saved as .csv
+# dens <- readRDS("../data/supplementB_power_simulation_results.RDS") #If supplement simulation
 names(dens) <-  names(dat2)
 
 #Summary of results. These are incorporated into the main table in the paper, see tables.rmd

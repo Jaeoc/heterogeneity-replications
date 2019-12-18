@@ -254,9 +254,9 @@ combo
 Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau}$, B) $I^2$ and C) $H^2$ respectively for 40 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and odds ratios/risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals. Code to reproduce figure: osf.io/zuwpg/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 
-```{r cor_het_effect_size, results = "hide", cache=TRUE}
+```{r cor_het_effect_size, eval= FALSE}
 
-#This section gives the correlations and values reported in the section 'Heterogeneity and effect sizes' in the main manuscript 
+#This section gives the correlations and values reported in the section 'Heterogeneity and effect sizes' in the main manuscript (not printed if .rmd is knit)
 
 #1. Standardized mean differences----
 SMDs <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'

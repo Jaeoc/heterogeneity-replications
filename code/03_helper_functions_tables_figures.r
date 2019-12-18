@@ -4,7 +4,7 @@
 #Script purpose: Helper functions to prep data for tables and figures
 #Code: 
 #Additional comments: These functions are intended to be 'sourced' into the 
-#                     tables.rmd and figures.rmd files 
+#                     tables.rmd, figures.rmd, and supplement-tables-figures.rmd files 
 
 #******************************************
 
@@ -67,7 +67,7 @@ est_heterogen_smd_raw <- function(x){
 }
 
 #******************************************
-#Function for Figure 3 and Supplement C----
+#Functions for Figure 3 (first also used in Supplement C)----
 #******************************************
 
 MD_fit <- function(x){ #standardize mean differences in the meta-analysis
@@ -153,8 +153,9 @@ spear_tau <- function(formula, data, indices){ #spearman
 
 
 #******************************************
-#Functions (for Supplement A) to transform all effect sizes to the same unit of measurement and meta-analyze----
+#Functions for Supplement A----
 #******************************************
+
 
 #Formulas found in: 
 #Borenstein, M. (2009). Effect sizes for continuous data. In H. Cooper, L. V. Hedges, & J. C. Valentine (Eds.), 
@@ -162,19 +163,10 @@ spear_tau <- function(formula, data, indices){ #spearman
 
 #Jacobs, P., & Viechtbauer, W. (2017). Estimation of the biserial correlation and its sampling variance for use
 #in meta-analysis. Research Synthesis Methods, 8(2), 161-180.
-#(provide an exact computation of the point-biserial correlation rather than the approximate [Hunter & Schmitd] in Borenstein)
-#Jacobs and Viechbauers version has the advantage that it can compute variance even if r = 1
 
-#Jacobs and Viechtbauer (2017) recommend transforming the point-biserial correlation to a 
-#biserial correlation. 
+#Cooper, H., Hedges, L. V., & Valentine, J. C. (2009). The handbook of research synthesis and meta-analysis 2nd
+#edition. In The Hand. of Res. Synthesis and Meta-Analysis, 2nd Ed. (pp. 1-615). Russell Sage Foundation.
 
-
-##For raw mean difference + SE -> Hedge's g
-transform_SE <- function(ES, SE, n1, n2){ 
-  sdpooled <- sqrt(SE^2 / (1 / n1 + 1/n2)) #Borenstein, M. (2009). In Cooper & Hedges. p. 224
-  d <- ES / sdpooled
-  data.frame(d = d, n1 = n1, n2 = n2)
-}
 
 #For raw mean difference + SD -> Hedge's g
 transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean difference
@@ -193,44 +185,13 @@ transform_d_to_r <- function(d, n1, n2){
   data.frame(r = r, vi = var_r, n = n1 + n2) 
 }
 
-#Note that above function gives the same result as
-#metafor::escalc(measure = "RBIS", ml1, ml2, sd1, sd2, n1, n2, data = x)
-#With the difference that metafor uses the exact variance equation (eq 12, Jacobs and Viechtbauer, 2017)
-#and we use the approximate (eq. 13). For consistency we only apply the approximate method
-#We chose this version because the escalc approach cannot handle the effect where SE are reported rather than SD
 
-#Function to apply the transformation functions to the data
+#Function to apply the transformation functions to the (in the end only to data where x[, "outcomes1_2"] == "mean _ SD")
 transform_MA <- function(x){
-  if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
-    
-    converted <- metafor::escalc(measure = "RTET", ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2,
-                                 data = x) #convert to tetrachoric correlations
-    out <- data.frame(r = converted$yi, vi = converted$vi)
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-    d_conversion <- transform_SE(x$effect_size, x$outcome_c2, x$ntreatment, x$ncontrol) #convert to biserial correlations
-    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2) 
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SD")){  
-    
-    d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
-    out <- transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
-    
-  } else if(any(x[, "effect_type"] == "r")){
-    
-    out <- metafor::escalc(measure = "COR", ri = x$effect_size, ni =x$Ntotal) #compute variance, no transformation
-    out <- data.frame(r = out$yi, vi = out$vi)
-    
-  } else{ #For the many labs OR that were transformed to d
-    
-    converted <- metafor::escalc(measure = "RTET", ai = x$outcome_t1, bi = x$outcome_t2, ci = x$outcome_c1, di = x$outcome_c2,
-                                 data = x) #convert to tetrachoric correlations
-    out <- data.frame(r = converted$yi, vi = converted$vi)
-    
-  }
   
-  out
+  d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
+  transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
+  
 }
 
 
@@ -255,7 +216,6 @@ summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viecht
 #******************************************
 #Function for Supplement C ----
 #******************************************
-#For computing the correlation between average sampling variance and average effect size
 
 compute_precision <- function(SD1, SD2, n1, n2){
   var_pooled <- ((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2) #Borenstein, M. (2009), p. 226. 

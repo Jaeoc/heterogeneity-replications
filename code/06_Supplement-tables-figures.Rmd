@@ -62,7 +62,7 @@ a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain 
 ```
 
 
-```{r, cache = FALSE}
+```{r a-plot, cache = FALSE}
 a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("SMD (untransformed)") +
   scale_x_continuous(name = expression(paste(italic(I)^2, " Index"))) +
   scale_y_continuous(name = "Tau")
@@ -119,14 +119,14 @@ b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
 
 
 
-```{r, fig.width = 6, fig.asp = 1.3}
+```{r combine-plots, fig.width = 6, fig.asp = 1.3}
 
 cowplot::plot_grid(a_plot, b_plot, ncol = 1, labels = "AUTO")
 
 # ggsave("../figures/Figure-S1.png", dpi = 600, width = 6, height = 7.8)
 ```
 
-_Figure S.1_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations.
+_Figure S1A_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations.
 
 ```{r text-results, eval = FALSE}
 #Not printed if knitting the document.
@@ -191,7 +191,7 @@ Estimated type I error and power for zero/small/medium/large heterogeneity when 
 
 _Type I error and power to detect four heterogeneity levels under two true effect sizes_
 
-```{r}
+```{r table-S1B}
 knitr::kable(comparison, digits = 2, longtable = TRUE, booktabs = TRUE) %>% 
   add_header_above(c(" " = 1, "True effect size zero" = 4, "True effect size medium" = 4)) %>% 
   add_header_above(c(" " = 1, "Type I error rate and power for different heterogeneity levels" = 8))
@@ -201,7 +201,7 @@ knitr::kable(comparison, digits = 2, longtable = TRUE, booktabs = TRUE) %>%
 
 # Supplement C
 
-```{r, preprocessing}
+```{r preprocessing-supp-C}
 
 SMDs_raw <- dat %>% filter(outcomes1_2 == "mean _ SD") %>% 
   mutate(wi = compute_precision(SD1 = outcome_t2, SD2 = outcome_c2, n1 = ntreatment, n2 = ncontrol)) #compute_precision function is sourced
@@ -244,7 +244,7 @@ corr_data_no_anchoring <- without_anchoring %>%
 
 ## Table S1C. 
 
-```{r, corr-table}
+```{r table-S1C}
 
 cors <- round(cor(corr_data), digits = 2)
 cors[upper.tri(cors)] <- "" #make upper triangle empty in correlation matrix
@@ -257,7 +257,7 @@ knitr::kable(cors, booktabs = TRUE, escape = FALSE)
 
 ## Table S2C. 
 
-```{r, no-anchoring-corr}
+```{r table-S2C-no-anchoring-SMD}
 cors_anch <- round(cor(corr_data_no_anchoring), digits = 2)
 cors_anch[upper.tri(cors_anch)] <- "" #make upper triangle empty in correlation matrix
 

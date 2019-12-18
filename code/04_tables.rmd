@@ -34,7 +34,7 @@ source("03_helper_functions_tables_figures.r") #Load functions to prep data for 
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
 rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
-ma <- c("I: $\\mu = 0.0$", "II: $\\mu = 0.3$", "III: $\\mu = 0.5$")
+ma <- c("I: $\\rho_{xy} = 0.0$", "II: $\\rho_{xy} = 0.3$", "III: $\\rho_{xy} = 0.5$")
 
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
@@ -53,12 +53,12 @@ table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_
 # table1b <- cbind(studies, table1b)
 # rownames(table1b) <- NULL
 # 
-# table1b %>% knitr::kable(booktabs = T, col.names = c("Study and Measurement Error", "I: $\\mu = 0$", "II: $\\mu = .3$", "III: $\\mu = .5$"), escape = FALSE, digits = 2) %>% 
+# table1b %>% knitr::kable(booktabs = T, col.names = c("Study and Measurement Error", "I: $\\rho_{xy} = 0$", "II: $\\rho_{xy} = .3$", "III: $\\rho_{xy} = .5$"), escape = FALSE, digits = 2) %>% 
 #   add_header_above(c(" " = 1, "Meta-Analysis" = 3)) %>% 
 #   add_header_above(c(" " = 1, "Observed effect sizes" = 3)) %>% 
 #   row_spec(3, hline_after = TRUE)
 ```
-*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\mu$ when within study sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite within study sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
+*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\rho_{xy}$ when within study sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite within study sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 ## Table 2
 ### Pre-registered multi-lab replication projects
@@ -131,8 +131,8 @@ sample_settings <- c("26/36 samples were primarily university students, 3 genera
                "All but one sample explicitly consisted of students and all took place in-lab. The last sample was recruited at university grounds.", #RRR6
                'All samples consisted of in-lab undergraduate students aged 18-34.', #RRR7
                      "All samples consisted of in-lab undergraduate students aged 18-25", #RRR8
-               "All samples consisted of in-lab students aged 18-25",
-               "All samples consisted of in-lab students aged 18-25")
+               "All samples consisted of in-lab students aged 18-25", #RRR9
+               "All samples consisted of in-lab students aged 18-25") #RRR10
 
 #1) what kind of samples
 
@@ -165,7 +165,7 @@ summary.table %>% knitr::kable(booktabs = TRUE,
   column_spec(8, width = "30em") %>% 
   landscape()
 ```
-Note: For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
+**Note:** For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
 
 ## Table 3
 ### Heterogeneity across primary effects and statistical power of thirteen multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
@@ -200,7 +200,7 @@ het <- dat %>%
   ungroup()
 
 #****************
-#Results for "Heterogeneity Estimates and Confidence Intervals" section in paper
+#Results for "Heterogeneity Estimates and Confidence Intervals" section in paper----
 
 sum(het$s_I2 >= 62.5) #what number of I2 estimates would be rounded to "large" (75% I2) heterogeneity
 sum(het$s_I2 >= 37.5 & het$s_I2 < 62.5) #what number of I2 estimates would be rounded to "medium" (50% I2) heterogeneity
