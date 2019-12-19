@@ -308,7 +308,7 @@ pchisq(23, 23, lower.tail = FALSE)
 logOR <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
   filter(effect_type == "Log Odds Ratio") 
 
-nrow(logOR[logOR$eff_size_p > 0.05,]) #only 1 log odds ratio not signifcant
+logOR[logOR$eff_size_p > 0.05,] #only 1 log odds ratio not signifcant. tau = 0.13, I2 = 11.8, H2 = 1.05
 
 #bootstrap confidence intervals
 #code contribution by Amir Abdol
