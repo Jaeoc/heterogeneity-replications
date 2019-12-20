@@ -5,7 +5,7 @@ output: pdf_document
 ---
 
 
-This document contains the tables and figures from Supplement A, B and C for the project "Heterogeneity in direct replications in psychology and its association with effect size". 
+This document contains the tables and figures from Supplement A, B and C for the project "Heterogeneity in direct replications in psychology and its association with effect size". This file can be found at: osf.io/bm2wa/?view_only=e6639d8d4f924739a7310782fbbb4e06
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
@@ -81,34 +81,13 @@ res2 <- dat %>%
   map_dfr(summarizer, .id = "effect")
 
 
-
-#Add rp and k to the data-frame
-het <- dat %>%
-  filter(effect %in% res2$effect) %>% 
-  select(rp, Site, effect, effect_type) %>%
-  group_by(rp, effect) %>%
-  summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>%
-  left_join(res2) %>%
-  mutate(effect_type = recode(effect_type,
-                              d = "SMD.",
-                              'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>%
-  ungroup()
-
-d <- het %>% filter(effect_type == "SMD.") %>%
-  mutate(sigma2 = tau2/(I2/100) - tau2) #add 'typical within study variance' per project
-
-```
-
-
-```{r tau-vs-tau}
 b <- select(a, effect, tau2) %>%
-  left_join(select(d, effect, tau2), by = "effect") #add point-biserial transformation tau2 to untransformed
+  left_join(select(res2, effect, tau2), by = "effect") #add point-biserial transformation tau2 to untransformed
+
 ```
 
 
-```{r b-plot-1}
+```{r b-plot}
 b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
   geom_point() +
   ggtitle("SMD vs. Point biserial") +
@@ -117,16 +96,35 @@ b_plot <- ggplot(b, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
 
 ```
 
+```{r fisher-transformed}
+res3 <- dat %>%
+  filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "d") %>%
+  split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
+  map(transform_MA, fisher = TRUE) %>% #Fisher-transformed
+  map_dfr(summarizer, .id = "effect")
+
+
+d <- select(a, effect, tau2) %>%
+  left_join(select(res3, effect, tau2), by = "effect") #add fisher-transformed point-biserial transformation tau2 to untransformed
+```
+
+```{r c-plot}
+c_plot <- ggplot(d, aes(x = sqrt(tau2.x), y = sqrt(tau2.y))) +
+  geom_point() +
+  ggtitle(expression(bold(paste("SMD vs. Fisher's ", italic(z))))) +
+  scale_x_continuous(name = "Tau (SMD)") +
+  scale_y_continuous(name = expression(paste("Tau (Fisher's ", italic(z), ")")))
+```
 
 
 ```{r combine-plots, fig.width = 6, fig.asp = 1.3}
 
-cowplot::plot_grid(a_plot, b_plot, ncol = 1, labels = "AUTO")
+cowplot::plot_grid(a_plot, b_plot, c_plot, ncol = 1, labels = "AUTO")
 
 # ggsave("../figures/Figure-S1.png", dpi = 600, width = 6, height = 7.8)
 ```
 
-_Figure S1A_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations.
+_Figure S1A_ Association between estimates of $\tau$ and $I^2$ after and before standardized mean differences (SMD) effects were transformed into point-biserial correlations for all effects reported as SMDs in Many Labs 1. Panel A shows the association between estimates of $\tau$ and $I^2$ without transformation when using the meta-analytic specification of the original authors (see main text). Panel B shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations. Panel C shows the association between estimates of $\tau$ for the same effects before and after transformation to point-biserial correlations and subsequently to Fisher's _z_.
 
 ```{r text-results, eval = FALSE}
 #Not printed if knitting the document.
@@ -134,11 +132,15 @@ _Figure S1A_ Association between estimates of $\tau$ and $I^2$ after and before 
 #to find out which point is which effect in Panel B. 
 b_plot + ggrepel::geom_label_repel(data = b, aes(label = effect))
 
-#Examine effects of larger effect size on transformation
+#Examine effects of larger effect size on transformation to point-biserial
 transform_d_to_r(c(0, 0.1, 1, 1.1, 2, 2.1), n1 = 100, n2 = 100) #sourced function
 
-#to find out which point is which effect in Panel c. 
+#to find out which point is which effect in Panel C. 
 c_plot + ggrepel::geom_label_repel(data = d, aes(label = effect))
+
+#Examine effects of larger effect size on transformation to Fisher's z
+transform_d_to_r(c(0, 0.1, 1, 1.1, 2, 2.1), n1 = 100, n2 = 100, fisher = TRUE) #sourced function
+
 
 ```
 
@@ -197,7 +199,7 @@ knitr::kable(comparison, digits = 2, longtable = TRUE, booktabs = TRUE) %>%
   add_header_above(c(" " = 1, "Type I error rate and power for different heterogeneity levels" = 8))
 ```
 
-**Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). Code to reproduce table: https://osf.io/j9zyd/?view_only=e6639d8d4f924739a7310782fbbb4e06
+**Note.** Column headers indicate the degree of simulated heterogeneity where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large heterogeneity ($I^2$ = 25/50/75%) respectively. Medium effect size is as defined by Cohen (1988). 
 
 # Supplement C
 

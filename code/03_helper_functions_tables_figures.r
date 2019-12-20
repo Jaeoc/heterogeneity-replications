@@ -175,22 +175,24 @@ transform_SD <- function(m1, m2, SD1, SD2, n1, n2){ #assumes ES is raw mean diff
   data.frame(d = d, n1 = n1, n2 = n2)
 }
 
-transform_d_to_r <- function(d, n1, n2){ 
+transform_d_to_r <- function(d, n1, n2, fisher = FALSE){ 
   m <- n1 + n2 - 2 #Jacobs and Viechtbauer (2017), p.164
   h <- m/n1 + m/n2 #p. 164
   r <- d / sqrt(d^2 + h) #point-biserial correlation, Jacobs and Viechtbauer (2017), equation 5 
   var_r <- (1-r^2)^2 / (n1 + n2 -1) #Cooper and Hedges (2009), equation 12.27
-  # r <- 0.5*ln((1+r)/(1-r)) #Fishers z transformation Cooper and Hedges (2009), equation 12.28
-  # var_r <- 1 / (n1+n2 -3) #Fisher z variance, Cooper and Hedges (2009), equation 12.29
+  if(fisher){ #if fisher = TRUE, do fisher transform
+  r <- 0.5*log((1+r)/(1-r)) #Fishers z transformation Cooper and Hedges (2009), equation 12.28
+  var_r <- 1 / (n1+n2 -3) #Fisher z variance, Cooper and Hedges (2009), equation 12.29
+  }
   data.frame(r = r, vi = var_r, n = n1 + n2) 
 }
 
 
 #Function to apply the transformation functions to the (in the end only to data where x[, "outcomes1_2"] == "mean _ SD")
-transform_MA <- function(x){
+transform_MA <- function(x, fisher = FALSE){
   
   d_conversion <- transform_SD(x$outcome_t1, x$outcome_c1, x$outcome_t2, x$outcome_c2, x$ntreatment, x$ncontrol)
-  transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2)
+  transform_d_to_r(d_conversion$d, d_conversion$n1, d_conversion$n2, fisher = fisher)
   
 }
 
