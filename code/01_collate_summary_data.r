@@ -1454,14 +1454,44 @@ rrr7 <- rrr7 %>%
 #[9] RRR8 ----
 #******************************************
 ##summary data from Registered Replication Report 8 https://osf.io/k27hm/
-##Data contained in zip-file named final_results.zip: https://osf.io/mxugy/
+##Data contained in zip-file named Meta-analysis_final.zip: https://osf.io/p2myk/
+##Additional comments: The summary data uploaded by RRR8 contained standard errors 
+##                     of the mean *difference*, but not standard deviations for 
+##                     the effect sizes. Transforming the effect sizes of RRR8 into
+##                     standardized mean differences would thus require assuming equal
+##                     variance in both treatment and control groups; a strong assumption. 
+##                     Here we thus do some minor edits to the original RRR8 code and
+##                     extract means and standard deviations.
 
-#library(tabulizer)
 #library(dplyr)
 
+##Procedure to extract the means and standard deviations for RRR8
+
+# 1) Download the RRR8 Meta-analysis script and data(Meta-analysis_final.zip): https://osf.io/p2myk/
+
+# 2) In the file dijksterhuis_meta_analysis_2.R comment out line 23 ["source(paste(lab, '_univ.R', sep=''))"]
+#    This is to load the already cleaned and collated summary file instead of redoing it.
+#    It is also necessary (at least on my cpu) because Schulte-Mecklenbeck and Koppel
+#    have individual files which were not saved/extracted properly ["incomplete final line"]
+
+#3 ) In the same file, add the following lines of code between the line 43 and line 44:
+#   'g1_sd'=c(sd(g1), sd(g1_skip)),
+#   'g2_sd'=c(sd(g2), sd(g2_skip)),
+
+# 3) delete all [labname]_data_meta files in the extracted meta-analysis folder
+
+# 4) Delete the Rentzelas folder because it gave the following error and is not one of 23 labs in the main analysis anyway:
+#   Error in rbind(deparse.level, ...) : 
+#   numbers of columns of arguments do not match
+
+# 5) In the file dijksterhuis_meta_analysis_2.R run lines 1 - 120, make sure working directory is set to the file location
+#     [not sure which packages in line 1-7 actually need to be loaded, I had them all installed already so just loaded them all]
+
+# 6) Save the collated data file with the following line of code:
+#   write.csv(all_dat, file = "RRR08_summary_stats.csv", row.names = FALSE)
+
 #Extract data
-f <- "../data/source/RRR8/final_results/tables/all_raw_effects.pdf" #path to table (which includes country names)
-rrr8 <- extract_tables(f) #note contains data from all labs, not only the 23 used in main analysis of paper
+rrr8 <- read.csv("../data/source/rrr8/RRR08_summary_stats.csv", stringsAsFactors = FALSE)
 
 authors_main23 <- c("Schulte-Mecklenbeck", "Baskin", "Braithwaite", "Vazire", "Newell", "O'Donnell", "Tamayo", #23 labs from main analysis in paper
                     "Karpinski", "Klein", "Keller", "Shanks", "Bialobrzeska", "Koppel", "Philipp", "Ropovik", #manually coded from Figure 1 in paper https://www.psychologicalscience.org/publications/replication-dijksterhuis-van-knippenberg
@@ -1469,25 +1499,17 @@ authors_main23 <- c("Schulte-Mecklenbeck", "Baskin", "Braithwaite", "Vazire", "N
 
 
 #Clean and format data
-rrr8 <- lapply(rrr8, function(x) x[x[,2] == "Main Effect",]) #remove effects that are not the primary effect, note that this drops the headers which are in row 1 of the first list
-rrr8[[1]] <- rrr8[[1]][, -c(4, 6, 8, 10, 18)] #drop a few by extraction incorrectly added columns
-
-rrr8 <- as.data.frame(do.call("rbind", rrr8), stringsAsFactors = FALSE)#conmbine into one dataframe
-
-rrr8$V1[22] <- "O'Donnell" #Correct faulty extraction of O'Donnell's name
-
-rrr8[, 3:8] <- sapply(rrr8[,3:8], as.numeric) #change relevant columns to numeric
+rrr8 <- rrr8[rrr8$label == "main",] #remove effects that are not the primary effect, note that this drops the headers which are in row 1 of the first list
 
 rrr8 <- rrr8 %>% 
-  filter(V1 %in% authors_main23) %>% #limit to the 23 labs from main analysis in paper
-  rename(Site = V1, #rename variables to consistent names
-         outcome_t1 = V3, #mean treatment group
-         ntreatment = V4,
-         outcome_c1 = V5,#mean control group
-         ncontrol = V6,
-         effect_size = V7, #Mean difference
-         outcome_c2 = V8, #standard error
-         country = V11) %>% 
+  filter(authors %in% authors_main23) %>% #limit to the 23 labs from main analysis in paper
+  rename(Site = authors, #rename variables to consistent names
+         outcome_t1 = g1_mean, #mean treatment group
+         outcome_t2 = g1_sd, #sd treatment group
+         ntreatment = n1,
+         outcome_c1 = g2_mean,#mean control group
+         outcome_c2 = g2_sd, #sd treatment group
+         ncontrol = n2) %>%    
   mutate(rp = "RRR8", #Add some descriptive information
          effect = "Professor priming", 
          in_lab = 1, # All participants required to be in individual cubicles or at independent workstations where they could not see each other
@@ -1495,10 +1517,10 @@ rrr8 <- rrr8 %>%
          design = "control vs. treatment", 
          or_stat_test = "Confidence Interval", #No particular test, just looked at the effect and CI
          effect_type = "Raw mean difference",
-         outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
+         effect_size = outcome_t1 - outcome_t2, #mean difference
+         outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
          ml2_ncp_variance = NA, #only for ml2
-         outcome_t2 = NA, #only have sE of the effect, so nothing for this variable
          country = recode(country, #Recode country names to official three letter acronyms for consistency
                           Hungary = "HUN",
                           'United Arab Emirates' = "ARE",
@@ -1534,18 +1556,43 @@ rrr8 <- rrr8 %>%
 
 #library(dplyr)
 
-rrr9 <- read.csv("../data/source/rrr9/RRR9_summary_data.csv", stringsAsFactors = FALSE)
+##Procedure to exctract summary data
+# 1) Download and extract RRR09 meta-analysis script and data (SW_Script_and_Data.zip): https://osf.io/qegfd/
+# 2) In file Srull & Wyer (RRR)-meta-analysis.Rmd
+#     -Run lines 0 - 292
+#     - Save the results from the object metaDataRon and metaDataBeh with the following lines of code
+#         write.csv(metaDataRon, "RRR09_hostility_summary_stats.csv", row.names = FALSE)
+#         write.csv(metaDataBeh, "RRR09_behavior_summary_stats.csv", row.names = FALSE)
+
+
+host <- read.csv("../data/source/rrr9/RRR09_hostility_summary_stats.csv", stringsAsFactors = FALSE)
+behav <- read.csv("../data/source/rrr9/RRR09_behavior_summary_stats.csv", stringsAsFactors = FALSE)
+
+#rename variables to consistent names
+host <- host %>% rename(Site = lab.name,
+                        outcome_t1 = mean.hos.80,
+                        outcome_t2 = sd.hos.80,
+                        ntreatment = n.80,
+                        outcome_c1 = mean.hos.20,
+                        outcome_c2 = sd.hos.20,
+                        ncontrol = n.20)
+
+behav <- behav %>% rename(Site = lab.name,
+                        outcome_t1 = mean.beh.80,
+                        outcome_t2 = sd.beh.80,
+                        ntreatment = n.80,
+                        outcome_c1 = mean.beh.20,
+                        outcome_c2 = sd.beh.20,
+                        ncontrol = n.20)
+
+
+rrr9 <- bind_rows(list("Hostility priming - hostility" = host,
+                       "Hostility priming - behavior" = behav), .id = "effect")
+
+#Clean and format
 
 rrr9 <- rrr9 %>% 
-  rename(Site = lab.name, #rename variables to consistent names
-         outcome_t1 = mean.beh.80, #mean treatment group
-         ntreatment = n.80,
-         outcome_c1 = mean.beh.20,#mean control group
-         ncontrol = n.20,
-         outcome_t2 = sd.beh.80, 
-         outcome_c2 = sd.beh.20) %>% 
   mutate(rp = "RRR9", #Add some descriptive information
-         effect = "Hostility priming", 
          in_lab = 1, # All participants in large group of at least 50 people
          B_or_W = "Between", 
          design = "control vs. treatment", 
@@ -1555,20 +1602,20 @@ rrr9 <- rrr9 %>%
          outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
          ml2_ncp_variance = NA, #only for ml2
-         country = c("GBR", #Acar, country for each lab from https://osf.io/uskr8/,
+         country = rep(c("GBR", #Acar, country for each lab from https://osf.io/uskr8/,
                      "HUN", #Aczel
                      "CAN", #Birt
                      "USA", #Evans
                      "PRT", #Ferreira-Santos
-                     "GBR", #Iraizoz
+                     "GBR", #Gonzales-Iraizoz
                      "AUS", #Holzmeister
-                     "ISR", #Rozmann
+                     "ISR", #Klein Selle & Rozmann
                      "SWE", #Koppel
                      "FRA", #Laine
                      "GER", #Loschelder
                      "USA", #McCarthy
                      "NLD", #Meijer
-                     "TUR", #?zdogru
+                     "TUR", #Ozdogru
                      "GBR", #Pennington
                      "BEL", #Roets
                      "GER", #Suchotzki
@@ -1577,6 +1624,7 @@ rrr9 <- rrr9 %>%
                      "NLD", #Veschuere
                      "USA", #Wick
                      "USA"), #Wiggins
+                     2), #repeat countrys once (2) since we have two DVs (hostility/behavior)
          Site = tolower(Site)) %>% #Make site-names lower-case 
   select(rp, effect, Site, country, in_lab, Ntotal, B_or_W, design, or_stat_test, effect_type, effect_size, 
          ntreatment, ncontrol, outcomes1_2, outcome_t1, outcome_c1, outcome_t2, outcome_c2, ml2_ncp_variance) #select only variables of interest
@@ -1587,24 +1635,60 @@ rrr9 <- rrr9 %>%
 ##summary data from Registered Replication Report 10 https://osf.io/vxz7q/
 ##Direct link to .zip file with data: https://osf.io/fwnc2/
 ##Summary data located at Meta-Analysis_2018-07-09.zip\Meta-Analysis\Results_perMAA\Main\Tables\10 commandments effect_table_data.csv
-#Additional comments:  standard error of difference, no SD per group
+#Additional comments:  The summary data uploaded by RRR10 contained standard errors of 
+#                      the mean *difference*, but not standard deviations for the effect
+#                      sizes. Transforming the effect sizes of RRR10 into standardized
+#                      mean differences would thus require assuming equal variance in
+#                      both treatment and control groups; a strong assumption. Here we
+#                      thus do some minor edits to the original RRR10 code and extract
+#                      means and standard deviations.
 
 #library(dplyr)
 
-rrr10 <- read.csv("../data/source/RRR10/10 commandments effect_table_data.csv", stringsAsFactors = FALSE)
 
-rrr10$authors[grep("Iraizoz", rrr10$authors)] <- "Gonzales-Iraizoz" #simplify names not read properly
-rrr10$authors[grep("ru", rrr10$authors)] <- "Ozdogru"
+##Procedure to exctract the means and standard deviations for RRR10
+# 1) Download and extract RRR10 meta-analysis script and data (Meta-Analysis_2018-07-09.zip): https://osf.io/fwnc2/
+#   
+#   2) Make the following changes to the file mazar_srull_meta_analysis.R
+#     a)Lines 54-55 add code:
+#       g1_sd <- summarize(g1, sd = sd(!!g1_var))$sd
+#       g2_sd <- summarize(g2, sd = sd(!!g2_var))$sd	
+#   b) lines 64 - 65 add code:
+#       "g1_sd" = g1_sd,
+#       "g2_sd" = g2_sd,
+#   c)  lines 129 - 137: comment out
+#   d) Line 140: delete the variables cvb_eff, cvb_eff_permaa, self_vs_exp
+# 
+# 3) On my machine accents on letters in file-names resulted in errors, thus:
+#   In that data/ folder change the names of the files that end in "Final" that
+#   contain "Gonzáles" -> "Gonzales" and "Özdu'gru" -> "Ozdugru", and delete
+#   their data_meta files in the same folder
+# 
+# 4) In the file mazar_srull_meta_analysis.R (having opened R as using the project file in the zipped folder)
+# 	a) run functions and load packages
+# 	b) run lines 157 - 158
+# 	c) Run lines 201 - 205
+# 	d) Keep only main condition "10 commandments effect" by running the following line of code after lines 201-205
+# 	    all_dat <- all_dat %>% filter(label == "10 commandments effect")
+# 	e) Finally save the results for use in main paper
+# 	    write.csv(all_dat, file = "RRR10_summary_stats.csv", row.names = FALSE)
+
+
+rrr10 <- read.csv("../data/source/RRR10/RRR10_summary_stats.csv", stringsAsFactors = FALSE)
+
+
+not_primary_labs <- c("Acar", "Baskin", "Blatz", #not included in primary analysis (see paper)
+                      "Pennington", "Roets", "Tran") 
 
 rrr10 <- rrr10 %>% 
-  slice(-c(1, 21)) %>% #drop original effect and meta-analytic summmary from data
+  filter(!authors %in% not_primary_labs) %>% #remove these 
   rename(Site = authors, #rename variables to consistent names
-         outcome_t1 = mean1, #mean treatment group
+         outcome_t1 = g1_mean, #mean treatment group
+         outcome_t2 = g1_sd, #sd treatment group
          ntreatment = n1,
-         outcome_c1 = mean2,#mean control group
-         ncontrol = n2,
-         effect_size = means, #Mean difference
-         outcome_c2 = se) %>%  #standard error of the difference 
+         outcome_c1 = g2_mean,#mean control group
+         outcome_c2 = g2_sd, #sd control group
+         ncontrol = n2) %>% 
   mutate(rp = "RRR10", #Add some descriptive information
          effect = "Moral reminder", 
          in_lab = 1, # All participants in large group of 50 people
@@ -1612,23 +1696,23 @@ rrr10 <- rrr10 %>%
          design = "control vs. treatment", 
          or_stat_test = "ANOVA", #No particular test, just looked at the effect and CI
          effect_type = "Raw mean difference",
-         outcomes1_2 = "mean _ SE", #Describes the content of outcome1 and outcome2 variables
+         effect_size = outcome_t1 - outcome_t2, #Mean difference
+         outcomes1_2 = "mean _ SD", #Describes the content of outcome1 and outcome2 variables
          Ntotal = ntreatment + ncontrol,
          ml2_ncp_variance = NA, #only for ml2
-         outcome_t2 = NA, #only have sE of the effect (difference of means) and no SDs, so nothing for this variable
-         country = c("HUN", #country for each lab from https://osf.io/uskr8/, Aczel
+         country = c("HUN", #Aczel, country for each lab from https://osf.io/uskr8/ 
                      "CAN", #Birt
                      "USA", #Evans
                      "PRT", #Ferreira-Santos
-                     "GBR", #Iraizoz
+                     "GBR", #Gonzales-Iraizoz
                      "AUS", #Holzmeister
-                     "ISR", #Rozmann
+                     "ISR", #Klein Selle & Rozmann
                      "SWE", #Koppel
                      "FRA", #Laine
                      "GER", #Loschelder
                      "USA", #McCarthy
                      "NLD", #Meijer
-                     "TUR", #?zdogru
+                     "TUR", #Ozdogru
                      "GER", #Suchotzki
                      "FRA", #Sutan
                      "NLD", #Vanpaemel
