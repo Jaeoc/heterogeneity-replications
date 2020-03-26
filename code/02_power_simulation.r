@@ -173,7 +173,7 @@ set.seed(112)
 res <- vector("list", length(dat2)) #output of below loop
 
 system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
- res[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 36 hours on my (fairly slow) machine
+ res[[e]] <- simulate_I2(dat2[[e]], reps = 1000, tau = tau_values, effect_size = "zero") #NB! 1e3 reps here is about 36 hours on my (fairly slow) machine
  cat("...RS",e, "/37") #see progress
  if (e%%5 == 0 | e == 37) saveRDS(res, "../data/tau_simulation_results.RDS") #save ocassionally and at finish
 })
@@ -185,7 +185,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 # res_a <- vector("list", length(dat2)) #output of below loop
 
 # system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progress (lapply otherwise option)
-  # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
+  # res_a[[e]] <- simulate_I2(dat2[[e]], reps = 1000, tau = tau_values, effect_size = "medium") #NB! 1000 reps here is about 24 hours on my (fairly slow) machine
   # cat("...RS",e, "/37") #see progress
   # if (e%%5 == 0 | e == 37) saveRDS(res_a, "../data/supplementB_tau_simulation_results.RDS") #save ocassionally and at finish
 # })
@@ -195,6 +195,7 @@ system.time(for(e in seq_along(dat2)){ #As loop to be able to see and save progr
 dat3 <- readRDS("../data/tau_simulation_results.RDS")
 # dat3 <- readRDS("../supplementB_tau_simulation_results.RDS") #for supplement
 names(dat3) <- names(dat2) #names are lost when looping instead of using lapply so must be re-added
+
 
 dat3 <- dat3 %>% #create dataframe with identifier
   bind_rows(.id = "effect") %>% 
@@ -232,7 +233,8 @@ dat5 <- dat4 %>% #add the extracted tau-values as a vector to each list-element 
 
 ##Simulation
 set.seed(56)
-res2 <- vector("list", length(dat5)) 
+res2 <- vector("list", length(dat5))
+
 
 system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
   res2[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
@@ -241,27 +243,29 @@ system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progr
   if (e%%5 == 0 | e == 37) saveRDS(res2, "../data/power_simulation_results.RDS") #save ocassionally and at finish
 })
 
-
 #*********************
 #Effect size sensitivity simulation for Supplement B
 
 #Note dat5 from above is needed
 
 # set.seed(50)
-#  res2_a <- vector("list", length(dat2)) #output of below loop
-# 
-#  system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
-#    res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
-#                             tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
-#   cat("...RS",e, "/37") #see progress
-#    if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/supplementB_power_simulation_results.RDS") #save ocassionally and at finish
-#  })
+ # res2_a <- vector("list", length(dat2)) #output of below loop
+
+ # system.time(for(e in seq_along(dat5)){ #As loop to be able to see and save progress (lapply otherwise option)
+   # res2_a[[e]] <- simulate_I2(dat5[[e]][[1]], reps = 1e4,
+                            # tau = c(0, dat5[[e]][[2]]), effect_size = "medium") #NB! 1e4 reps here is about 9.5 hours on my (fairly slow) machine
+  # cat("...RS",e, "/37") #see progress
+   # if (e%%5 == 0 | e == 37) saveRDS(res2_a, "../data/supplementB_power_simulation_results.RDS") #save ocassionally and at finish
+ # })
 #********************
+
 
 ##Simulation results
 dens <- readRDS("../data/power_simulation_results.RDS") #very large if saved as .csv
 # dens <- readRDS("../data/supplementB_power_simulation_results.RDS") #If supplement simulation
 names(dens) <-  names(dat2)
+
+
 
 #Summary of results. These are incorporated into the main table in the paper, see tables.rmd
 I2_ci_lb <- dens %>% 
