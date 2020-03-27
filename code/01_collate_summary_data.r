@@ -1484,10 +1484,13 @@ rrr7 <- rrr7 %>%
 #   Error in rbind(deparse.level, ...) : 
 #   numbers of columns of arguments do not match
 
-# 5) In the file dijksterhuis_meta_analysis_2.R run lines 1 - 120, make sure working directory is set to the file location
+# 5) Rename the Bialobrzeska folder and inside the folder the Bialobrzeska_data_complete file 
+#    to not use a special 'l' (or else didn't load on my machine)
+
+# 6) In the file dijksterhuis_meta_analysis_2.R run lines 1 - 120, make sure working directory is set to the file location
 #     [not sure which packages in line 1-7 actually need to be loaded, I had them all installed already so just loaded them all]
 
-# 6) Save the collated data file with the following line of code:
+# 7) Save the collated data file with the following line of code:
 #   write.csv(all_dat, file = "RRR08_summary_stats.csv", row.names = FALSE)
 
 #Extract data
@@ -1731,4 +1734,3 @@ rrr10 <- rrr10 %>%
 effects <- rbind(ml1, ml2, ml3, rrr1_2, rrr3, rrr4, rrr5, rrr6, rrr7, rrr8, rrr9, rrr10)
 
 # write.csv(effects, "../data/collated_summary_data.csv", row.names = FALSE)
-
