@@ -133,18 +133,21 @@ I2_plot <- ggplot(I2_dist, aes(x = I2, group = Heterogeneity)) +
   scale_fill_manual(name = NULL, #drop legend title so that can place directly under other legend
                     values = "#666666", #fill color
                     breaks = "Observed",
-                    labels = "Observed") +
+                    labels = "     Observed") + #space before Observed to align label with other labels since this guide has a different width to the others (see last line)
   scale_color_manual(values = c("#D95F02", "#E6AB02", "#1B9E77","#E7298A"), #fill colors
                      breaks = c("Zero", "Small", "Medium", "Large"),
                      labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)")) +
   theme(legend.position = c(0.85, 0.71), #placement of legend
         legend.spacing = unit(-0.4, "cm"), #move the two legends close to each other to seem like one
+        legend.key.width = unit(0.8, "cm"), #set default keywidth wider, so we can distinguis linetypes dashed and dotdash
         legend.background = element_blank(), #remove legend background so that we can put a shared box around the two legends
         legend.box.background = element_rect(colour = "black")) + #create the shared box
   scale_y_continuous(name = "Density") +
   scale_x_continuous(name = expression(paste(italic(I)^2," index", sep = ""))) +
-  guides(linetype = guide_legend(order = 1),
-         color  = guide_legend(order = 1))
+  guides(linetype = guide_legend(order = 1), #place linetype/color guides above fill guide
+         color  = guide_legend(order = 1),
+         fill = guide_legend(keywidth = unit(0.2, "cm"), #Make fill legend thinner to look like the histogram bars
+                             direction = "horizontal")) #needed in combination with above
 #*****************
 
 I2_plot
