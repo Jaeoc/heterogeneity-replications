@@ -41,6 +41,7 @@ source("03_helper_functions_tables_figures.r") #Load functions to prep data for 
 
 # Supplement A
 
+
 ```{r a-plot-prep, cache = TRUE}
 res <- dat %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
@@ -61,6 +62,7 @@ het <- dat %>%
 a <- het %>% filter(rp == "ML1" & !effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing','Norm of reciprocity', 'Low vs. high category scales') & effect_type == "SMD.")
 ```
 
+## Figure S1A
 
 ```{r a-plot, cache = FALSE}
 a_plot <- ggplot(a, aes(x = s_I2, y = sqrt(tau2))) + geom_point() + ggtitle("SMD (untransformed)") +
@@ -216,7 +218,7 @@ average_within <- SMDs_raw %>% #these values we now wish to correlate with meta-
 
 #Raw mean differences to SMD
 MD_standardized <- dat %>% 
-  filter(outcomes1_2 == "mean _ SD") %>% #Note, drops Mean _ SE studies (two) since no method in metafor to convert into standardized mean differences
+  filter(outcomes1_2 == "mean _ SD") %>% 
   split(.$effect) %>% 
   map_dfr(MD_fit, .id = "effect") #MD_fit function is sourced
 
@@ -267,4 +269,63 @@ knitr::kable(cors_anch, booktabs = TRUE, escape = FALSE)
 
 ```
 
-**Note:** The Pearson correlations from 36 meta-analyses estimated with the random effects model and restricted maximum likelihood. The sample of effects is identical to Table S1C but with 4 Anchoring effects excluded. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nontheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+**Note:** The Pearson correlations from 36 meta-analyses estimated with the random effects model and restricted maximum likelihood. The sample of effects is identical to Table S1C but with 4 Anchoring effects excluded. $s^2$ = "typical" within studies variance (Higgins and Thompson, 2002, equation 9), $\hat{\mu}$ = average absolute effect size, $I^2$ = $\hat{\tau}^2$ / $(\hat{\tau}^2 + s^2)$ , $H^2$ = $Q/(K-1)$ where $Q$ is the Q-statistic and $K$ is the number of studies in a meta-analysis. This expression for $H^2$ is strictly only correct when using the DerSimonian-Laird estimator, see main manuscript for why we use it nonetheless. In all 40 meta-analyses effect sizes were measured as mean or standardized mean differences. Effects reported as mean differences were standardized for the meta-analyses.
+
+## Figure S1C
+
+```{r plotC prep}
+
+#Create plot labels
+set.seed(499) #for the bootstrapping
+all_effects_ci <- tau_per_type %>% 
+  bootfitter_sigma2(.) #bootfitter is a sourced function
+
+labels_all <- tau_per_type %>% #
+  fitter_sigma2(.) %>% #fitter is a sourced function
+  mutate(lab = paste0("r = ", r, " ", all_effects_ci$ci)) #put output into one variable for improved plotting
+
+
+set.seed(500) #for the bootstrapping
+restricted_effects_ci <- without_anchoring %>% 
+  bootfitter_sigma2(.) #bootfitter is a sourced function
+
+labels_restricted <- without_anchoring %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
+  fitter_sigma2(.) %>% #fitter is a sourced function
+  mutate(lab = paste0("r = ", r, " ", restricted_effects_ci$ci)) #put output into one variable for improved plotting
+```
+
+
+```{r fig C}
+within_plot_full <- ggplot(tau_per_type, aes(x = eff_size, y = s2)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_text(data = labels_all[labels_all$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  scale_y_continuous(name = expression(paste(italic(s^2)))) +
+  scale_x_continuous(name = "Absolute Effect Size") +
+  theme_classic() +
+  theme(strip.background = element_blank(), #remove box around titles
+        strip.text = element_text(size = 12),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid"))
+
+without_anchoring_plot <- ggplot(without_anchoring, aes(x = eff_size, y = s2)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
+  geom_text(data = labels_restricted[labels_restricted$index == "sigma",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  scale_y_continuous(name = expression(paste(italic(s^2)))) +
+  scale_x_continuous(name = "Absolute Effect Size") +
+  theme_classic() +
+  theme(strip.background = element_blank(), #remove box around titles
+        strip.text = element_text(size = 12),
+        panel.border = element_rect(fill = NA, colour = "black", #add box around plots
+                                    size = 0.5, linetype = "solid"))
+
+
+cowplot::plot_grid(within_plot_full, without_anchoring_plot, nrow = 2, labels = "AUTO")
+
+ggsave("../figures/figure-S1C.png", dpi = 600, height =  7, width = 7)
+```
+
+Figure S1C. The Pearson correlation (_r_) between average absolute effect size and average within studies standard deviation for 40 effects that were measured as mean or standardized mean differences. Panel A shows results for all 40 effect sizes and panel B with the four largest (Anchoring 1 - 4) excluded. Effects reported as mean differences were standardized. Square brackets contain 95% bootstrapped percentile confidence intervals. 
+```
+

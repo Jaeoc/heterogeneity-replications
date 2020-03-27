@@ -68,10 +68,18 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type, linetype 
                      minor_breaks = NULL) +
   scale_linetype_manual(name = "Effect type", 
                         values = c( "dotdash", "dotted", "solid", "dashed"),
-                        breaks = c("Fisher's z", "Cohen's q", "MD", "SMD")) + 
+                        breaks = c("Fisher's z", "Cohen's q", "MD", "SMD"),
+                        labels = c(expression(paste("Fisher's ", italic(z))),
+                                   expression(paste("Cohen's ", italic(q))),
+                                   expression(paste(italic(MD))),
+                                   expression(paste(italic(SMD))))) + 
   scale_color_brewer(name = "Effect type", 
                      palette = "Dark2", 
-                     breaks = c("Fisher's z", "Cohen's q", "MD", "SMD")) +
+                     breaks = c("Fisher's z", "Cohen's q", "MD", "SMD"),
+                     labels = c(expression(paste("Fisher's ", italic(z))),
+                                   expression(paste("Cohen's ", italic(q))),
+                                   expression(paste(italic(MD))),
+                                   expression(paste(italic(SMD))))) +
   coord_cartesian(ylim = c(0, 100)) +
   theme(legend.position = c(0.8, 0.4),
         legend.background = element_rect(linetype = "solid", color = "black")) +
@@ -113,25 +121,31 @@ observed <- dat %>%
 
 
 ```{r Density-plot, fig.height=4, fig.width=6.47}
-I2_plot <- ggplot(I2_dist, aes(x = I2, group = Heterogeneity, fill = Heterogeneity, linetype = Heterogeneity)) +
-  geom_histogram(data = observed, aes(y = ..density.., x = I2), bins = 100, alpha = 1) +
-  geom_density(alpha = 0.3) +
+I2_plot <- ggplot(I2_dist, aes(x = I2, group = Heterogeneity)) + 
+  geom_histogram(data = observed, aes(y = ..density.., x = I2, fill = Heterogeneity), bins = 100, alpha = 0.6)   +
+  stat_density(geom="line", position="identity", #we use stat_density instead of geom_density to get only the density lines (and no fill)
+               aes(linetype = Heterogeneity, color = Heterogeneity), size = 0.75)+ 
   theme_classic() +
   coord_cartesian(xlim = c(0, 100))  +
-  scale_fill_brewer(palette = "Dark2",
-                    breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
-                    labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-  scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "solid", "dashed"),
-                        breaks = c("Zero", "Small", "Medium", "Large", "Observed"), 
-                        labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-  scale_color_brewer(palette = "Dark2", 
-                     breaks = c("Zero", "Small", "Medium", "Large", "Observed"),
-                     labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)", "Observed")) +
-  theme(legend.position = c(0.85, 0.71),
-        legend.background = element_rect(linetype = "solid", color = "black")) +
+  scale_linetype_manual(values = c( "dotdash", "dotted", "solid", "dashed"),
+                        breaks = c("Zero", "Small", "Medium", "Large"), 
+                        labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)")) +
+  scale_fill_manual(name = NULL, #drop legend title so that can place directly under other legend
+                    values = "#666666", #fill color
+                    breaks = "Observed",
+                    labels = "Observed") +
+  scale_color_manual(values = c("#D95F02", "#E6AB02", "#1B9E77","#E7298A"), #fill colors
+                     breaks = c("Zero", "Small", "Medium", "Large"),
+                     labels = c("Zero (0%)", "Small (25%)", "Medium (50%)", "Large (75%)")) +
+  theme(legend.position = c(0.85, 0.71), #placement of legend
+        legend.spacing = unit(-0.4, "cm"), #move the two legends close to each other to seem like one
+        legend.background = element_blank(), #remove legend background so that we can put a shared box around the two legends
+        legend.box.background = element_rect(colour = "black")) + #create the shared box
   scale_y_continuous(name = "Density") +
-  scale_x_continuous(name = expression(paste(I^2," index", sep = ""))) +
-  guides(fill = guide_legend(override.aes = list(alpha = c(rep(0.3, 4), 1))))
+  scale_x_continuous(name = expression(paste(italic(I)^2," index", sep = ""))) +
+  guides(linetype = guide_legend(order = 1),
+         color  = guide_legend(order = 1))
+#*****************
 
 I2_plot
 # ggsave("../figures/density-I2.png", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
@@ -139,24 +153,19 @@ I2_plot
 
 ```
 
-Figure 2. Simulated $I^2$  densities across 67 meta-analyses for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and the distribution of the observed $I^2$ estimates (bars) for the 67 meta-analyses. Each simulated density consists of approximately 670,000 estimates. 
+Figure 2. Simulated $I^2$  densities across 68 meta-analyses for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and the distribution of the observed $I^2$ estimates (bars) for the 68 meta-analyses. Each simulated density consists of approximately 680,000 estimates. 
 
 
 ## Figure 3: correlations per effect type
 
 ```{r corr_per_effect_type-prep}
 
-#Function 'est_heterogen_smd_raw' is sourced, see also tables.rmd
-tau2_per_type <- dat %>% #First compute meta-analytic results for all effects (will save: SMDs results)
-  split(.$effect) %>%  
-  map_dfr(est_heterogen_smd_raw, .id = "effect") 
-
-
 #Raw mean differences to SMD
 MD_standardized <- dat %>% 
-  filter(outcomes1_2 == "mean _ SD") %>% #Note, drops Mean _ SE studies (two) since no method in metafor to convert into standardized mean differences
+  filter(outcomes1_2 == "mean _ SD") %>% 
   split(.$effect) %>% 
-  map_dfr(MD_fit, .id = "effect") #MD_fit function is sourced
+  map_dfr(MD_fit, .id = "effect") %>% #MD_fit function is sourced
+  mutate(effect_type = "Standardized Mean Difference")
 
 #effects that were originally transformed from OR to SMD by ML1 which we refit as OR
 OR2d <- c('Allowed vs. forbidden', 'Gain vs. loss framing', 
@@ -171,23 +180,14 @@ rd_effects <- c("Verbal overshadowing 1", "Verbal overshadowing 2")
 log_odds_ratios <- dat %>% 
   filter(effect %in% c(OR2d, ml2_or, rd_effects)) %>% 
   split(.$effect) %>% 
-  map_dfr(log_or_fit, .id = "effect") #log_or_fit function is sourced
+  map_dfr(log_or_fit, .id = "effect") %>% #log_or_fit function is sourced
+  mutate(effect_type = "Log Odds Ratio")
 
-
-tau_per_type <- dat %>% #This is to add the effect_type names
-  select(effect, effect_type) %>% 
-  distinct() %>% #get unique rows
-  mutate(effect_type = recode(effect_type, 
-                              d = "Standardized Mean Difference")) %>% 
-  left_join(tau2_per_type) %>% #Add the meta-analytic results
-  filter(!effect %in% c(log_odds_ratios$effect, MD_standardized$effect)) %>% #drop old odds ratio effects and unstandardized MD
-  bind_rows(MD_standardized) %>% #add MD after standardization
-  bind_rows(log_odds_ratios) %>% #add odds ratios
-  mutate(effect_type = ifelse(effect %in% MD_standardized$effect, "Standardized Mean Difference", effect_type),
-         effect_type = ifelse(effect %in% log_odds_ratios$effect, "Log Odds Ratio", effect_type),
-         eff_size = abs(eff_size), #need the absolute values for plotting
-         tau = sqrt(tau2)) %>% 
-  filter(effect_type %in% c("Standardized Mean Difference", "Log Odds Ratio"))
+#combine into one dataframe for plotting
+tau_per_type <- MD_standardized %>% 
+  bind_rows(log_odds_ratios) %>% 
+  mutate(eff_size = abs(eff_size), #need the absolute values for plotting
+         tau = sqrt(tau2))
 
 
 #lables
@@ -211,7 +211,7 @@ tau_facet <- ggplot(tau_per_type, aes(x = eff_size, y = tau)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
   geom_text(data = labels[labels$index == "tau",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
-  scale_y_continuous(name = expression(paste("Between Studies Standard Deviation ", italic(tau)))) +
+  scale_y_continuous(name = expression(paste("Between Studies Standard Deviation ", tau))) +
   scale_x_continuous(name = "Absolute Effect Size") +
   theme_classic() +
   theme(strip.background = element_blank(), #remove box around titles

@@ -34,18 +34,19 @@ source("03_helper_functions_tables_figures.r") #Load functions to prep data for 
 rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
 rho <- c(0, .3, .5)
 rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
-ma <- c("I: $\\rho_{xy} = 0.0$", "II: $\\rho_{xy} = 0.3$", "III: $\\rho_{xy} = 0.5$")
+ma <- c("I", "II", "III")
+
 
 
 rooted_relabilities <- sweep(rooted_relabilities, 2, rho, "*")
 devs <- apply(rooted_relabilities, 2, sd)
-table1 <- data.frame(ma, t(rooted_relabilities), devs)
+table1 <- data.frame(ma, rho, t(rooted_relabilities), devs)
 
 
-table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8", "SD(ES)"), escape = FALSE, digits = 2) %>% 
+table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\rho_{xy}$", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8", "SD(ES)"), escape = FALSE, digits = 2) %>% 
   kable_styling(position = "left") %>% 
-  add_header_above(c(" " = 1, "Study 1"= 1, "Study 2" = 1, "Study 3" = 1)) %>% 
-  add_header_above(c(" " = 1, "Observed Effect Sizes" = 3))
+  add_header_above(c(" " = 2, "Study 1"= 1, "Study 2" = 1, "Study 3" = 1)) %>% 
+  add_header_above(c(" " = 2, "Observed Effect Sizes" = 3)) 
 
 #alternative inversed table 1
 # table1b <- t(table1)[2:5,]
@@ -58,7 +59,7 @@ table1 %>% knitr::kable(booktabs = T, col.names = c("Meta-Analysis", "$\\sqrt{R_
 #   add_header_above(c(" " = 1, "Observed effect sizes" = 3)) %>% 
 #   row_spec(3, hline_after = TRUE)
 ```
-*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\rho_{xy}$ when within study sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite within study sample sizes. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06
+*Note:* The values under Study 1, 2 and 3 are observed effect sizes for that study given its measurement reliability $\sqrt{R_{xx'}}\times\sqrt{R_{yy'}}$ and the true effect size $\rho_{xy}$ when within study sample size is infinite. SD(ES) is the standard deviation of the observed effect sizes for meta-analysis I, II and III; equivalent to heterogeneity given infinite within study sample sizes. Code to reproduce table: osf.io/gtfjn/
 
 ## Table 2
 ### Pre-registered multi-lab replication projects
@@ -107,7 +108,7 @@ description <- c("Two correlational effects: 'Gender math attitude' compared imp
             "Facial feedback hypothesis; Independent two-group experiment. Participants either induced to 'smile' or 'pouth' by holding a pen in their mouth differently and simultaneously rated funniness of cartoons. ", #RRR6
             "Intuitive cooperation; Independent two-group experiment. Economic game with money contribution to a common pool either under time pressure or time delay.",
                  "Professor priming; Independent two-group experiment. Participants primed with either a 'professor' or 'hooligan' stimuli. Outcome was percentage correct trivia answers.", #RRR8
-            "Hostility priming; Independent two-group experiment. Participants descrambled sentences, either 20% or 80% were hostile, then rated ambiguous behavior.", #RRR9
+            "Hostility priming; Independent two-group experiment with two outcome variables. Participants descrambled sentences, either 20% or 80% were hostile, then rated an individual and a list of ambiguous behaviors on perceived hostility.", #RRR9
             "Moral reminder; Independent two-group experiment. Participants either recalled the Ten Commandments or books they'd read. Outcome was degree of cheating when reporting results. ") #RRR10 
 
 
@@ -165,38 +166,38 @@ summary.table %>% knitr::kable(booktabs = TRUE,
   column_spec(8, width = "30em") %>% 
   landscape()
 ```
-**Note:** For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/kf6pt/?view_only=e6639d8d4f924739a7310782fbbb4e06"
+**Note:** For studies with several effects the number of participants is the average across effects, rounded to the closest whole number. N = Participants used for primary analyses by original authors (i.e., after exclusions). RP = Replication Project, K (US) = no. primary studies (number of US studies), ML = Many Labs, RRR = Registered Replication Report. Code to reproduce table: osf.io/gtfjn/
 
 ## Table 3
 ### Heterogeneity across primary effects and statistical power of thirteen multi-lab replication projects, ordered with respect to estimated heterogeneity ($I^2$).
-```{r prep-heterogeneity-table, cache = TRUE, results = 'hide'}
-#library(metafor)
+```{r prep-heterogeneity-table, results = 'hide'}
+#library(metafor) 
 #library(dplyr)
 #library(purrr)
 
 #fit a random effects model to all empirical data
 #Each set of input datapoints is meta-analyzed as per the original replication project
 #Function 'est_heterogen_smd_raw' is sourced
-res <- dat %>% 
+res <- dat %>%
   split(.$effect) %>%  #separate by effect, necessary step otherwise the function is applied overall
   map_dfr(est_heterogen_smd_raw, .id = "effect") %>% #apply function, rbind results into dataframe ('dfr'), make sure purrr is up to date
   mutate(tau = sqrt(tau2),
          tau_ci.lb = sqrt(tau2_ci.lb),
-         tau_ci.ub = sqrt(tau2_ci.ub)) %>% 
+         tau_ci.ub = sqrt(tau2_ci.ub)) %>%
   select(-tau2, - tau2_ci.lb, -tau2_ci.ub) #drop redundant variables
 
 
 #Add rp and k to the data-frame and prep for table
-het <- dat %>% 
-  select(rp, Site, effect, effect_type) %>% 
-  group_by(rp, effect) %>% 
+het <- dat %>%
+  select(rp, Site, effect, effect_type) %>%
+  group_by(rp, effect) %>%
   summarize(effect_type = unique(effect_type),
-            k = n_distinct(Site)) %>% 
-  left_join(res) %>% 
-  mutate(effect_type = recode(effect_type, 
+            k = n_distinct(Site)) %>%
+  left_join(res) %>%
+  mutate(effect_type = recode(effect_type,
                               d = "SMD",
                               'Raw mean difference' = "MD",
-                              'Risk difference' = "RD")) %>% 
+                              'Risk difference' = "RD")) %>%
   ungroup()
 
 #****************
@@ -226,17 +227,17 @@ dens <- readRDS("../data/power_simulation_results.RDS")
 names(dens) <-  sort(unique(dat$effect)) #names were alphabetized upon splitting in simulation so must sort
 
 #Summary of simulation results, needs to be combined with main part of table
-I2_power <- dens %>% 
-  bind_rows(.id = "effect") %>% 
-  group_by(effect, tau_index) %>% 
+I2_power <- dens %>%
+  bind_rows(.id = "effect") %>%
+  group_by(effect, tau_index) %>%
   summarize(power = mean(Qp <= 0.05)) %>% #Estimate power/type 1 error for each tau level and effect
-  ungroup() %>% 
+  ungroup() %>%
   tidyr::spread(key = tau_index, value = power) %>% #prep for table
   rename(zero = '1', small = '2', medium = '3', large = '4')
 
 #Combine dataframes to create full table
-het <-  het %>% 
-  left_join(I2_power) %>% 
+het <-  het %>%
+  left_join(I2_power) %>%
   arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by I2 and upper CI bound
   mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 1), nsmall = 1)), ", ", trimws(format(round(s_ci.ub, 1), nsmall = 1)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
          s_I2 = format(round(s_I2, 1), nsmall = 1),
@@ -246,25 +247,38 @@ het <-  het %>%
   select(rp, effect, k, effect_type, eff_size, s_I2, I2_ci, tau, tau_ci, zero, small, medium, large)
 
 #Add superscripts
-het <- het %>% 
+het <- het %>%
   mutate(s_I2 = ifelse(effect %in% c("Grammar on intention attribution", "Conscientiousness and persistence"), paste0(s_I2, "\\textsuperscript{a}"), s_I2), #add a superscript
-         tau = ifelse(effect == "Conscientiousness and persistence", paste0(tau, "\\textsuperscript{a}"), tau)) %>% 
+         tau = ifelse(effect == "Conscientiousness and persistence", paste0(tau, "\\textsuperscript{a}"), tau)) %>%
   mutate_at(vars(zero, small, medium, large), ~ifelse(effect %in% c('Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales', 'Verbal overshadowing 1', 'Verbal overshadowing 2'), paste0(., "\\textsuperscript{b}"), .)) #add b superscript
 
 het$effect <- gsub("&", "\\\\&", het$effect)
+
+
+#highlight the effects in Figure 3
+fig3_smds <- unique(dat$effect[dat$outcomes1_2 == "mean _ SD"]) 
+fig3_logor <- c('Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales', #ML1 (OR2d)
+                "Affect & Risk", "Trolley Dilemma 1", "Framing", "Trolley Dilemma 2", #ML2
+                "Verbal overshadowing 1", "Verbal overshadowing 2") #RRR1
+                     
+het$effect <- ifelse(het$effect %in% fig3_smds, paste0(het$effect, footnote_marker_symbol(1)), het$effect)
+het$effect <- ifelse(het$effect %in% fig3_logor, paste0(het$effect, footnote_marker_symbol(2)), het$effect)
+
 ```
 
 ```{r heterogeneity-table, cache = FALSE}
 #library(kableExtra)
 
-het %>% knitr::kable(align = "c", longtable = TRUE, booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\hat\\tau$", "$\\hat\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>% 
-  add_header_above(c(" " = 9, "Level of heterogeneity" = 4)) %>% 
-  add_header_above(c(" " = 9, "Type I Error Rate & Statistical Power" = 4)) %>% 
+het %>% knitr::kable(longtable = TRUE, booktabs = TRUE, escape = FALSE, digits = 2, col.names = c("RP", "Effect", "K", "Effect type", "Effect size estimate",  "$I^2$(\\%)", "$I^2$ 95\\% CI", "$\\hat\\tau$", "$\\hat\\tau$ 95\\% CI", "Zero", "Small", "Medium", "Large")) %>%
+  add_header_above(c(" " = 9, "Level of heterogeneity" = 4)) %>%
+  add_header_above(c(" " = 9, "Type I Error Rate & Statistical Power" = 4)) %>%
   kable_styling(latex_options = c("scale_down", "repeat_header"), font_size = 7) %>% #comment out if outputting html file
-  column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped 
+  column_spec(5, width = "5em") %>% #make sure the 'Effect size estimate' header is wrapped
+  column_spec(4, width = "3em") %>% #wrap 'Effect Type' header 
   footnote(threeparttable = TRUE, escape = FALSE,
            general = "Effects were estimated in metafor using REML. The following effects are odds ratios transformed into standardized mean differences: 'Allowed vs. forbidden', 'Gain vs. loss framing', 'Norm of reciprocity', 'Low vs. high category scales'. All ML2 meta-analyses with effect type 'r' except 'Moral foundations' and 'Social Value Orientation' were transformed to correlations from a variety of effect sizes. RP = Replication Project, K = no. primary studies, $\\\\hat\\\\tau$ = between studies standard deviation, CI = confidence intervals. Statistical power was simulated, where Zero = simulated type 1 error, and the other headers represent simulated power under small/medium/large
-heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/kf6pt/?view\\\\_only=e6639d8d4f924739a7310782fbbb4e06" ,
-           alphabet = c("Value rounded to zero", "These effects were simulated as standardized mean differences")) %>% landscape()
+heterogeneity ($I^2$ = 25/50/75\\\\%) respectively. SMD = Standardized Mean difference (Hedge's g), MD = Mean Difference, RD = Risk Difference, r = correlation. Code to reproduce table: osf.io/gtfjn/" ,
+           alphabet = c("Value rounded to zero", "These effects were simulated as standardized mean differences"),
+symbol = c("SMD effect size in Figure 3", "Log odds ratio effect size in Figure 3")) %>% landscape()
 ```
 

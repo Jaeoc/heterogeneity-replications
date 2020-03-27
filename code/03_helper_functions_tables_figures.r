@@ -2,7 +2,7 @@
 
 #Project: Heterogeneity in direct replications in psychology and its association with effect size
 #Script purpose: Helper functions to prep data for tables and figures
-#Code: 
+#Code: Anton Olsson Collentine (anton@olssoncollentine.com)
 #Additional comments: These functions are intended to be 'sourced' into the 
 #                     tables.rmd, figures.rmd, and supplement-tables-figures.rmd files 
 
@@ -19,10 +19,6 @@ est_heterogen_smd_raw <- function(x){
   if(any(x[, "effect_type"] == "Risk difference")){ #without the 'any' we will get warnings because we apply 'if' to a vector
     
     fit <- rma(measure = "RD", ai = outcome_t1, bi = outcome_t2, ci = outcome_c1, di = outcome_c2,  n1i = ntreatment, n2i = ncontrol,  data = x)
-    
-  } else if(any(x[, "outcomes1_2"] == "mean _ SE")){  
-    
-    fit <-  rma(yi = effect_size, sei = outcome_c2,  data = x) 
     
   } else if(any(x[, "effect_type"] == "Raw mean difference")){
     if(any(x[, "rp"] %in% c("RRR5", "RRR7"))){ #For these us the Knapp and Hartung adjustment of standard errors
@@ -198,8 +194,8 @@ transform_MA <- function(x, fisher = FALSE){
 
 
 #function to run random effect meta-analysis on transformed effect sizes
-summarizer <- function(x){#Z-transformation not recommended by Jacobs and Viechtbauer (2017) for biserial correlations, p. 176
-  fitr <- rma(yi = x$r, vi = x$vi, data = x) #rma for biserial and pearson correlations (distinct per effect!)
+summarizer <- function(x){
+  fitr <- rma(yi = x$r, vi = x$vi, data = x) 
   ci <- confint(fitr)$random[c(1, 3), ] #I2 and tau2 confidence intervals
   
   data.frame(r = fitr$b[[1]], tau2 = fitr$tau2, tau2.lb = ci[1, 2], tau2.ub = ci[1, 3],
@@ -223,4 +219,32 @@ compute_precision <- function(SD1, SD2, n1, n2){
   var_pooled <- ((n1 - 1)*SD1^2 + (n2 - 1)*SD2^2) / (n1 + n2 - 2) #Borenstein, M. (2009), p. 226. 
   sampling_var <- var_pooled / (n1 + n2)
   1 / sampling_var #precision
+}
+
+
+
+#Supplement C labels
+pear_sigma2 <- function(formula, data, indices){ #pearson
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ s2 + eff_size, data=d)
+  return(fit$estimate)
+}
+
+fitter_sigma2 <- function(df){  #function to fit correlations for annotating facet plots
+  fit_sigma <- summary(lm(s2 ~ eff_size, data = df))
+  r <- sqrt(fit_sigma$r.squared)
+  data.frame(r = format(round(r, digits = 2), nsmall = 2),
+             index = "sigma") 
+}
+
+bootfitter_sigma2 <- function(x){ #function that computes the bootstrapped confidence intervals using above functions to annotate plots
+  bootfit <- boot(data=x, statistic=pear_sigma2, R=1000, formula= ~ eff_size + s2)
+  sigma_ci_pears <- boot.ci(bootfit, type="perc")
+  
+  ci.lb <- sigma_ci_pears$percent[4]
+  ci.ub <- sigma_ci_pears$percent[5]
+  
+  ci <- paste0("[", format(round(ci.lb, 2), nsmall = 2), ", ",
+               format(round(ci.ub, 2), nsmall = 2), "]")#percentile 
+  data.frame(ci, index = "sigma")
 }
