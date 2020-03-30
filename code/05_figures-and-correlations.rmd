@@ -91,7 +91,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type, linetype 
 
 ```
 
-Figure 1. Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 67 effects. Tau is not directly comparable across effect size measures. 
+*Figure 1.* Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 67 effects. Tau ($\tau$) is not directly comparable across effect size measures. Code to reproduce table: osf.io/u2t3r 
 
 ## Figure 2
 
@@ -157,7 +157,7 @@ I2_plot
 
 ```
 
-Figure 2. Simulated $I^2$  densities across 68 meta-analyses for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and the distribution of the observed $I^2$ estimates (bars) for the 68 meta-analyses. Each simulated density consists of approximately 680,000 estimates. 
+*Figure 2.* Simulated $I^2$  densities across 68 meta-analyses for zero, small, medium, and large heterogeneity according to the definitions of Higgins (2003), and the distribution of the observed $I^2$ estimates (bars) for the 68 meta-analyses. Each simulated density consists of approximately 680,000 estimates. *MD* = Mean Difference, *SMD* = Standardized Mean Difference. Code to reproduce table: osf.io/u2t3r
 
 
 ## Figure 3: correlations per effect type
@@ -203,7 +203,10 @@ fig3_ci <- tau_per_type %>%
 labels <- tau_per_type %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
   split(.$effect_type) %>% 
   map_dfr(fitter, .id = "effect_type") %>% #fitter is a sourced function
-  mutate(lab = paste0("r = ", r, " ", fig3_ci$ci)) #put output into one variable for improved plotting
+  mutate(lab = paste0("r (", c(rep(8, 3), rep(41, 3)), ") = ",
+                      gsub("0\\.", "\\.", r),
+                      ", 95% CI ",
+                      gsub("0\\.", "\\.", fig3_ci$ci))) #put output into one variable for improved plotting
 
 
 ```
@@ -214,7 +217,7 @@ labels <- tau_per_type %>% #row 1:2 = tau2, row 3:4 = I2, row 5:6 = H2
 tau_facet <- ggplot(tau_per_type, aes(x = eff_size, y = tau)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
-  geom_text(data = labels[labels$index == "tau",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  geom_text(data = labels[labels$index == "tau",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.06, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste("Between Studies Standard Deviation ", tau))) +
   scale_x_continuous(name = "Absolute Effect Size") +
   theme_classic() +
@@ -226,9 +229,9 @@ tau_facet <- ggplot(tau_per_type, aes(x = eff_size, y = tau)) +
 
 #I2plot----
 I2_facet <- ggplot(tau_per_type, aes(x = eff_size, y = s_I2)) + 
+  geom_text(data = labels[labels$index == "I2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.06, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
-  geom_text(data = labels[labels$index == "I2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste(italic(I)^2, " Index"))) +
   scale_x_continuous(name = "Absolute Effect Size") +
   coord_cartesian(ylim = c(0, 100)) +
@@ -243,7 +246,7 @@ I2_facet <- ggplot(tau_per_type, aes(x = eff_size, y = s_I2)) +
 H2_facet <- ggplot(tau_per_type, aes(x = eff_size, y = H2)) + 
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, color = "black") + #to set alpha for the line geom_line must be used rather than geom_smooth
-  geom_text(data = labels[labels$index == "H2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.05, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
+  geom_text(data = labels[labels$index == "H2",], aes(label = lab), x = -Inf, y = Inf, hjust = -0.06, vjust = 2, size = 3.5, fontface = "italic", alpha = .6) + #hjust and vjust can be used to annotate the same position in all facets even though the scale are different
   scale_y_continuous(name = expression(paste(italic(H)^2, " Index"))) +
   scale_x_continuous(name = "Absolute Effect Size") +
   theme_classic() +
@@ -259,7 +262,7 @@ combo <- cowplot::plot_grid(tau_facet, I2_facet, H2_facet, labels = "AUTO")
 combo
 ```
 
-Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau}$, B) $I^2$ and C) $H^2$ respectively for 40 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and odds ratios/risk differences computed as log odds ratios. Square brackets contain 95% bootstrapped percentile confidence intervals. Code to reproduce figure: osf.io/zuwpg/?view_only=e6639d8d4f924739a7310782fbbb4e06
+*Figure 3.* The Pearson correlation between absolute effect size and A) $\hat{\tau}$, B) $I^2$ and C) $H^2$ respectively for 43 effects that were measured as mean or standardized mean differences and 10 effects measured as odds ratios or risk differences from 13 pre-registered multi-lab replication projects. Effects reported as mean differences were standardized and odds ratios/risk differences computed as log odds ratios. *r* = Product-moment correlation, square brackets contain 95% bootstrapped percentile confidence intervals. Code to reproduce figure: osf.io/u2t3r
 
 
 ```{r cor_het_effect_size, eval= FALSE}
