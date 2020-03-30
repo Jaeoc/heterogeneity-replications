@@ -263,30 +263,88 @@ Figure 3. The Pearson correlation between absolute effect size and A) $\hat{\tau
 
 ```{r cor_het_effect_size, eval= FALSE}
 
-#This section gives the correlations and values reported in the section 'Heterogeneity and effect sizes' in the main manuscript (not printed if .rmd is knit)
+#This section gives the correlations and values reported in the section 'Heterogeneity and effect sizes' in the main manuscript (not printed if .rmd is knit).
 
-#1. Standardized mean differences----
+#bootstrap confidence intervals code contribution by Amir Abdol.
+
+set.seed(435) #same seed as for plot
+
+#Pearson bootstrap percentile confidence intervals for SMD and logOR
+cis <- tau_per_type %>% #same as in Figure 3
+  split(.$effect_type) %>% 
+  map_dfr(bootfitter, .id = "effect_type") #bootfitter is a sourced function
+
+#1.1. Standardized mean differences Pearsons----
 SMDs <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
   filter(effect_type == "Standardized Mean Difference") 
 
-cor.test(SMDs$tau, SMDs$eff_size) #pearson tau2
-cor.test(SMDs$s_I2, SMDs$eff_size) #pearson I2
-cor.test(SMDs$H2, SMDs$eff_size) #pearson H2
+#pearson tau2
+cor.test(SMDs$tau, SMDs$eff_size) 
+#pearson I2
+cor.test(SMDs$s_I2, SMDs$eff_size)
+#pearson H2
+cor.test(SMDs$H2, SMDs$eff_size) 
 
-cor.test(SMDs$tau, SMDs$eff_size, method = "spearman") #spearman
-cor.test(SMDs$s_I2, SMDs$eff_size, method = "spearman") #spearman
-cor.test(SMDs$H2, SMDs$eff_size, method = "spearman") #spearman
 
+#1.2. log OR Pearson's----
+logOR <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
+  filter(effect_type == "Log Odds Ratio") 
 
-##Excluding anchoring effects
+#pearson tau2
+cor.test(logOR$tau, logOR$eff_size) 
+#pearson I2
+cor.test(logOR$s_I2, logOR$eff_size)
+#pearson H2
+cor.test(logOR$H2, logOR$eff_size) 
+
+#1.3 Excluding anchoring effects Pearson's ---- 
 dropped_anchoring <- SMDs %>%
   filter(!grepl("Anchoring", effect))
 
-cor.test(dropped_anchoring$tau, dropped_anchoring$eff_size) #pearson
-cor.test(dropped_anchoring$s_I2, dropped_anchoring$eff_size) #pearson
-cor.test(dropped_anchoring$H2, dropped_anchoring$eff_size) #pearson
+#tau
+cor.test(dropped_anchoring$tau, dropped_anchoring$eff_size) 
+bootfit <- boot(data=dropped_anchoring, statistic=pear_tau, R=1000, formula= ~ eff_size + tau)
+boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
 
-#1.05 When ES not sig. diff from zero----
+#I2
+cor.test(dropped_anchoring$s_I2, dropped_anchoring$eff_size) #pearson
+bootfit <- boot(data=dropped_anchoring, statistic=pear_I2, R=1000, formula= ~ eff_size + s_I2) #statistic function is sourced
+boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
+
+#H2
+cor.test(dropped_anchoring$H2, dropped_anchoring$eff_size) #pearson
+bootfit <- boot(data=dropped_anchoring, statistic=pear_H2, R=1000, formula= ~ eff_size + H2)
+boot.ci(bootfit, type=c("perc", "bca"))
+
+#1.4. Spearman's rank order correlation----
+
+#tau
+cor.test(SMDs$tau, SMDs$eff_size, method = "spearman") #spearman
+options(warn=-1)
+bootfit <- boot(data=SMDs, statistic=spear_tau, R=1000, formula= ~ eff_size + tau)
+options(warn=0)
+
+boot.ci(bootfit, type=c("perc", "bca"))
+
+#I2
+cor.test(SMDs$s_I2, SMDs$eff_size, method = "spearman") #spearman
+options(warn=-1)
+bootfit <- boot(data=SMDs, statistic=spear_I2, R=1000, formula= ~ eff_size + s_I2)
+options(warn=0)
+
+boot.ci(bootfit, type=c("perc", "bca"))
+
+#H2
+
+cor.test(SMDs$H2, SMDs$eff_size, method = "spearman") #spearman
+options(warn=-1)
+bootfit <- boot(data=SMDs, statistic=spear_H2, R=1000, formula= ~ eff_size + H2)
+options(warn=0)
+
+boot.ci(bootfit, type=c("perc", "bca"))
+
+#2. When ES not sig. diff from zero----
+
 ##When effect size not sig diff from 0 (alpha = .05), what is average heterogeneity?
 nrow(SMDs[SMDs$eff_size_p > 0.05,]) #20/40 SMDs have ES not sig. diff from zero
 sum(SMDs$tau[SMDs$eff_size_p > 0.05] == 0) #13/20 of these have taus == 0
@@ -308,71 +366,8 @@ dat %>% filter(effect %in% SMDs_not_sig) %>% #amongst the non-sig SMDS
 pchisq(23, 23, lower.tail = FALSE)
 
 #logs
-logOR <- tau_per_type %>% #tau_per_type object from code section two up 'cor_per_effect_type_prep'
-  filter(effect_type == "Log Odds Ratio") 
 
 logOR[logOR$eff_size_p > 0.05,] #only 1 log odds ratio not signifcant. tau = 0.13, I2 = 11.8, H2 = 1.05
-
-#bootstrap confidence intervals
-#code contribution by Amir Abdol
-
-
-#1.1 I2 confidence intervals----
-
-
-#bootfit <- boot(data=SMDs, statistic=pear_I2, R=1000, formula= ~ eff_size + s_I2) #see Fig 3
-#I2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
-
-
-#Excluding anchoring effects
-set.seed(234)
-bootfit <- boot(data=dropped_anchoring, statistic=pear_I2, R=1000, formula= ~ eff_size + s_I2) #statistic function is sourced
-
-I2_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
-
-#1.2 Tau confidence intervals----
-
-# bootfit <- boot(data=tau_per_type, statistic=pear_tau, R=1000, formula= ~ eff_size + tau2) #see Fig 3
-# tau2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
-
-#Excluding anchoring effects
-cor.test(dropped_anchoring$tau2, dropped_anchoring$eff_size)
-
-set.seed(423)
-bootfit <- boot(data=dropped_anchoring, statistic=pear_tau, R=1000, formula= ~ eff_size + tau)
-tau_dropped_ci_pears <- boot.ci(bootfit, type=c("perc", "bca")) #percentile and adjusted percental method (BCa)
-
-
-#1.3 H2 confidence intervals----
-set.seed(342)
-bootfit <- boot(data=tau_per_type, statistic=pear_H2, R=1000, formula= ~ eff_size + H2)
-H2_ci_pears <- boot.ci(bootfit, type=c("perc", "bca"))
-
-
-
-#1.4 spearman bootstrap CIs----
-#First for I2
-spear_I2 <- function(formula, data, indices){ #spearman
-     d <- data[indices,]
-     fit <- cor.test(formula = ~ s_I2 + eff_size, data=d, method = "spearman")
-     return(fit$estimate)
-}
-
-set.seed(241)
-options(warn=-1)
-bootfit <- boot(data=tau_per_type, statistic=spear_I2, R=1000, formula= ~ eff_size + s_I2)
-options(warn=0)
-
-I2_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
-
-#Second for tau
-
-set.seed(5233)
-options(warn=-1)
-bootfit <- boot(data=tau_per_type, statistic=spear_tau, R=1000, formula= ~ eff_size + tau)
-options(warn=0)
-
-tau_ci_spear <- boot.ci(bootfit, type=c("perc", "bca"))
 
 ```
 

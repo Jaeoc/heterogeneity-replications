@@ -147,7 +147,12 @@ spear_tau <- function(formula, data, indices){ #spearman
   return(fit$estimate)
 }
 
-
+#third for  H2
+spear_H2 <- function(formula, data, indices){ #spearman
+  d <- data[indices,]
+  fit <- cor.test(formula = ~ H2 + eff_size, data=d, method = "spearman")
+  return(fit$estimate)
+}
 #******************************************
 #Functions for Supplement A----
 #******************************************
