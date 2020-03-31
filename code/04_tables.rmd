@@ -31,8 +31,8 @@ source("03_helper_functions_tables_figures.r") #Load functions to prep data for 
 ### Variation in observed effect sizes as a function of true effect size and measurement reliability.  
 ```{r effect-size-heterogeneity-table, cache = TRUE}
 #library(kableExtra)
-rooted_relabilities <- matrix(rep(c(.6, .7,.8), 3), ncol = 3)
-rho <- c(0, .3, .5)
+rooted_relabilities <- matrix(rep(c(.60, .70,.80), 3), ncol = 3)
+rho <- c(0.0, .30, .50)
 rel <- c("$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .6", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .7", "$\\sqrt{R_{xx'}}\\times\\sqrt{R_{yy'}}$ = .8")
 ma <- c("I", "II", "III")
 
@@ -239,8 +239,8 @@ I2_power <- dens %>%
 het <-  het %>%
   left_join(I2_power) %>%
   arrange(desc(s_I2),  desc(s_ci.ub)) %>% #sort by I2 and upper CI bound
-  mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 1), nsmall = 1)), ", ", trimws(format(round(s_ci.ub, 1), nsmall = 1)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
-         s_I2 = format(round(s_I2, 1), nsmall = 1),
+  mutate(I2_ci = paste0("[", trimws(format(round(s_ci.lb, 2), nsmall = 2)), ", ", trimws(format(round(s_ci.ub, 2), nsmall = 2)), "]"), #Round and put confidence interval between brackets, e.g., [0, 0.41]
+         s_I2 = format(round(s_I2, 2), nsmall = 2),
          tau_ci = paste0("[", trimws(format(round(tau_ci.lb, 3), nsmall = 3)), ", ", trimws(format(round(tau_ci.ub, 3), nsmall = 3)), "]"),
          tau = format(round(tau, 3), nsmall = 3)) %>% #rounded here instead of in table function because should have 3 digits
   mutate_at(vars(zero, small, medium, large), ~format(round(., 2), nsmall = 2)) %>% #round here because of superscripts added later
