@@ -88,7 +88,7 @@ ggplot(dat3, aes(x = tau, y = I2, group = effect, color = effect_type, linetype 
   
 
 # ggsave("../figures/tau-I2.png", dpi = 600, height =  4 , width = 6.47)
-
+# ggsave("../figures/Figure1_tau-I2.pdf", dpi = 600, height =  4 , width = 6.47, device = cairo_pdf())
 ```
 
 *Figure 1.* Result of simulation relating $I^2$-values to between studies standard deviation. Each line represent one of 67 effects. Tau ($\tau$) is not directly comparable across effect size measures. Code to reproduce table: osf.io/u2t3r 
@@ -152,8 +152,8 @@ I2_plot <- ggplot(I2_dist, aes(x = I2, group = Heterogeneity)) +
 #*****************
 
 I2_plot
-# ggsave("../figures/density-I2.png", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
-
+# ggsave("../figures/density-I2.png", dpi = 600, height =  4, width = 6.47)
+# ggsave("../figures/Figure2_density-I2.pdf", dpi = 600, height =  4, width = 6.47, device = cairo_pdf())
 
 ```
 
@@ -259,6 +259,7 @@ H2_facet <- ggplot(tau_per_type, aes(x = eff_size, y = H2)) +
 #combined----
 combo <- cowplot::plot_grid(tau_facet, I2_facet, H2_facet, labels = "AUTO")
 # ggsave("../figures/effect-het.png", dpi = 600, height =  7, width = 7)
+# ggsave("../figures/Figure3_effect-het.pdf", dpi = 600, height =  7, width = 7, device = cairo_pdf)
 combo
 ```
 
